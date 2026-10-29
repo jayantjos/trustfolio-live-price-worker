@@ -32,36 +32,50 @@ function identify(input) {
   }
   return null;
 }
+function safeBrowserEvidence(html, meta, item) {
+  const title=(/<title[^>]*>([^<]{0,260})<\/title>/i.exec(html)||[])[1]||'';
+  const h1=(/<h1\b[^>]*>([\s\S]{0,1200}?)<\/h1>/i.exec(html)||[])[1]||'';
+  let urlHost=null,urlPath=null;
+  if (meta?.finalUrl) try { const u=new URL(meta.finalUrl); urlHost=u.hostname;urlPath=u.pathname.slice(0,140); }catch(_){}
+  const e002=isBrowserE002(html);
+  return {browserTitle:title.replace(/[\r\n\t<>]/g,' ').slice(0,130),
+    mainHeading:h1.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim().slice(0,130),
+    finalUrlHost:urlHost,finalUrlPath:urlPath,
+    isExpectedPidInHtml:html.toUpperCase().includes(item.id.toUpperCase()),
+    containsSellingPriceToken:/"(?:fsp|price)"\s*:/i.test(html),
+    containsVisibleRupeePrice:/₹\s*[\d,]{3,}/.test(html),
+    storeErrorCode:e002?'E002':null};
+}
+function isBrowserE002(html){
+  const body=/<body\b[^>]*>([\s\S]{0,6000}?)<\/body>/i.exec(html)?.[1]||'';
+  const plain=body.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,' ').replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  return plain.length<1500 && /\bE002\b/i.test(plain) && /something went wrong/i.test(plain);
+}
 async function browserRenderedPrice(item, env) {
-  if (!env?.BROWSER || typeof env.BROWSER.quickAction !== 'function') {
-    return {parsed:null, diagnostic:'browser_binding_missing'};
-  }
-  let response;
+  if(!env?.BROWSER || typeof env.BROWSER.quickAction!=='function')
+    return {parsed:null,diagnostic:'browser_binding_missing',evidence:null};
   try {
-    response=await env.BROWSER.quickAction('content', {
-      url:item.url,
-      gotoOptions:{waitUntil:'networkidle2'},
-      // This is a browser request for the exact, prevalidated marketplace PDP.
-      // Do not send cookies, other credentials, or arbitrary user-supplied hosts.
-    });
-    if(!response || !response.ok) return {parsed:null, diagnostic:'browser_http_'+(response?.status??'unknown')};
-    const data=await response.text();
-    if(!data || data.length>BROWSER_MAX_BYTES) return {parsed:null, diagnostic:'browser_content_empty_or_too_large'};
-    let rendered=data;
-    // Some Browser Run binding versions use a JSON envelope, others return HTML.
-    if(/^\s*\{/.test(data)) {
-      try {
-        const body=JSON.parse(data);
-        rendered=[body?.result,body?.html,body?.content,body?.data].find(v=>typeof v==='string')||'';
-      } catch(_) {rendered='';}
+    const r=await env.BROWSER.quickAction('content',{url:item.url,gotoOptions:{waitUntil:'networkidle2',timeout:30000}});
+    if(!r?.ok)return {parsed:null,diagnostic:'browser_http_'+(r?.status??'unknown'),evidence:null};
+    const raw=await r.text();
+    if(!raw || raw.length>BROWSER_MAX_BYTES)return {parsed:null,diagnostic:'browser_content_empty_or_too_large',evidence:null};
+    let html=raw,meta=null;
+    if(/^\s*\{/.test(raw)){
+      let d;try{d=JSON.parse(raw)}catch(_){return {parsed:null,diagnostic:'browser_invalid_json_envelope',evidence:null}}
+      if(d.success!==true||typeof d.result!=='string')return {parsed:null,diagnostic:'browser_unsuccessful_envelope',evidence:null};
+      html=d.result;meta=d.meta||null;
     }
-    if (!rendered || rendered.length>BROWSER_MAX_BYTES) return {parsed:null, diagnostic:'browser_content_not_html'};
-    const parsed=extractPrice(item.platform,rendered,{id:item.id,title:item.variantTitle||null});
+    if(!html || html.length>BROWSER_MAX_BYTES)return {parsed:null,diagnostic:'browser_content_not_html',evidence:null};
+    const evidence=safeBrowserEvidence(html,meta,item);
+    if(evidence.finalUrlHost&&!['flipkart.com','www.flipkart.com','amazon.in','www.amazon.in'].includes(evidence.finalUrlHost))
+      return {parsed:null,diagnostic:'browser_redirect_unknown_host',evidence};
+    if(evidence.finalUrlPath&&item.platform==='flipkart'&&!evidence.finalUrlPath.includes('/p/'))
+      return {parsed:null,diagnostic:'browser_redirect_away_from_product',evidence};
+    if(evidence.storeErrorCode==='E002')return {parsed:null,diagnostic:'flipkart_e002_store_error_page',evidence};
+    const parsed=extractPrice(item.platform,html,{id:item.id,title:item.variantTitle||null});
     return {parsed,diagnostic:parsed.status==='ok'?'verified_from_rendered_html':
-      parsed.error || 'rendered_page_no_price'};
-  } catch(e) {
-    return {parsed:null, diagnostic:'browser_request_failed:'+String(e?.name||'error').slice(0,40)};
-  }
+      parsed.error||'rendered_page_no_price',evidence};
+  }catch(e){return {parsed:null,diagnostic:'browser_request_failed:'+String(e?.name||'error').slice(0,40),evidence:null}}
 }
 async function retrieve(item, env, browserProbe=false) {
   const start=Date.now();
@@ -95,11 +109,13 @@ async function retrieve(item, env, browserProbe=false) {
   const title=match?.[1]||null;
   let parsed=extractPrice(item.platform,html,{id:item.id,title:item.variantTitle||null});
   let browserDiagnostic='not_requested';
+  let browserEvidenceSummary=null;
   // Browser Run is used only when manually requested for one exact product.
   // No recurring browser usage or cost on normal live-price traffic.
   if (browserProbe && parsed.status==='error') {
     const check=await browserRenderedPrice(item,env);
     browserDiagnostic=check.diagnostic;
+    browserEvidenceSummary=check.evidence;
     if(check.parsed?.status==='ok' && check.parsed.priceNum>0) parsed=check.parsed;
     // Explicit unavailable evidence is only accepted from the exact verified
     // product page, not arbitrary related-product or category text.
@@ -111,6 +127,7 @@ async function retrieve(item, env, browserProbe=false) {
     inStock:parsed.inStock, status:parsed.status,
     error:parsed.error??null, httpStatus:resp.status,
     browserDiagnostic:browserProbe?browserDiagnostic:undefined,
+    browserEvidence:browserProbe?browserEvidenceSummary:undefined,
     extractionSource:parsed.source??null,
     bytesRead:Math.round(new TextEncoder().encode(html).length/1024)+' KB',
     latencyMs:Date.now()-start
@@ -149,7 +166,7 @@ export default {
   async fetch(request, env, ctx) {
     const url=new URL(request.url);
     if (request.method==='GET' && (url.pathname==='/' || url.pathname==='/health'))
-      return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.2.0',
+      return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.4.0',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
         note:'Actual-price checks require configured secret and verifiable source content.'});
     if(url.pathname!=='/api/check')return json({error:'not_found'},404);

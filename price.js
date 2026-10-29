@@ -69,8 +69,16 @@ function identityValid(html, expected) {
   // Flipkart PID/ Amazon ASIN in the primary URL is checked by the request parser.
   return true;
 }
+function isVisibleFlipkartE002(html) {
+  const body=/<body\b[^>]*>([\s\S]{0,6000}?)<\/body>/i.exec(html)?.[1]||'';
+  const plain=body.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,' ')
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi,' ')
+    .replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  return plain.length<1500 && /\bE002\b/i.test(plain) && /something went wrong/i.test(plain);
+}
 export function extractFlipkart(html, expected) {
   if (!html || html.length<500) return failure('empty_product_page');
+  if (isVisibleFlipkartE002(html)) return failure('flipkart_e002_store_error_page');
   if (!identityValid(html,expected)) return failure('product_identity_unverified');
   const ld=productJsonld(html,expected);
   if (ld) return ld;
@@ -89,6 +97,24 @@ export function extractFlipkart(html, expected) {
        || /<meta\b[^>]*content=["']([\d,.]+)["'][^>]*itemprop=["']price["'][^>]*>/i.exec(html);
   const n=parseMoney(meta?.[1]);
   if (n!=null) return ok(n,'flipkart_product_price_meta');
+  // An independently verified same-PID page may expose only a primary price DOM.
+  // Reject multiple prices, recommendations far from the product, MRP and bank offers.
+  if (expected?.id && html.toUpperCase().includes(String(expected.id).toUpperCase())) {
+    const amounts=[];
+    const re=/<(?:div|span)\b[^>]*class=["']([^"']*\bNx9bqj\b[^"']*)["'][^>]*>([^<]{0,100})<\/(?:div|span)>/gi;
+    let m;
+    while ((m=re.exec(html))) {
+      if (/mrp|strike|original|bank|card|cashback|emi|exchange|offer/i.test(m[1])) continue;
+      const near=html.slice(Math.max(0,m.index-3500),Math.min(html.length,m.index+3500));
+      if (!near.toUpperCase().includes(String(expected.id).toUpperCase())
+        && !/<h1\b[^>]*>[\s\S]{0,1400}?<\/h1>/i.test(near)) continue;
+      const match=/^\s*(?:₹|Rs\.?)\s*([\d,]{3,}(?:\.\d{1,2})?)\s*$/.exec(m[2]);
+      const amount=parseMoney(match?.[1]);
+      if(amount!=null) amounts.push(amount);
+    }
+    const distinct=[...new Set(amounts)];
+    if(distinct.length===1) return ok(distinct[0],'flipkart_primary_price_element');
+  }
   return failure('product_page_price_not_exposed');
 }
 export function extractAmazon(html, expected) {

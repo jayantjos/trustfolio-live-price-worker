@@ -1,3 +1,7 @@
+# TrustFolio v0.4 E002-safe price diagnostics
+
+Flipkart E002 is a transient storefront error, never out-of-stock. Explicit single-product Browser Run diagnostic includes safe page evidence. No guessed or MRP prices, no automatic Browser Run usage. Do not switch TrustFolio VPS production to this Worker without verified real marketplace prices.
+
 # TrustFolio Worker v0.2: Browser Run *opt-in diagnostic*
 
 ## Tested finding
