@@ -1,3 +1,9 @@
+# v0.7 — Fixed-sample manual verification of **new Cloudflare Worker**
+
+Call `GET /qa/sample` (no secret required) to run a fresh HTTP price check for **only the three hardcoded real MongoDB products**. The endpoint has a globally enforced 15-minute Cloudflare Durable Object rate limit; repeat calls return latest saved result with `fresh:false`. It calls the exact same protected `/api/check` internally using the saved `TF_PRICE_WORKER_KEY`. No arbitrary products, browser rendering, Scrape.do, MongoDB writes or production cutover. A failed price stays `null`, never guessed. Compare `report.checks[].productUrl` and `priceINR` with exact variants on the actual marketplaces. It will return `PRICE_UNVERIFIED` when any product lacks verified price.
+
+---
+
 # v0.6 Persisted automated live-price reports
 
 The Cloudflare Cron every six hours now saves the last read-only result to a tiny SQLite-backed Durable Object (available within Workers Free plan usage limits). GET /monitor/latest is a public **read-only report of three fixed product SKUs**; it does NOT trigger fetching, reveal any API key, or expose HTML. It reports pending before the first Cron run and PASS or PRICE_UNVERIFIED afterward. The scheduled test still uses the saved TF_PRICE_WORKER_KEY internally and keeps the original TrustFolio backend untouched. The GitHub health workflow can retrieve reports without manual credential entry.
