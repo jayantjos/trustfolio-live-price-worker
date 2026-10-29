@@ -240,7 +240,7 @@ const worker = {
   async fetch(request, env, ctx) {
     const url=new URL(request.url);
     if (request.method==='GET' && (url.pathname==='/' || url.pathname==='/health'))
-      return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.5.0',
+      return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.6.0',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
         monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs',
           statusUrl:'/monitor/latest',storageConfigured:Boolean(env.MONITOR_STATE)},
