@@ -31,7 +31,7 @@ test('Amazon buy box price not MRP',()=>{
  assert.equal(extractAmazon(h,{id:'B012345678',title:'iPhone 16 128GB'}).priceNum,69900);
 });
 test('Health version 0.4 and auth',async()=>{
- const h=await worker.fetch(new Request('https://unit.example/health'),{TF_PRICE_WORKER_KEY:'unit'},{});assert.equal((await h.json()).version,'0.4.0');
+ const h=await worker.fetch(new Request('https://unit.example/health'),{TF_PRICE_WORKER_KEY:'unit'},{});assert.equal((await h.json()).version,'0.7.0');
  const x=await worker.fetch(req(),{TF_PRICE_WORKER_KEY:'incorrect'},{});assert.equal(x.status,401);
 });
 test('Browser E002 reveals only safe diagnostic; opt-in',async()=>{
