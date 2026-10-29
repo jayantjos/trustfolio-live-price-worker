@@ -4,6 +4,16 @@ import { DurableObject } from 'cloudflare:workers';
 // Only a tiny, non-sensitive latest-QA summary is persisted; no secrets/HTML.
 export class PriceMonitorState extends DurableObject {
   async readLatest() { return (await this.ctx.storage.get('latest')) || null; }
+  async claimOnDemand(now) {
+    // Per-Worker singleton; at most one public sample fetch every 15 min.
+    return this.ctx.storage.transaction(async txn => {
+      const previous=Number(await txn.get('manual_last_claim')||0);
+      const retryAfterMs=Math.max(0,previous+15*60*1000-now);
+      if(retryAfterMs>0) return {allowed:false,retryAfterSeconds:Math.ceil(retryAfterMs/1000)};
+      await txn.put('manual_last_claim',now);
+      return {allowed:true,retryAfterSeconds:0};
+    });
+  }
   async saveLatest(report) {
     if (!report || report.kind!=='trustfolio_price_monitor'
        || !Array.isArray(report.checks) || report.checks.length!==3)
@@ -186,7 +196,7 @@ const MONITORED_PRODUCTS = Object.freeze([
     url:'https://www.amazon.in/dp/B0FNCLVRW5',platform:'amazon'},
 ]);
 const MONITOR_CRON = '5 */6 * * *';
-async function runScheduledPriceQA(worker,env,ctx) {
+async function runScheduledPriceQA(worker,env,ctx,options={}) {
   if(!env?.TF_PRICE_WORKER_KEY) {
     console.error('TRUSTFOLIO_AUTO_PRICE_QA=worker_secret_missing');
     throw new Error('MONITOR_SECRET_MISSING');
@@ -207,7 +217,7 @@ async function runScheduledPriceQA(worker,env,ctx) {
     const value=record[product.platform]||{};
     const verified=record.pid===product.pid && value.status==='ok'
       && Number.isFinite(value.priceNum) && value.priceNum>0;
-    return {pid:product.pid,platform:product.platform,label:product.label,
+    return {pid:product.pid,platform:product.platform,label:product.label,productUrl:product.url,
       verified,status:value.status||'request_failed',
       priceINR:verified?value.priceNum:null,
       source:verified?(value.extractionSource||null):null,
@@ -215,8 +225,8 @@ async function runScheduledPriceQA(worker,env,ctx) {
       error:verified?null:(value.error||record.error||'price_not_verified')};
   });
   const successes=checks.filter(x=>x.verified).length;
-  const report={kind:'trustfolio_price_monitor',version:'0.6.0',
-    checkedAt:new Date().toISOString(),cron:MONITOR_CRON,
+  const report={kind:'trustfolio_price_monitor',version:'0.7.0',
+    checkedAt:new Date().toISOString(),cron:MONITOR_CRON,trigger:options.trigger==='manual'?'manual':'cron',
     total:checks.length,verified:successes,
     result:successes===checks.length?'PASS':'PRICE_UNVERIFIED',checks};
   console.log('TRUSTFOLIO_AUTO_PRICE_QA '+JSON.stringify(report));
@@ -232,7 +242,7 @@ async function runScheduledPriceQA(worker,env,ctx) {
     console.error('TRUSTFOLIO_AUTO_QA_STORAGE_NOT_CONFIGURED');
   }
   // A nonzero Cron failure makes missing real prices visible in Cron Events.
-  if(successes!==checks.length)throw new Error('MONITOR_PRICE_UNVERIFIED_'+successes+'_OF_'+checks.length);
+  if(successes!==checks.length && options.failOnUnverified!==false)throw new Error('MONITOR_PRICE_UNVERIFIED_'+successes+'_OF_'+checks.length);
   return report;
 }
 
@@ -240,17 +250,38 @@ const worker = {
   async fetch(request, env, ctx) {
     const url=new URL(request.url);
     if (request.method==='GET' && (url.pathname==='/' || url.pathname==='/health'))
-      return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.6.0',
+      return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.7.0',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
         monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs',
-          statusUrl:'/monitor/latest',storageConfigured:Boolean(env.MONITOR_STATE)},
+          statusUrl:'/monitor/latest',testUrl:'/qa/sample',storageConfigured:Boolean(env.MONITOR_STATE)},
         note:'Actual-price checks require configured secret and verifiable source content.'});
+    // Controlled test-only public endpoint: exactly three hardcoded Mongo SKUs.
+    // No arbitrary URLs, browser calls, credentials in responses, or writes to MongoDB.
+    if(request.method==='GET' && url.pathname==='/qa/sample') {
+      if(!env?.TF_PRICE_WORKER_KEY||!env?.MONITOR_STATE)
+        return json({error:'sample_test_not_configured'},503);
+      const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
+      let claim;
+      try{claim=await state.claimOnDemand(Date.now())}
+      catch(_){return json({error:'sample_rate_limit_unavailable'},503)}
+      if(!claim.allowed){
+        const latest=await state.readLatest();
+        return json({fresh:false,rateLimited:true,retryAfterSeconds:claim.retryAfterSeconds,
+          report:latest||null});
+      }
+      try {
+        const report=await runScheduledPriceQA(worker,env,ctx,{trigger:'manual',failOnUnverified:false});
+        return json({fresh:true,rateLimited:false,report});
+      } catch(e) {
+        return json({error:'sample_test_failed',kind:String(e?.name||'error')},503);
+      }
+    }
     if(request.method==='GET' && url.pathname==='/monitor/latest') {
       if(!env?.MONITOR_STATE)return json({ready:false,error:'monitor_storage_not_configured'},503);
       try {
         const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
         const latest=await state.readLatest();
-        return json({ready:true,version:'0.6.0',state:latest?'available':'pending',latest});
+        return json({ready:true,version:'0.7.0',state:latest?'available':'pending',latest});
       } catch(e) {
         return json({ready:false,error:'monitor_storage_unavailable'},503);
       }
