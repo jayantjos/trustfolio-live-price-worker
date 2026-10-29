@@ -1,8 +1,8 @@
 import { extractPrice } from './price.js';
+import { DurableObject } from 'cloudflare:workers';
 
 // Only a tiny, non-sensitive latest-QA summary is persisted; no secrets/HTML.
-export class PriceMonitorState {
-  constructor(ctx,env) {this.ctx=ctx;this.env=env;}
+export class PriceMonitorState extends DurableObject {
   async readLatest() { return (await this.ctx.storage.get('latest')) || null; }
   async claimOnDemand(now) {
     // Serialize competing requests within the singleton Durable Object.
@@ -232,7 +232,7 @@ async function runScheduledPriceQA(worker,env,ctx,options={}) {
       error:verified?null:(value.error||record.error||'price_not_verified')};
   });
   const successes=checks.filter(x=>x.verified).length;
-  const report={kind:'trustfolio_price_monitor',version:'0.7.1',
+  const report={kind:'trustfolio_price_monitor',version:'0.7.2',
     checkedAt:new Date().toISOString(),cron:MONITOR_CRON,trigger:options.trigger==='manual'?'manual':'cron',
     total:checks.length,verified:successes,
     result:successes===checks.length?'PASS':'PRICE_UNVERIFIED',checks};
@@ -257,7 +257,7 @@ const worker = {
   async fetch(request, env, ctx) {
     const url=new URL(request.url);
     if (request.method==='GET' && (url.pathname==='/' || url.pathname==='/health'))
-      return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.7.1',
+      return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.7.2',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
         monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs',
           statusUrl:'/monitor/latest',testUrl:'/qa/sample',storageConfigured:Boolean(env.MONITOR_STATE)},
@@ -288,7 +288,7 @@ const worker = {
       try {
         const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
         const latest=await state.readLatest();
-        return json({ready:true,version:'0.7.1',state:latest?'available':'pending',latest});
+        return json({ready:true,version:'0.7.2',state:latest?'available':'pending',latest});
       } catch(e) {
         return json({ready:false,error:'monitor_storage_unavailable'},503);
       }
