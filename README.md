@@ -1,3 +1,11 @@
+# v0.5 Automatic Price QA (no manual secret input)
+
+Cloudflare Cron executes every six hours at 00:05, 06:05, 12:05 and 18:05 UTC (05:35, 11:35, 17:35, 23:35 India). It uses TF_PRICE_WORKER_KEY from the already-configured Cloudflare Worker environment internally, to call the existing POST /api/check function. Three real MongoDB catalog SKUs are used (OPPO, Tecno, Amazon MTC TV); fresh requests have useCache=false. No Browser Run, no Scrape.do, no MongoDB update or deletion.
+
+See Worker dashboard > Observability > Workers Logs and filter on TRUSTFOLIO_AUTO_PRICE_QA. Reports show PASS only when all three price and PID checks verify, otherwise PRICE_UNVERIFIED and error fields. Failures are shown in Cron Events as well. The worker health endpoint shows the monitor schedule, not the last successful price. Your old TrustFolio production price worker remains unchanged until real marketplace price tests succeed.
+
+---
+
 # TrustFolio v0.4 E002-safe price diagnostics
 
 Flipkart E002 is a transient storefront error, never out-of-stock. Explicit single-product Browser Run diagnostic includes safe page evidence. No guessed or MRP prices, no automatic Browser Run usage. Do not switch TrustFolio VPS production to this Worker without verified real marketplace prices.

@@ -8,5 +8,10 @@
   },
   "browser": {
     "binding": "BROWSER"
+  },
+  "triggers": {
+    "crons": [
+      "5 */6 * * *"
+    ]
   }
 }

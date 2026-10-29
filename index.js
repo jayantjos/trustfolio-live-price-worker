@@ -162,12 +162,62 @@ async function one(input, useCache, ctx, env, browserProbe=false) {
     bestDeal:data.status==='ok'?{winner:item.platform,savings:0,status:'ok'}:{winner:null,savings:0,status:'no_price'},
     cached,itemLatencyMs:Date.now()-start};
 }
-export default {
+
+const MONITORED_PRODUCTS = Object.freeze([
+  {label:'Flipkart OPPO Reno 12 Pro 512 GB',pid:'MOBH2AHZH779MGYF',
+    url:'https://www.flipkart.com/oppo-reno-12-pro-5g-space-brown-512-gb/p/itmed01efe011f83?pid=MOBH2AHZH779MGYF',platform:'flipkart'},
+  {label:'Flipkart Tecno Pova 8 Pro 512 GB',pid:'MOBHQFDZKKM7EEFZ',
+    url:'https://www.flipkart.com/tecno-pova-8-pro-5g-tundra-green-512-gb/p/itmff783095ed31c?pid=MOBHQFDZKKM7EEFZ',platform:'flipkart'},
+  {label:'Amazon MTC 43 inch Smart TV',pid:'B0FNCLVRW5',
+    url:'https://www.amazon.in/dp/B0FNCLVRW5',platform:'amazon'},
+]);
+const MONITOR_CRON = '5 */6 * * *';
+async function runScheduledPriceQA(worker,env,ctx) {
+  if(!env?.TF_PRICE_WORKER_KEY) {
+    console.error('TRUSTFOLIO_AUTO_PRICE_QA=worker_secret_missing');
+    throw new Error('MONITOR_SECRET_MISSING');
+  }
+  // Exercise the SAME authenticated /api/check handler internally.
+  // The secret never leaves the Worker, and no Browser Run is triggered.
+  const request=new Request('https://trustfolio-monitor.internal/api/check',{
+    method:'POST',
+    headers:{'x-api-key':env.TF_PRICE_WORKER_KEY,'content-type':'application/json'},
+    body:JSON.stringify({items:MONITORED_PRODUCTS.map(x=>x.url),useCache:false,browserProbe:false})
+  });
+  const response=await worker.fetch(request,env,ctx);
+  if(!response.ok)throw new Error('MONITOR_CHECK_HTTP_'+response.status);
+  const payload=await response.json();
+  const rows=Array.isArray(payload.results)?payload.results:[];
+  const checks=MONITORED_PRODUCTS.map((product,i)=>{
+    const record=rows[i]||{};
+    const value=record[product.platform]||{};
+    const verified=record.pid===product.pid && value.status==='ok'
+      && Number.isFinite(value.priceNum) && value.priceNum>0;
+    return {pid:product.pid,platform:product.platform,label:product.label,
+      verified,status:value.status||'request_failed',
+      priceINR:verified?value.priceNum:null,
+      source:verified?(value.extractionSource||null):null,
+      httpStatus:value.httpStatus??null,
+      error:verified?null:(value.error||record.error||'price_not_verified')};
+  });
+  const successes=checks.filter(x=>x.verified).length;
+  const report={kind:'trustfolio_price_monitor',version:'0.5.0',
+    checkedAt:new Date().toISOString(),cron:MONITOR_CRON,
+    total:checks.length,verified:successes,
+    result:successes===checks.length?'PASS':'PRICE_UNVERIFIED',checks};
+  console.log('TRUSTFOLIO_AUTO_PRICE_QA '+JSON.stringify(report));
+  // A nonzero Cron failure makes missing real prices visible in Cron Events.
+  if(successes!==checks.length)throw new Error('MONITOR_PRICE_UNVERIFIED_'+successes+'_OF_'+checks.length);
+  return report;
+}
+
+const worker = {
   async fetch(request, env, ctx) {
     const url=new URL(request.url);
     if (request.method==='GET' && (url.pathname==='/' || url.pathname==='/health'))
-      return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.4.0',
+      return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.5.0',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
+        monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs'},
         note:'Actual-price checks require configured secret and verifiable source content.'});
     if(url.pathname!=='/api/check')return json({error:'not_found'},404);
     if(request.method!=='POST')return json({error:'method_not_allowed'},405);
@@ -185,5 +235,9 @@ export default {
     for(const input of body.items) results.push(await one(input,body.useCache!==false,ctx,env,browserProbe));
     return json({success:true,results});
   }
+  async scheduled(controller,env,ctx) {
+    await runScheduledPriceQA(worker,env,ctx);
+  }
 };
-export {identify};
+export default worker;
+export {identify,runScheduledPriceQA};
