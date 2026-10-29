@@ -1,4 +1,18 @@
 import { extractPrice } from './price.js';
+import { DurableObject } from 'cloudflare:workers';
+
+// Only a tiny, non-sensitive latest-QA summary is persisted; no secrets/HTML.
+export class PriceMonitorState extends DurableObject {
+  async readLatest() { return (await this.ctx.storage.get('latest')) || null; }
+  async saveLatest(report) {
+    if (!report || report.kind!=='trustfolio_price_monitor'
+       || !Array.isArray(report.checks) || report.checks.length!==3)
+      throw new Error('INVALID_MONITOR_REPORT');
+    await this.ctx.storage.put('latest', report);
+    return true;
+  }
+}
+
 
 const cache = new Map();
 const TTL = 45_000;
@@ -201,11 +215,22 @@ async function runScheduledPriceQA(worker,env,ctx) {
       error:verified?null:(value.error||record.error||'price_not_verified')};
   });
   const successes=checks.filter(x=>x.verified).length;
-  const report={kind:'trustfolio_price_monitor',version:'0.5.0',
+  const report={kind:'trustfolio_price_monitor',version:'0.6.0',
     checkedAt:new Date().toISOString(),cron:MONITOR_CRON,
     total:checks.length,verified:successes,
     result:successes===checks.length?'PASS':'PRICE_UNVERIFIED',checks};
   console.log('TRUSTFOLIO_AUTO_PRICE_QA '+JSON.stringify(report));
+  if (env?.MONITOR_STATE) {
+    try {
+      const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
+      await state.saveLatest(report);
+    } catch (error) {
+      console.error('TRUSTFOLIO_AUTO_QA_STORAGE_ERROR='+String(error?.name||'error'));
+      throw new Error('MONITOR_STORAGE_FAILED');
+    }
+  } else {
+    console.error('TRUSTFOLIO_AUTO_QA_STORAGE_NOT_CONFIGURED');
+  }
   // A nonzero Cron failure makes missing real prices visible in Cron Events.
   if(successes!==checks.length)throw new Error('MONITOR_PRICE_UNVERIFIED_'+successes+'_OF_'+checks.length);
   return report;
@@ -217,8 +242,19 @@ const worker = {
     if (request.method==='GET' && (url.pathname==='/' || url.pathname==='/health'))
       return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.5.0',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
-        monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs'},
+        monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs',
+          statusUrl:'/monitor/latest',storageConfigured:Boolean(env.MONITOR_STATE)},
         note:'Actual-price checks require configured secret and verifiable source content.'});
+    if(request.method==='GET' && url.pathname==='/monitor/latest') {
+      if(!env?.MONITOR_STATE)return json({ready:false,error:'monitor_storage_not_configured'},503);
+      try {
+        const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
+        const latest=await state.readLatest();
+        return json({ready:true,version:'0.6.0',state:latest?'available':'pending',latest});
+      } catch(e) {
+        return json({ready:false,error:'monitor_storage_unavailable'},503);
+      }
+    }
     if(url.pathname!=='/api/check')return json({error:'not_found'},404);
     if(request.method!=='POST')return json({error:'method_not_allowed'},405);
     if(!env.TF_PRICE_WORKER_KEY) return json({error:'worker_key_not_configured'},503);

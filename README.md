@@ -1,3 +1,9 @@
+# v0.6 Persisted automated live-price reports
+
+The Cloudflare Cron every six hours now saves the last read-only result to a tiny SQLite-backed Durable Object (available within Workers Free plan usage limits). GET /monitor/latest is a public **read-only report of three fixed product SKUs**; it does NOT trigger fetching, reveal any API key, or expose HTML. It reports pending before the first Cron run and PASS or PRICE_UNVERIFIED afterward. The scheduled test still uses the saved TF_PRICE_WORKER_KEY internally and keeps the original TrustFolio backend untouched. The GitHub health workflow can retrieve reports without manual credential entry.
+
+---
+
 # v0.5 Automatic Price QA (no manual secret input)
 
 Cloudflare Cron executes every six hours at 00:05, 06:05, 12:05 and 18:05 UTC (05:35, 11:35, 17:35, 23:35 India). It uses TF_PRICE_WORKER_KEY from the already-configured Cloudflare Worker environment internally, to call the existing POST /api/check function. Three real MongoDB catalog SKUs are used (OPPO, Tecno, Amazon MTC TV); fresh requests have useCache=false. No Browser Run, no Scrape.do, no MongoDB update or deletion.
