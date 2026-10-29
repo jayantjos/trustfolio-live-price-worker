@@ -3,6 +3,8 @@ import { extractPrice } from './price.js';
 const cache = new Map();
 const TTL = 45_000;
 const LIMIT = 5;
+// Browser Run is EXPLICIT opt-in, one product per request; no automatic fallbacks.
+const BROWSER_MAX_BYTES = 2_500_000;
 const CORS_ORIGIN = '*';
 const json = (value, status=200) => new Response(JSON.stringify(value), {
   status, headers: {'content-type':'application/json; charset=utf-8', 'cache-control':'no-store', 'access-control-allow-origin':CORS_ORIGIN}
@@ -30,7 +32,38 @@ function identify(input) {
   }
   return null;
 }
-async function retrieve(item) {
+async function browserRenderedPrice(item, env) {
+  if (!env?.BROWSER || typeof env.BROWSER.quickAction !== 'function') {
+    return {parsed:null, diagnostic:'browser_binding_missing'};
+  }
+  let response;
+  try {
+    response=await env.BROWSER.quickAction('content', {
+      url:item.url,
+      gotoOptions:{waitUntil:'networkidle2'},
+      // This is a browser request for the exact, prevalidated marketplace PDP.
+      // Do not send cookies, other credentials, or arbitrary user-supplied hosts.
+    });
+    if(!response || !response.ok) return {parsed:null, diagnostic:'browser_http_'+(response?.status??'unknown')};
+    const data=await response.text();
+    if(!data || data.length>BROWSER_MAX_BYTES) return {parsed:null, diagnostic:'browser_content_empty_or_too_large'};
+    let rendered=data;
+    // Some Browser Run binding versions use a JSON envelope, others return HTML.
+    if(/^\s*\{/.test(data)) {
+      try {
+        const body=JSON.parse(data);
+        rendered=[body?.result,body?.html,body?.content,body?.data].find(v=>typeof v==='string')||'';
+      } catch(_) {rendered='';}
+    }
+    if (!rendered || rendered.length>BROWSER_MAX_BYTES) return {parsed:null, diagnostic:'browser_content_not_html'};
+    const parsed=extractPrice(item.platform,rendered,{id:item.id,title:item.variantTitle||null});
+    return {parsed,diagnostic:parsed.status==='ok'?'verified_from_rendered_html':
+      parsed.error || 'rendered_page_no_price'};
+  } catch(e) {
+    return {parsed:null, diagnostic:'browser_request_failed:'+String(e?.name||'error').slice(0,40)};
+  }
+}
+async function retrieve(item, env, browserProbe=false) {
   const start=Date.now();
   let resp;
   try {
@@ -60,13 +93,24 @@ async function retrieve(item) {
   if(html.length>2_500_000)return {...errorShape(item.platform,'html_too_large',resp.status),latencyMs:Date.now()-start};
   const match=/<title[^>]*>([^<]*)<\/title>/i.exec(html);
   const title=match?.[1]||null;
-  const parsed=extractPrice(item.platform,html,{id:item.id,title:item.variantTitle||null});
+  let parsed=extractPrice(item.platform,html,{id:item.id,title:item.variantTitle||null});
+  let browserDiagnostic='not_requested';
+  // Browser Run is used only when manually requested for one exact product.
+  // No recurring browser usage or cost on normal live-price traffic.
+  if (browserProbe && parsed.status==='error') {
+    const check=await browserRenderedPrice(item,env);
+    browserDiagnostic=check.diagnostic;
+    if(check.parsed?.status==='ok' && check.parsed.priceNum>0) parsed=check.parsed;
+    // Explicit unavailable evidence is only accepted from the exact verified
+    // product page, not arbitrary related-product or category text.
+  }
   return {
     platform:item.platform==='flipkart'?'Flipkart':'Amazon',
     url:item.url, title,
     price:parsed.price, priceNum:parsed.priceNum,
     inStock:parsed.inStock, status:parsed.status,
     error:parsed.error??null, httpStatus:resp.status,
+    browserDiagnostic:browserProbe?browserDiagnostic:undefined,
     extractionSource:parsed.source??null,
     bytesRead:Math.round(new TextEncoder().encode(html).length/1024)+' KB',
     latencyMs:Date.now()-start
@@ -75,7 +119,7 @@ async function retrieve(item) {
 function empty(platform, status) {
   return {platform, url:null, title:null, price:null, priceNum:null, inStock:null, status};
 }
-async function one(input, useCache, ctx) {
+async function one(input, useCache, ctx, env, browserProbe=false) {
   const start=Date.now();
   const item=identify(input);
   if(!item) {
@@ -89,7 +133,7 @@ async function one(input, useCache, ctx) {
   if (useCache && existing && existing.expiry>Date.now()) {
     data=existing.data;cached=true;
   } else {
-    data=await retrieve(item);
+    data=await retrieve(item,env,browserProbe);
     if(data.status==='ok' && data.priceNum>0) {
       cache.set(k,{data,expiry:Date.now()+TTL});
       if(cache.size>300)cache.delete(cache.keys().next().value);
@@ -105,7 +149,7 @@ export default {
   async fetch(request, env, ctx) {
     const url=new URL(request.url);
     if (request.method==='GET' && (url.pathname==='/' || url.pathname==='/health'))
-      return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.1.0',
+      return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.2.0',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
         note:'Actual-price checks require configured secret and verifiable source content.'});
     if(url.pathname!=='/api/check')return json({error:'not_found'},404);
@@ -115,8 +159,13 @@ export default {
     let body;try {body=await request.json()} catch(_) {return json({error:'invalid_json'},400)}
     if (!Array.isArray(body?.items)||body.items.length<1||body.items.length>LIMIT || body.items.some(x=>typeof x!=='string'))
       return json({error:'items_must_be_1_to_5_product_urls'},400);
+    // Strictly limit expensive browser operation to an explicitly requested
+    // single-SKU diagnostic. The ordinary price service is unchanged.
+    const browserProbe=body.browserProbe===true;
+    if (browserProbe && (body.items.length!==1 || body.useCache!==false))
+      return json({error:'browser_probe_requires_one_item_and_useCache_false'},400);
     const results=[];
-    for(const input of body.items) results.push(await one(input,body.useCache!==false,ctx));
+    for(const input of body.items) results.push(await one(input,body.useCache!==false,ctx,env,browserProbe));
     return json({success:true,results});
   }
 };
