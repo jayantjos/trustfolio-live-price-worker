@@ -1,8 +1,8 @@
 import { extractPrice } from './price.js';
-import { DurableObject } from 'cloudflare:workers';
 
 // Only a tiny, non-sensitive latest-QA summary is persisted; no secrets/HTML.
-export class PriceMonitorState extends DurableObject {
+export class PriceMonitorState {
+  constructor(ctx,env) {this.ctx=ctx;this.env=env;}
   async readLatest() { return (await this.ctx.storage.get('latest')) || null; }
   async claimOnDemand(now) {
     // Per-Worker singleton; at most one public sample fetch every 15 min.
