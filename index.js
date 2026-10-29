@@ -234,7 +234,7 @@ const worker = {
     const results=[];
     for(const input of body.items) results.push(await one(input,body.useCache!==false,ctx,env,browserProbe));
     return json({success:true,results});
-  }
+  },
   async scheduled(controller,env,ctx) {
     await runScheduledPriceQA(worker,env,ctx);
   }
