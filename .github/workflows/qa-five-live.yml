@@ -1,0 +1,26 @@
+name: Read-only five Amazon Cloudflare live QA
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-five-live.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cloudflare-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check Worker health and five known Mongo ASINs without secrets
+        shell: bash
+        run: |
+          set -u
+          base="https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev"
+          echo '=== WORKER HEALTH ==='
+          curl -sS -L --max-time 15 -w '\nHTTP_STATUS:%{http_code} TOTAL_SEC:%{time_total}\n' "$base/health" || true
+          ids=(B0H75M7JKH B0DVH1HDVQ B074J9SPYX B08RC27RJM B0F24RTBDQ)
+          for i in 0 1 2 3 4; do
+            echo "=== AMAZON_INDEX:$i ASIN:${ids[$i]} ==="
+            curl -sS -L --max-time 20 -w '\nHTTP_STATUS:%{http_code} TOTAL_SEC:%{time_total}\n' "$base/qa/check-100?platform=amazon&index=$i" || true
+            echo
+          done
