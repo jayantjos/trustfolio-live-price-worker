@@ -150,17 +150,46 @@ export function extractAmazon(html, expected) {
   if (/^amazon\.in\s*$/i.test(title) || !expected?.id ||
     !html.toUpperCase().includes(String(expected.id).toUpperCase()))
     return failure('amazon_product_identity_unverified');
-  const ld=productJsonld(html,expected);
-  if (ld) return ld;
-  for (const id of ['corePriceDisplay_desktop_feature_div','corePrice_feature_div','priceToPay','priceblock_dealprice','priceblock_ourprice']) {
-    const re=new RegExp('id=["\\\']'+id+'["\\\']','i');
+  // Price-to-pay is the checkout selling price. MRP, struck-through prices,
+  // deal banners and recommendation prices must not override it.
+  // Use a short DOM scope: the old 3800-byte window could swallow MRP.
+  const primaryIds=['priceToPay','apex_desktop','corePriceDisplay_desktop_feature_div',
+    'corePrice_feature_div','priceblock_dealprice','priceblock_ourprice'];
+  const readCandidates=(scope) => {
+    const a=[];
+    const re=/<span\\b([^>]*)>\\s*(?:₹|Rs\\.?)\\s*([\\d,]+(?:\\.\\d{1,2})?)\\s*<\\/span>/gi;
+    let m;
+    while((m=re.exec(scope))) {
+      if(!/\\ba-offscreen\\b/i.test(m[1])) continue;
+      const prefix=scope.slice(Math.max(0,m.index-260),m.index);
+      if(/a-text-price|a-price-strike|listPrice|basisPrice|\\bMRP\\b|maximum retail price/i.test(m[1]+prefix)) continue;
+      const n=parseMoney(m[2]);
+      if(n!==null) a.push(n);
+    }
+    return [...new Set(a)];
+  };
+  const priceToPay=/<(?:span|div)\\b[^>]*id=["']priceToPay["'][^>]*>/i.exec(html);
+  if(priceToPay) {
+    const scope=html.slice(priceToPay.index,priceToPay.index+950);
+    const amounts=readCandidates(scope);
+    if(amounts.length===1) return ok(amounts[0],'amazon_price_to_pay');
+    if(amounts.length>1) return failure('amazon_conflicting_primary_prices');
+  }
+  // Product-level buybox only; if it contains multiple distinct prices,
+  // never silently pick the first (often the crossed-out MRP).
+  for (const id of primaryIds.filter(x=>x!=='priceToPay')) {
+    const re=new RegExp('id=["\\\\\\']'+id+'["\\\\\\']','i');
     const match=re.exec(html);
     if (!match) continue;
-    const scope=html.slice(match.index,Math.min(html.length,match.index+3800));
-    const priceTag=/<span[^>]*class=["'][^"']*\ba-offscreen\b[^"']*["'][^>]*>\s*(?:₹|Rs\.?)\s*([\d,]+(?:\.\d{1,2})?)\s*<\/span>/i.exec(scope);
-    const price=parseMoney(priceTag?.[1]);
-    if(price!=null) return ok(price,'amazon_primary_buybox');
+    const scope=html.slice(match.index,Math.min(html.length,match.index+1700));
+    const amounts=readCandidates(scope);
+    if(amounts.length>1) return failure('amazon_conflicting_primary_prices');
+    if(amounts.length===1) return ok(amounts[0],'amazon_primary_buybox');
   }
+  // JSON-LD is not authoritative when a page explicitly exposes a price
+  // conflict. A valid product-scoped offer is useful only as a last resort.
+  const ld=productJsonld(html,expected);
+  if(ld) return ld;
   return failure('amazon_buybox_price_not_exposed');
 }
 export function extractPrice(platform, html, expected) {
