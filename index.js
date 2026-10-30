@@ -53,6 +53,12 @@ const errorShape = (platform, error, httpStatus=null) => ({
 });
 function identify(input) {
   if (typeof input!=='string' || input.length>1500) return null;
+  // Existing TrustFolio backend sends only the Amazon ASIN in items:[...].
+  // Preserve that legacy request contract for a URL-only future cutover.
+  const bareAsin=input.trim().toUpperCase();
+  if (/^B0[A-Z0-9]{8}$/.test(bareAsin)) {
+    return {platform:'amazon',id:bareAsin,url:'https://www.amazon.in/dp/'+bareAsin};
+  }
   let u; try {u=new URL(input)} catch (_) {return null}
   if(u.protocol!=='https:' || u.username || u.password || u.port) return null;
   const host=u.hostname.toLowerCase();
@@ -178,7 +184,7 @@ async function one(input, useCache, ctx, env, browserProbe=false) {
   const start=Date.now();
   const item=identify(input);
   if(!item) {
-    return {pid:null,input,amazon:empty('Amazon','skipped'),flipkart:empty('Flipkart','skipped'),
+    return {asin:null,pid:null,input,amazon:empty('Amazon','skipped'),flipkart:empty('Flipkart','skipped'),
       croma:empty('Croma','not_supported'),bestDeal:{winner:null,savings:0,status:'no_price'},
       cached:false,itemLatencyMs:Date.now()-start,error:'unsupported_product_url'};
   }
@@ -196,7 +202,7 @@ async function one(input, useCache, ctx, env, browserProbe=false) {
   }
   const fk=item.platform==='flipkart'?data:empty('Flipkart','skipped');
   const am=item.platform==='amazon'?data:empty('Amazon','skipped');
-  return {pid:item.id,input,amazon:am,flipkart:fk,croma:empty('Croma','not_supported'),
+  return {asin:item.platform==='amazon'?item.id:null,pid:item.id,input,amazon:am,flipkart:fk,croma:empty('Croma','not_supported'),
     bestDeal:data.status==='ok'?{winner:item.platform,savings:0,status:'ok'}:{winner:null,savings:0,status:'no_price'},
     cached,itemLatencyMs:Date.now()-start};
 }
@@ -294,7 +300,7 @@ async function runScheduledPriceQA(worker,env,ctx,options={}) {
       error:verified?null:(value.error||record.error||'price_not_verified')};
   });
   const successes=checks.filter(x=>x.verified).length;
-  const report={kind:'trustfolio_price_monitor',version:'0.8.0',
+  const report={kind:'trustfolio_price_monitor',version:'0.9.0',
     checkedAt:new Date().toISOString(),cron:MONITOR_CRON,trigger:options.trigger==='manual'?'manual':'cron',
     total:checks.length,verified:successes,
     result:successes===checks.length?'PASS':'PRICE_UNVERIFIED',checks};
@@ -319,7 +325,7 @@ const worker = {
   async fetch(request, env, ctx) {
     const url=new URL(request.url);
     if (request.method==='GET' && (url.pathname==='/' || url.pathname==='/health'))
-      return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.8.0',
+      return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.9.0',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
         monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs',
           statusUrl:'/monitor/latest',testUrl:'/qa/sample',cromaTestUrl:'/qa/croma',storageConfigured:Boolean(env.MONITOR_STATE)},
@@ -366,7 +372,7 @@ const worker = {
       try {
         const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
         const latest=await state.readLatest();
-        return json({ready:true,version:'0.8.0',state:latest?'available':'pending',latest});
+        return json({ready:true,version:'0.9.0',state:latest?'available':'pending',latest});
       } catch(e) {
         return json({ready:false,error:'monitor_storage_unavailable'},503);
       }
