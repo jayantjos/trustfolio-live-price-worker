@@ -361,7 +361,7 @@ async function runScheduledPriceQA(worker,env,ctx,options={}) {
       error:verified?null:(value.error||record.error||'price_not_verified')};
   });
   const successes=checks.filter(x=>x.verified).length;
-  const report={kind:'trustfolio_price_monitor',version:'1.1.0',
+  const report={kind:'trustfolio_price_monitor',version:'1.1.1',
     checkedAt:new Date().toISOString(),cron:MONITOR_CRON,trigger:options.trigger==='manual'?'manual':'cron',
     total:checks.length,verified:successes,
     result:successes===checks.length?'PASS':'PRICE_UNVERIFIED',checks};
@@ -386,7 +386,7 @@ const worker = {
   async fetch(request, env, ctx) {
     const url=new URL(request.url);
     if (request.method==='GET' && (url.pathname==='/' || url.pathname==='/health'))
-      return json({ok:true,worker:'trustfolio-live-price-worker',version:'1.1.0',
+      return json({ok:true,worker:'trustfolio-live-price-worker',version:'1.1.1',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
         monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs',
           statusUrl:'/monitor/latest',testUrl:'/qa/sample',cromaTestUrl:'/qa/croma',budgetTestUrl:'/qa/budget20k',batch100Url:'/qa/check-100',storageConfigured:Boolean(env.MONITOR_STATE)},
@@ -395,6 +395,27 @@ const worker = {
     // No arbitrary URLs, browser calls, credentials in responses, or writes to MongoDB.
     // Read-only price QA: fixed 100 real Mongo products per store, no arbitrary URL input.
     // Each exact SKU can be fetched at most once every 3 hours across all users.
+    // Price format diagnostic: five preidentified Amazon anomalies only.
+    // Returns small price tokens, not raw HTML and not secret data.
+    if(request.method==='GET' && url.pathname==='/qa/amazon-format') {
+      const sku=String(url.searchParams.get('sku')||'');
+      if(!['B0H75M7JKH','B0CGDBR9DC','B0FMS18RZ2','B0H2F9KKP9','B0H44SBX2T'].includes(sku))
+        return json({error:'not_in_qa_allowlist'},400);
+      try {
+        const res=await fetch('https://www.amazon.in/dp/'+sku,{
+          method:'GET',headers:{accept:'text/html','accept-language':'en-IN,en;q=0.9',
+          'user-agent':'Mozilla/5.0 (compatible; TrustFolioPrice/1.0; +https://trustfolio.in)'},
+          redirect:'manual',signal:AbortSignal.timeout(6500)
+        });
+        if(res.status!==200)return json({sku,httpStatus:res.status,tokens:[]});
+        const html=(await res.text()).slice(0,2400000);
+        const marker=/id=["'](?:corePriceDisplay_desktop_feature_div|corePrice_feature_div|priceToPay|priceblock_ourprice)["']/i.exec(html);
+        const scope=marker?html.slice(marker.index,marker.index+3500):'';
+        const tokens=[...scope.matchAll(/a-offscreen[^>]*>\s*([^<]{1,85})\s*<\/span>/gi)]
+          .slice(0,7).map(m=>m[1].trim().slice(0,70));
+        return json({sku,httpStatus:200,title:(/<title[^>]*>([^<]{0,100})<\/title>/i.exec(html)||[])[1]||null,tokens});
+      }catch(e){return json({sku,error:String(e?.name||'error'),tokens:[]})}
+    }
     if(request.method==='GET' && url.pathname==='/qa/check-100') {
       const platform=url.searchParams.get('platform');
       const index=Number(url.searchParams.get('index'));
@@ -487,7 +508,7 @@ const worker = {
       try {
         const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
         const latest=await state.readLatest();
-        return json({ready:true,version:'1.1.0',state:latest?'available':'pending',latest});
+        return json({ready:true,version:'1.1.1',state:latest?'available':'pending',latest});
       } catch(e) {
         return json({ready:false,error:'monitor_storage_unavailable'},503);
       }
