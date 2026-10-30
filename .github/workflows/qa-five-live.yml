@@ -20,6 +20,8 @@ jobs:
           curl -sS -L --max-time 15 -w '\nHTTP_STATUS:%{http_code} TOTAL_SEC:%{time_total}\n' "$base/health" || true
           echo '=== AMAZON PRICE FORMAT DIAGNOSTIC ==='
           curl -sS -L --max-time 15 -w '\nHTTP_STATUS:%{http_code} TOTAL_SEC:%{time_total}\n' "$base/qa/amazon-format?sku=B0H75M7JKH" || true
+          echo '=== AMAZON BROWSER ONE ==='
+          curl -sS -L --max-time 45 -w '\nHTTP_STATUS:%{http_code} TOTAL_SEC:%{time_total}\n' "$base/qa/amazon-browser-one" || true
           ids=(B0H75M7JKH B0DVH1HDVQ B074J9SPYX B08RC27RJM B0F24RTBDQ)
           for i in 0 1 2 3 4; do
             echo "=== AMAZON_INDEX:$i ASIN:${ids[$i]} ==="
