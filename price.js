@@ -5,7 +5,12 @@
  */
 const parseMoney = (value) => {
   if (typeof value === 'object' && value !== null) return parseMoney(value.amount ?? value.value ?? value.price);
-  const s = String(value ?? '').trim().replace(/^[₹$]\s*/, '').replace(/,/g, '');
+  const raw = String(value ?? '').trim().replace(/^[₹$]\s*/, '').replace(/^Rs\.?\s*/i, '');
+  // Never turn malformed Amazon "47,99000" into INR 4,799,000.
+  if (raw.includes(',') &&
+      !/^(?:\d{1,3}(?:,\d{3})+|\d{1,3}(?:,\d{2})*,\d{3})(?:\.\d{1,2})?$/.test(raw))
+    return null;
+  const s=raw.replace(/,/g,'');
   if (!/^\d{3,8}(?:\.\d{1,2})?$/.test(s)) return null;
   const n = Number(s);
   return Number.isFinite(n) && n >= 100 && n <= 1e7 ? n : null;
@@ -139,6 +144,12 @@ export function extractFlipkart(html, expected) {
 export function extractAmazon(html, expected) {
   if (!html || html.length<500) return failure('empty_product_page');
   if (!identityValid(html,expected)) return failure('product_identity_unverified');
+  // Amazon soft-blocks may return HTTP 200 with generic Amazon.in pages.
+  // Price evidence from another product must never be accepted for this ASIN.
+  const title=productTitle(html).trim();
+  if (/^amazon\.in\s*$/i.test(title) || !expected?.id ||
+    !html.toUpperCase().includes(String(expected.id).toUpperCase()))
+    return failure('amazon_product_identity_unverified');
   const ld=productJsonld(html,expected);
   if (ld) return ld;
   for (const id of ['corePriceDisplay_desktop_feature_div','corePrice_feature_div','priceToPay','priceblock_dealprice','priceblock_ourprice']) {
