@@ -79,7 +79,7 @@ function isVisibleFlipkartE002(html) {
   const plain=body.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,' ')
     .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi,' ')
     .replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
-  return plain.length<1500 && /\bE002\b/i.test(plain) && /something went wrong/i.test(plain);
+  return (plain.length<1500 && /\bE002\b/i.test(plain) && /something went wrong/i.test(plain)) || /<h2\b[^>]*>\s*something went wrong!?\s*<\/h2>\s*E002\b/i.test(body);
 }
 export function extractFlipkart(html, expected) {
   if (!html || html.length<500) return failure('empty_product_page');
@@ -131,7 +131,7 @@ export function extractFlipkart(html, expected) {
         Math.min(html.length,headline.index+4200));
       if(nearby.toUpperCase().includes(String(expected.id).toUpperCase())) {
         const matches=[...nearby.matchAll(/\bBuy\s+at\s*(?:₹|Rs\.?)\s*([\d,]{3,}(?:\.\d{1,2})?)/gi)]
-          .map(x=>parseMoney(x[1])).filter(x=>x!==null);
+          .map(x=>parseMoney(x[1].replace(/,+$/,''))).filter(x=>x!==null);
         const unique=[...new Set(matches)];
         if(unique.length===1 && !/NOTIFY_ME|notify\s+me/i.test(nearby)) {
           return ok(unique[0],'flipkart_primary_buy_at');
