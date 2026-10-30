@@ -14,7 +14,7 @@ export class PriceMonitorState extends DurableObject {
     await previousGate;
     try {
       const isBatch=/^qa100(?:v2|v3)?_(amazon|flipkart)_\d{1,2}$/.test(scope);
-      const storageKey=isBatch?scope+'_last_claim':scope==='budget'?'budget_last_claim':scope==='croma'?'croma_last_claim':'manual_last_claim';
+      const storageKey=isBatch?scope+'_last_claim':scope==='budget'?'budget_last_claim':scope==='croma'?'croma_last_claim':/^amazon_browser_one_B0[A-Z0-9]{8}$/.test(scope)?scope+'_last_claim':'manual_last_claim';
       const previous=Number(await this.ctx.storage.get(storageKey)||0);
       const retryAfterMs=Math.max(0,previous+(isBatch?3*60*60*1000:15*60*1000)-now);
       if(retryAfterMs>0)return {allowed:false,retryAfterSeconds:Math.ceil(retryAfterMs/1000)};
