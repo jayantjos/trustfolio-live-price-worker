@@ -155,14 +155,14 @@ export function extractAmazon(html, expected) {
   // Use a short DOM scope: the old 3800-byte window could swallow MRP.
   const primaryIds=['priceToPay','apex_desktop','corePriceDisplay_desktop_feature_div',
     'corePrice_feature_div','priceblock_dealprice','priceblock_ourprice'];
-  const readCandidates=(scope) => {
+  const readCandidates=(scope, trustedSellingScope=false) => {
     const a=[];
     const re=/<span\b([^>]*)>\s*(?:₹|Rs\.?)\s*([\d,]+(?:\.\d{1,2})?)\s*<\/span>/gi;
     let m;
     while((m=re.exec(scope))) {
       if(!/\ba-offscreen\b/i.test(m[1])) continue;
       const prefix=scope.slice(Math.max(0,m.index-260),m.index);
-      if(/a-text-price|a-price-strike|listPrice|basisPrice|\bMRP\b|maximum retail price/i.test(m[1]+prefix)) continue;
+      if(!trustedSellingScope && /a-text-price|a-price-strike|listPrice|basisPrice|\bMRP\b|maximum retail price/i.test(m[1]+prefix)) continue;
       const n=parseMoney(m[2]);
       if(n!==null) a.push(n);
     }
@@ -171,7 +171,7 @@ export function extractAmazon(html, expected) {
   const priceToPay=/<(?:span|div)\b[^>]*id=["']priceToPay["'][^>]*>/i.exec(html);
   if(priceToPay) {
     const scope=html.slice(priceToPay.index,priceToPay.index+950);
-    const amounts=readCandidates(scope);
+    const amounts=readCandidates(scope,true);
     if(amounts.length===1) return ok(amounts[0],'amazon_price_to_pay');
     if(amounts.length>1) return failure('amazon_conflicting_primary_prices');
   }
