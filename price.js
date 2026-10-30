@@ -157,18 +157,18 @@ export function extractAmazon(html, expected) {
     'corePrice_feature_div','priceblock_dealprice','priceblock_ourprice'];
   const readCandidates=(scope) => {
     const a=[];
-    const re=/<span\\b([^>]*)>\\s*(?:₹|Rs\\.?)\\s*([\\d,]+(?:\\.\\d{1,2})?)\\s*<\\/span>/gi;
+    const re=/<span\b([^>]*)>\s*(?:₹|Rs\.?)\s*([\d,]+(?:\.\d{1,2})?)\s*<\/span>/gi;
     let m;
     while((m=re.exec(scope))) {
-      if(!/\\ba-offscreen\\b/i.test(m[1])) continue;
+      if(!/\ba-offscreen\b/i.test(m[1])) continue;
       const prefix=scope.slice(Math.max(0,m.index-260),m.index);
-      if(/a-text-price|a-price-strike|listPrice|basisPrice|\\bMRP\\b|maximum retail price/i.test(m[1]+prefix)) continue;
+      if(/a-text-price|a-price-strike|listPrice|basisPrice|\bMRP\b|maximum retail price/i.test(m[1]+prefix)) continue;
       const n=parseMoney(m[2]);
       if(n!==null) a.push(n);
     }
     return [...new Set(a)];
   };
-  const priceToPay=/<(?:span|div)\\b[^>]*id=["']priceToPay["'][^>]*>/i.exec(html);
+  const priceToPay=/<(?:span|div)\b[^>]*id=["']priceToPay["'][^>]*>/i.exec(html);
   if(priceToPay) {
     const scope=html.slice(priceToPay.index,priceToPay.index+950);
     const amounts=readCandidates(scope);
