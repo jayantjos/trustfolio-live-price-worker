@@ -79,7 +79,7 @@ function isVisibleFlipkartE002(html) {
   const plain=body.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,' ')
     .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi,' ')
     .replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
-  return (plain.length<1500 && /\bE002\b/i.test(plain) && /something went wrong/i.test(plain)) || /<h2\b[^>]*>\s*something went wrong!?\s*<\/h2>\s*E002\b/i.test(body);
+  return (plain.length<1500 && /\bE002\b/i.test(plain) && /something went wrong/i.test(plain)) || /<h2\b[^>]*>\s*something went wrong!?\s*<\/h2>[\s\S]{0,250}?\bE002\b/i.test(body);
 }
 export function extractFlipkart(html, expected) {
   if (!html || html.length<500) return failure('empty_product_page');
