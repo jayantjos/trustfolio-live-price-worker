@@ -1,4 +1,5 @@
 import { extractPrice } from './price.js';
+import { QA_100_PRODUCTS } from './qa/real-mongo-100-each.js';
 import { DurableObject } from 'cloudflare:workers';
 
 // Only a tiny, non-sensitive latest-QA summary is persisted; no secrets/HTML.
@@ -12,15 +13,24 @@ export class PriceMonitorState extends DurableObject {
     this._claimGate=new Promise(resolve=>{unlock=resolve;});
     await previousGate;
     try {
-      const storageKey=scope==='budget'?'budget_last_claim':scope==='croma'?'croma_last_claim':'manual_last_claim';
+      const isBatch=/^qa100_(amazon|flipkart)_\d{1,2}$/.test(scope);
+      const storageKey=isBatch?scope+'_last_claim':scope==='budget'?'budget_last_claim':scope==='croma'?'croma_last_claim':'manual_last_claim';
       const previous=Number(await this.ctx.storage.get(storageKey)||0);
-      const retryAfterMs=Math.max(0,previous+15*60*1000-now);
+      const retryAfterMs=Math.max(0,previous+(isBatch?3*60*60*1000:15*60*1000)-now);
       if(retryAfterMs>0)return {allowed:false,retryAfterSeconds:Math.ceil(retryAfterMs/1000)};
       await this.ctx.storage.put(storageKey,now);
       return {allowed:true,retryAfterSeconds:0};
     } finally {
       unlock();
     }
+  }
+  async saveFixed100(key,report) {
+    if(!/^qa100_(amazon|flipkart)_\d{1,2}$/.test(key)||!report||report.kind!=='trustfolio_100_products_qa')throw new Error('INVALID_QA100_REPORT');
+    await this.ctx.storage.put(key+'_result',report);
+  }
+  async readFixed100(key) {
+    if(!/^qa100_(amazon|flipkart)_\d{1,2}$/.test(key))return null;
+    return (await this.ctx.storage.get(key+'_result'))||null;
   }
   async saveBudgetProbe(report) {
     if(!report || report.kind!=='budget20k_cloudflare_qa'||!Array.isArray(report.checks)||report.checks.length!==4)throw new Error('INVALID_BUDGET_QA');
@@ -351,7 +361,7 @@ async function runScheduledPriceQA(worker,env,ctx,options={}) {
       error:verified?null:(value.error||record.error||'price_not_verified')};
   });
   const successes=checks.filter(x=>x.verified).length;
-  const report={kind:'trustfolio_price_monitor',version:'1.0.0',
+  const report={kind:'trustfolio_price_monitor',version:'1.1.0',
     checkedAt:new Date().toISOString(),cron:MONITOR_CRON,trigger:options.trigger==='manual'?'manual':'cron',
     total:checks.length,verified:successes,
     result:successes===checks.length?'PASS':'PRICE_UNVERIFIED',checks};
@@ -376,13 +386,53 @@ const worker = {
   async fetch(request, env, ctx) {
     const url=new URL(request.url);
     if (request.method==='GET' && (url.pathname==='/' || url.pathname==='/health'))
-      return json({ok:true,worker:'trustfolio-live-price-worker',version:'1.0.0',
+      return json({ok:true,worker:'trustfolio-live-price-worker',version:'1.1.0',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
         monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs',
-          statusUrl:'/monitor/latest',testUrl:'/qa/sample',cromaTestUrl:'/qa/croma',budgetTestUrl:'/qa/budget20k',storageConfigured:Boolean(env.MONITOR_STATE)},
+          statusUrl:'/monitor/latest',testUrl:'/qa/sample',cromaTestUrl:'/qa/croma',budgetTestUrl:'/qa/budget20k',batch100Url:'/qa/check-100',storageConfigured:Boolean(env.MONITOR_STATE)},
         note:'Actual-price checks require configured secret and verifiable source content.'});
     // Controlled test-only public endpoint: exactly three hardcoded Mongo SKUs.
     // No arbitrary URLs, browser calls, credentials in responses, or writes to MongoDB.
+    // Read-only price QA: fixed 100 real Mongo products per store, no arbitrary URL input.
+    // Each exact SKU can be fetched at most once every 3 hours across all users.
+    if(request.method==='GET' && url.pathname==='/qa/check-100') {
+      const platform=url.searchParams.get('platform');
+      const index=Number(url.searchParams.get('index'));
+      if(!['amazon','flipkart'].includes(platform) || !Number.isInteger(index)||index<0||index>=100)
+        return json({error:'only_100_fixed_products_supported'},400);
+      if(!env?.TF_PRICE_WORKER_KEY||!env?.MONITOR_STATE)
+        return json({error:'qa100_not_configured'},503);
+      const sample=QA_100_PRODUCTS[platform][index];
+      if(!sample) return json({error:'sample_missing'},404);
+      const key='qa100_'+platform+'_'+index;
+      const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
+      let claim;
+      try{claim=await state.claimOnDemand(Date.now(),key)}
+      catch(_){return json({error:'qa100_storage_unavailable'},503)}
+      if(!claim.allowed){
+        const report=await state.readFixed100(key);
+        return json({fresh:false,rateLimited:true,retryAfterSeconds:claim.retryAfterSeconds,report});
+      }
+      let report;
+      try{
+        const data=await one(sample.input,false,ctx,env,false);
+        const store=data?.[platform]||{};
+        const actual=store.status==='ok'&&Number.isFinite(store.priceNum)&&store.priceNum>0
+          ?store.priceNum:null;
+        const identityValid=(platform==='amazon'?data.asin:data.pid)===sample.sku;
+        report={kind:'trustfolio_100_products_qa',platform,index,sku:sample.sku,
+          category:sample.category,title:sample.title,url:sample.url,storedPrice:sample.storedPrice,
+          checkedAt:new Date().toISOString(),status:store.status||'error',
+          priceINR:identityValid?actual:null,identityVerified:identityValid,
+          error:identityValid?(store.error||null):'product_identity_mismatch',
+          source:store.extractionSource||null,httpStatus:store.httpStatus??null,
+          elapsedMs:Number(data.itemLatencyMs)||null};
+        await state.saveFixed100(key,report);
+        return json({fresh:true,rateLimited:false,report});
+      } catch(e){
+        return json({error:'qa100_fetch_failed',errorType:String(e?.name||'error')},503);
+      }
+    }
     if(request.method==='GET' && url.pathname==='/qa/budget20k') {
       if(!env?.TF_PRICE_WORKER_KEY||!env?.MONITOR_STATE)return json({error:'budget_test_not_configured'},503);
       const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
@@ -437,7 +487,7 @@ const worker = {
       try {
         const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
         const latest=await state.readLatest();
-        return json({ready:true,version:'1.0.0',state:latest?'available':'pending',latest});
+        return json({ready:true,version:'1.1.0',state:latest?'available':'pending',latest});
       } catch(e) {
         return json({ready:false,error:'monitor_storage_unavailable'},503);
       }
