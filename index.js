@@ -12,14 +12,22 @@ export class PriceMonitorState extends DurableObject {
     this._claimGate=new Promise(resolve=>{unlock=resolve;});
     await previousGate;
     try {
-      const previous=Number(await this.ctx.storage.get(scope==='croma'?'croma_last_claim':'manual_last_claim')||0);
+      const storageKey=scope==='budget'?'budget_last_claim':scope==='croma'?'croma_last_claim':'manual_last_claim';
+      const previous=Number(await this.ctx.storage.get(storageKey)||0);
       const retryAfterMs=Math.max(0,previous+15*60*1000-now);
       if(retryAfterMs>0)return {allowed:false,retryAfterSeconds:Math.ceil(retryAfterMs/1000)};
-      await this.ctx.storage.put(scope==='croma'?'croma_last_claim':'manual_last_claim',now);
+      await this.ctx.storage.put(storageKey,now);
       return {allowed:true,retryAfterSeconds:0};
     } finally {
       unlock();
     }
+  }
+  async saveBudgetProbe(report) {
+    if(!report || report.kind!=='budget20k_cloudflare_qa'||!Array.isArray(report.checks)||report.checks.length!==4)throw new Error('INVALID_BUDGET_QA');
+    await this.ctx.storage.put('latest_budget20k_probe',report);
+  }
+  async readBudgetProbe() {
+    return (await this.ctx.storage.get('latest_budget20k_probe'))||null;
   }
   async saveCromaProbe(report) {
     if(!report || report.sku!=='300154')throw new Error('INVALID_CROMA_REPORT');
@@ -262,6 +270,49 @@ async function probeCromaFixedSku() {
   return result;
 }
 
+
+// Four exact first-wave Amazon/Flipkart candidates from the real MongoDB
+// TrustFolio smart-phones INR 20,000 ranker. No arbitrary user-supplied URLs.
+const BUDGET20K_CHECKS = Object.freeze([
+ {platform:'amazon',pid:'B0GPX4LV4F',name:'realme C83 5G 4+64GB',
+  input:'B0GPX4LV4F',productUrl:'https://www.amazon.in/dp/B0GPX4LV4F'},
+ {platform:'amazon',pid:'B0GQKZGBFD',name:'realme C83 5G 6+128GB',
+  input:'B0GQKZGBFD',productUrl:'https://www.amazon.in/dp/B0GQKZGBFD'},
+ {platform:'flipkart',pid:'MOBH7YZ9NSDFC3EK',name:'POCO X7 5G Yellow 256GB',
+  input:'https://www.flipkart.com/poco-x7-5g-yellow-256-gb/p/itm09a41b8f384f7?pid=MOBH7YZ9NSDFC3EK',
+  productUrl:'https://www.flipkart.com/poco-x7-5g-yellow-256-gb/p/itm09a41b8f384f7?pid=MOBH7YZ9NSDFC3EK'},
+ {platform:'flipkart',pid:'MOBH7YZ9DHHSMGHN',name:'POCO X7 5G Cosmic Silver 256GB',
+  input:'https://www.flipkart.com/poco-x7-5g-cosmic-silver-256-gb/p/itmdfee46549bede?pid=MOBH7YZ9DHHSMGHN',
+  productUrl:'https://www.flipkart.com/poco-x7-5g-cosmic-silver-256-gb/p/itmdfee46549bede?pid=MOBH7YZ9DHHSMGHN'},
+]);
+async function runBudget20kProbe(worker,env,ctx) {
+ const request=new Request('https://trustfolio-budget-qa.internal/api/check',{
+  method:'POST',headers:{'content-type':'application/json','x-api-key':env.TF_PRICE_WORKER_KEY},
+  body:JSON.stringify({items:BUDGET20K_CHECKS.map(v=>v.input),useCache:false,browserProbe:false})
+ });
+ const res=await worker.fetch(request,env,ctx);
+ if(!res.ok)throw new Error('BUDGET_QA_API_'+res.status);
+ const body=await res.json();
+ const checks=BUDGET20K_CHECKS.map((p,i)=>{
+   const row=body?.results?.[i]||{};
+   const store=row[p.platform]||{};
+   const hasIdentity=(p.platform==='amazon'?row.asin===p.pid:row.pid===p.pid);
+   const hasPrice=hasIdentity&&store.status==='ok'&&Number.isFinite(store.priceNum)&&store.priceNum>0;
+   const price=hasPrice?store.priceNum:null;
+   return {name:p.name,platform:p.platform,pid:p.pid,productUrl:p.productUrl,
+     status:store.status||'no_response',priceINR:price,
+     inBudget:hasPrice?price<=20000:null,
+     httpStatus:store.httpStatus??null,extractionSource:hasPrice?store.extractionSource||null:null,
+     error:store.error||null,identityVerified:hasIdentity};
+ });
+ return {kind:'budget20k_cloudflare_qa',checkedAt:new Date().toISOString(),
+    budgetINR:20000,category:'smart-phones',checked:checks.length,
+    verified:checks.filter(x=>x.priceINR!==null).length,
+    withinBudget:checks.filter(x=>x.inBudget===true).length,
+    overBudget:checks.filter(x=>x.inBudget===false).length,
+    unverified:checks.filter(x=>x.inBudget===null).length,checks};
+}
+
 const MONITORED_PRODUCTS = Object.freeze([
   {label:'Flipkart OPPO Reno 12 Pro 512 GB',pid:'MOBH2AHZH779MGYF',
     url:'https://www.flipkart.com/oppo-reno-12-pro-5g-space-brown-512-gb/p/itmed01efe011f83?pid=MOBH2AHZH779MGYF',platform:'flipkart'},
@@ -300,7 +351,7 @@ async function runScheduledPriceQA(worker,env,ctx,options={}) {
       error:verified?null:(value.error||record.error||'price_not_verified')};
   });
   const successes=checks.filter(x=>x.verified).length;
-  const report={kind:'trustfolio_price_monitor',version:'0.9.1',
+  const report={kind:'trustfolio_price_monitor',version:'1.0.0',
     checkedAt:new Date().toISOString(),cron:MONITOR_CRON,trigger:options.trigger==='manual'?'manual':'cron',
     total:checks.length,verified:successes,
     result:successes===checks.length?'PASS':'PRICE_UNVERIFIED',checks};
@@ -325,13 +376,27 @@ const worker = {
   async fetch(request, env, ctx) {
     const url=new URL(request.url);
     if (request.method==='GET' && (url.pathname==='/' || url.pathname==='/health'))
-      return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.9.1',
+      return json({ok:true,worker:'trustfolio-live-price-worker',version:'1.0.0',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
         monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs',
-          statusUrl:'/monitor/latest',testUrl:'/qa/sample',cromaTestUrl:'/qa/croma',storageConfigured:Boolean(env.MONITOR_STATE)},
+          statusUrl:'/monitor/latest',testUrl:'/qa/sample',cromaTestUrl:'/qa/croma',budgetTestUrl:'/qa/budget20k',storageConfigured:Boolean(env.MONITOR_STATE)},
         note:'Actual-price checks require configured secret and verifiable source content.'});
     // Controlled test-only public endpoint: exactly three hardcoded Mongo SKUs.
     // No arbitrary URLs, browser calls, credentials in responses, or writes to MongoDB.
+    if(request.method==='GET' && url.pathname==='/qa/budget20k') {
+      if(!env?.TF_PRICE_WORKER_KEY||!env?.MONITOR_STATE)return json({error:'budget_test_not_configured'},503);
+      const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
+      let claim;
+      try{claim=await state.claimOnDemand(Date.now(),'budget')}
+      catch(_){return json({error:'budget_rate_limit_unavailable'},503)}
+      if(!claim.allowed)return json({fresh:false,rateLimited:true,
+        retryAfterSeconds:claim.retryAfterSeconds,report:await state.readBudgetProbe()});
+      try{
+        const report=await runBudget20kProbe(worker,env,ctx);
+        await state.saveBudgetProbe(report);
+        return json({fresh:true,rateLimited:false,report});
+      }catch(e){return json({error:'budget_test_failed',reason:String(e?.name||'error')},503)}
+    }
     if(request.method==='GET' && url.pathname==='/qa/croma') {
       if(!env?.MONITOR_STATE)return json({error:'croma_probe_storage_not_configured'},503);
       const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
@@ -372,7 +437,7 @@ const worker = {
       try {
         const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
         const latest=await state.readLatest();
-        return json({ready:true,version:'0.9.1',state:latest?'available':'pending',latest});
+        return json({ready:true,version:'1.0.0',state:latest?'available':'pending',latest});
       } catch(e) {
         return json({ready:false,error:'monitor_storage_unavailable'},503);
       }
