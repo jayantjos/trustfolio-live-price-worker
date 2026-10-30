@@ -13,7 +13,7 @@ export class PriceMonitorState extends DurableObject {
     this._claimGate=new Promise(resolve=>{unlock=resolve;});
     await previousGate;
     try {
-      const isBatch=/^qa100_(amazon|flipkart)_\d{1,2}$/.test(scope);
+      const isBatch=/^qa100(?:v2)?_(amazon|flipkart)_\d{1,2}$/.test(scope);
       const storageKey=isBatch?scope+'_last_claim':scope==='budget'?'budget_last_claim':scope==='croma'?'croma_last_claim':'manual_last_claim';
       const previous=Number(await this.ctx.storage.get(storageKey)||0);
       const retryAfterMs=Math.max(0,previous+(isBatch?3*60*60*1000:15*60*1000)-now);
@@ -25,11 +25,11 @@ export class PriceMonitorState extends DurableObject {
     }
   }
   async saveFixed100(key,report) {
-    if(!/^qa100_(amazon|flipkart)_\d{1,2}$/.test(key)||!report||report.kind!=='trustfolio_100_products_qa')throw new Error('INVALID_QA100_REPORT');
+    if(!/^qa100(?:v2)?_(amazon|flipkart)_\d{1,2}$/.test(key)||!report||report.kind!=='trustfolio_100_products_qa')throw new Error('INVALID_QA100_REPORT');
     await this.ctx.storage.put(key+'_result',report);
   }
   async readFixed100(key) {
-    if(!/^qa100_(amazon|flipkart)_\d{1,2}$/.test(key))return null;
+    if(!/^qa100(?:v2)?_(amazon|flipkart)_\d{1,2}$/.test(key))return null;
     return (await this.ctx.storage.get(key+'_result'))||null;
   }
   async saveBudgetProbe(report) {
@@ -361,7 +361,7 @@ async function runScheduledPriceQA(worker,env,ctx,options={}) {
       error:verified?null:(value.error||record.error||'price_not_verified')};
   });
   const successes=checks.filter(x=>x.verified).length;
-  const report={kind:'trustfolio_price_monitor',version:'1.2.0',
+  const report={kind:'trustfolio_price_monitor',version:'1.2.1',
     checkedAt:new Date().toISOString(),cron:MONITOR_CRON,trigger:options.trigger==='manual'?'manual':'cron',
     total:checks.length,verified:successes,
     result:successes===checks.length?'PASS':'PRICE_UNVERIFIED',checks};
@@ -386,7 +386,7 @@ const worker = {
   async fetch(request, env, ctx) {
     const url=new URL(request.url);
     if (request.method==='GET' && (url.pathname==='/' || url.pathname==='/health'))
-      return json({ok:true,worker:'trustfolio-live-price-worker',version:'1.2.0',
+      return json({ok:true,worker:'trustfolio-live-price-worker',version:'1.2.1',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
         monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs',
           statusUrl:'/monitor/latest',testUrl:'/qa/sample',cromaTestUrl:'/qa/croma',budgetTestUrl:'/qa/budget20k',batch100Url:'/qa/check-100',storageConfigured:Boolean(env.MONITOR_STATE)},
@@ -425,7 +425,7 @@ const worker = {
         return json({error:'qa100_not_configured'},503);
       const sample=QA_100_PRODUCTS[platform][index];
       if(!sample) return json({error:'sample_missing'},404);
-      const key='qa100_'+platform+'_'+index;
+      const key=(url.searchParams.get('rev')==='v2'?'qa100v2_':'qa100_')+platform+'_'+index;
       const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
       let claim;
       try{claim=await state.claimOnDemand(Date.now(),key)}
@@ -508,7 +508,7 @@ const worker = {
       try {
         const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
         const latest=await state.readLatest();
-        return json({ready:true,version:'1.2.0',state:latest?'available':'pending',latest});
+        return json({ready:true,version:'1.2.1',state:latest?'available':'pending',latest});
       } catch(e) {
         return json({ready:false,error:'monitor_storage_unavailable'},503);
       }
