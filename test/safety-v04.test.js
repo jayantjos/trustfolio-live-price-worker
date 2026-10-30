@@ -27,11 +27,11 @@ test('Conflicting DOM prices fail closed',()=>{
  assert.equal(extractFlipkart(x,{id:pid,title}).priceNum,null);
 });
 test('Amazon buy box price not MRP',()=>{
- const h='<html><head><title>iPhone 16 128GB Amazon.in</title></head><body><div id="corePriceDisplay_desktop_feature_div"><span class="a-offscreen">₹69,900</span></div><del>₹79,900</del>'+tail;
+ const h='<html><head><title>iPhone 16 128GB Amazon.in</title></head><body><div id="ASIN">B012345678</div><div id="corePriceDisplay_desktop_feature_div"><span class="a-offscreen">₹69,900</span></div><del>₹79,900</del>'+tail;
  assert.equal(extractAmazon(h,{id:'B012345678',title:'iPhone 16 128GB'}).priceNum,69900);
 });
 test('Health version 0.4 and auth',async()=>{
- const h=await worker.fetch(new Request('https://unit.example/health'),{TF_PRICE_WORKER_KEY:'unit'},{});assert.equal((await h.json()).version,'0.7.0');
+ const h=await worker.fetch(new Request('https://unit.example/health'),{TF_PRICE_WORKER_KEY:'unit'},{});assert.equal((await h.json()).version,'1.2.2');
  const x=await worker.fetch(req(),{TF_PRICE_WORKER_KEY:'incorrect'},{});assert.equal(x.status,401);
 });
 test('Browser E002 reveals only safe diagnostic; opt-in',async()=>{

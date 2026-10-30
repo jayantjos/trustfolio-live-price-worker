@@ -7,7 +7,7 @@ test('cron handler and health report v0.5 without exposing secret',async()=>{
  assert.equal(typeof worker.scheduled,'function');
  const x=await worker.fetch(new Request('https://x.test/health'),{TF_PRICE_WORKER_KEY:'DO_NOT_LOG'}, {});
  const y=await x.json();
- assert.equal(y.version,'0.7.0');
+ assert.equal(y.version,'1.2.2');
  assert.equal(y.monitoring.items,3);
  assert.equal(JSON.stringify(y).includes('DO_NOT_LOG'),false);
 });

@@ -15,7 +15,7 @@ test('legacy Amazon bare ASIN identifies exact /dp URL',()=>{
 test('legacy backend receives r.asin truthy and r.amazon selling price for bare ASIN',async()=>{
  globalThis.fetch=async url=>{
   assert.equal(url,'https://www.amazon.in/dp/'+asin);
-  return new Response('<html><title>MTC 43 Inch Full HD Smart LED TV Amazon.in</title><body><div id="corePriceDisplay_desktop_feature_div"><span class="a-offscreen">₹24,000</span></div>'+longBody+'</body></html>',{headers:{'content-type':'text/html'}});
+  return new Response('<html><title>MTC 43 Inch Full HD Smart LED TV Amazon.in</title><body><div id="ASIN">'+asin+'</div><div id="corePriceDisplay_desktop_feature_div"><span class="a-offscreen">₹24,000</span></div>'+longBody+'</body></html>',{headers:{'content-type':'text/html'}});
  };
  const response=await worker.fetch(req([asin]),{TF_PRICE_WORKER_KEY:'unit'},{});
  assert.equal(response.status,200);

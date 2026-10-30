@@ -29,5 +29,18 @@
         "PriceMonitorState"
       ]
     }
-  ]
+  ],
+  "previews": {
+    "browser": {
+      "binding": "BROWSER"
+    },
+    "durable_objects": {
+      "bindings": [
+        {
+          "name": "MONITOR_STATE",
+          "class_name": "PriceMonitorState"
+        }
+      ]
+    }
+  }
 }

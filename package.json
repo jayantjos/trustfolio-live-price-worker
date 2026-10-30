@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "test": "node --test test/*.test.js",
+    "test": "node --experimental-loader ./test/cloudflare-node-loader.mjs --test test/*.test.js",
     "deploy": "wrangler deploy",
     "dev": "wrangler dev"
   },
