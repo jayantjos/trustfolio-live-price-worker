@@ -281,7 +281,7 @@ async function runScheduledPriceQA(worker,env,ctx,options={}) {
   const request=new Request('https://trustfolio-monitor.internal/api/check',{
     method:'POST',
     headers:{'x-api-key':env.TF_PRICE_WORKER_KEY,'content-type':'application/json'},
-    body:JSON.stringify({items:MONITORED_PRODUCTS.map(x=>x.url),useCache:false,browserProbe:false})
+    body:JSON.stringify({items:MONITORED_PRODUCTS.map(x=>x.platform==='amazon'?x.pid:x.url),useCache:false,browserProbe:false})
   });
   const response=await worker.fetch(request,env,ctx);
   if(!response.ok)throw new Error('MONITOR_CHECK_HTTP_'+response.status);
@@ -300,7 +300,7 @@ async function runScheduledPriceQA(worker,env,ctx,options={}) {
       error:verified?null:(value.error||record.error||'price_not_verified')};
   });
   const successes=checks.filter(x=>x.verified).length;
-  const report={kind:'trustfolio_price_monitor',version:'0.9.0',
+  const report={kind:'trustfolio_price_monitor',version:'0.9.1',
     checkedAt:new Date().toISOString(),cron:MONITOR_CRON,trigger:options.trigger==='manual'?'manual':'cron',
     total:checks.length,verified:successes,
     result:successes===checks.length?'PASS':'PRICE_UNVERIFIED',checks};
@@ -325,7 +325,7 @@ const worker = {
   async fetch(request, env, ctx) {
     const url=new URL(request.url);
     if (request.method==='GET' && (url.pathname==='/' || url.pathname==='/health'))
-      return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.9.0',
+      return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.9.1',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
         monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs',
           statusUrl:'/monitor/latest',testUrl:'/qa/sample',cromaTestUrl:'/qa/croma',storageConfigured:Boolean(env.MONITOR_STATE)},
@@ -372,7 +372,7 @@ const worker = {
       try {
         const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
         const latest=await state.readLatest();
-        return json({ready:true,version:'0.9.0',state:latest?'available':'pending',latest});
+        return json({ready:true,version:'0.9.1',state:latest?'available':'pending',latest});
       } catch(e) {
         return json({ready:false,error:'monitor_storage_unavailable'},503);
       }
