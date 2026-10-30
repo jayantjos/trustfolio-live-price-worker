@@ -1,0 +1,24 @@
+name: One-by-one Amazon Browser QA
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-amazon-single.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  one-product:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Single ASIN browser check, no retries
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev"
+          health=$(curl -fsS --max-time 15 "$base/health")
+          echo "$health"
+          echo "$health" | grep -q '"amazonBrowserQALock":"per-asin-v2"'
+          echo '=== SINGLE_ASIN:B0DVH1HDVQ ==='
+          curl -fsS --max-time 45 "$base/qa/amazon-browser-one?sku=B0DVH1HDVQ"
+          echo
