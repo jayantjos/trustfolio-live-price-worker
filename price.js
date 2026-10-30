@@ -178,10 +178,11 @@ export function extractAmazon(html, expected) {
   // Product-level buybox only; if it contains multiple distinct prices,
   // never silently pick the first (often the crossed-out MRP).
   for (const id of primaryIds.filter(x=>x!=='priceToPay')) {
-    const re=new RegExp('id=["\\\\\\']'+id+'["\\\\\\']','i');
-    const match=re.exec(html);
-    if (!match) continue;
-    const scope=html.slice(match.index,Math.min(html.length,match.index+1700));
+    const doubleQuoted=html.indexOf('id="'+id+'"');
+    const singleQuoted=html.indexOf("id='"+id+"'");
+    const position=doubleQuoted>=0?doubleQuoted:singleQuoted;
+    if(position<0) continue;
+    const scope=html.slice(position,Math.min(html.length,position+1700));
     const amounts=readCandidates(scope);
     if(amounts.length>1) return failure('amazon_conflicting_primary_prices');
     if(amounts.length===1) return ok(amounts[0],'amazon_primary_buybox');
