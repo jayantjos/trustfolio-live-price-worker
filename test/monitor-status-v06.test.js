@@ -4,7 +4,7 @@ import worker,{PriceMonitorState} from '../index.js';
 test('health includes v0.6 monitoring status route, no key leak',async()=>{
  const binding={getByName:()=>({readLatest:async()=>null})};
  const r=await worker.fetch(new Request('https://unit.test/health'),{TF_PRICE_WORKER_KEY:'secret',MONITOR_STATE:binding},{});
- const x=await r.json();assert.equal(x.version,'0.7.0');
+ const x=await r.json();assert.equal(x.version,'1.2.2');
  assert.equal(x.monitoring.statusUrl,'/monitor/latest');
  assert.equal(x.monitoring.storageConfigured,true);
  assert.equal(JSON.stringify(x).includes('secret'),false);
