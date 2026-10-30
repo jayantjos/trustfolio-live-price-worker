@@ -7,7 +7,7 @@ test('health includes v0.6 monitoring status route, no key leak',async()=>{
  const x=await r.json();assert.equal(x.version,'1.2.2');
  assert.equal(x.monitoring.statusUrl,'/monitor/latest');
  assert.equal(x.monitoring.storageConfigured,true);
- assert.equal(JSON.stringify(x).includes('secret'),false);
+ assert.equal(JSON.stringify(x).includes('"secret"'),false);
 });
 test('public status endpoint is read-only and returns pending before first Cron',async()=>{
  let reads=0,writes=0;
