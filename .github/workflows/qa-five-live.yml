@@ -17,7 +17,13 @@ jobs:
           set -u
           base="https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev"
           echo '=== WORKER HEALTH ==='
-          curl -sS -L --max-time 15 -w '\nHTTP_STATUS:%{http_code} TOTAL_SEC:%{time_total}\n' "$base/health" || true
+          health=$(curl -fsS --max-time 15 "$base/health") || { echo 'DEPLOY_VERIFY_FAILED:health_unavailable'; exit 1; }
+          echo "$health"
+          if ! echo "$health" | grep -q '"amazonBrowserQALock":"per-asin-v2"'; then
+            echo 'DEPLOY_VERIFY_FAILED:per_asin_fix_not_live'
+            exit 1
+          fi
+          echo 'DEPLOY_VERIFY_PASS:per_asin_fix_live'
           echo '=== AMAZON PRICE FORMAT DIAGNOSTIC ==='
           curl -sS -L --max-time 15 -w '\nHTTP_STATUS:%{http_code} TOTAL_SEC:%{time_total}\n' "$base/qa/amazon-format?sku=B0H75M7JKH" || true
           echo '=== AMAZON BROWSER ONE ==='
