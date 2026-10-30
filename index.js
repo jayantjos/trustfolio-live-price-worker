@@ -400,10 +400,11 @@ const worker = {
     // Read-only one-ASIN browser diagnostic, hardcoded and rate-limited.
     // Never writes prices to MongoDB or exposes HTML/secrets.
     if(request.method==='GET' && url.pathname==='/qa/amazon-browser-one') {
-      const sku='B0H75M7JKH';
+      const sku=String(url.searchParams.get('sku')||'B0H75M7JKH').trim().toUpperCase();
+      if(!['B0H75M7JKH','B0DVH1HDVQ','B074J9SPYX','B08RC27RJM','B0F24RTBDQ'].includes(sku)) return json({error:'not_in_fixed_qa_allowlist'},400);
       if(!env?.MONITOR_STATE)return json({error:'monitor_state_missing'},503);
       const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
-      let claim;try { claim=await state.claimOnDemand(Date.now(),'amazon_browser_one'); }
+      let claim;try { claim=await state.claimOnDemand(Date.now(),'amazon_browser_one_'+sku); }
       catch(_) {return json({error:'monitor_state_failed'},503)}
       if(!claim.allowed)return json({sku,rateLimited:true,retryAfterSeconds:claim.retryAfterSeconds});
       const item=identify(sku);
