@@ -4,7 +4,7 @@ import { DurableObject } from 'cloudflare:workers';
 // Only a tiny, non-sensitive latest-QA summary is persisted; no secrets/HTML.
 export class PriceMonitorState extends DurableObject {
   async readLatest() { return (await this.ctx.storage.get('latest')) || null; }
-  async claimOnDemand(now) {
+  async claimOnDemand(now,scope='sample') {
     // Serialize competing requests within the singleton Durable Object.
     // SQLite-backed Durable Objects expose storage.get/put directly.
     const previousGate=this._claimGate||Promise.resolve();
@@ -12,14 +12,21 @@ export class PriceMonitorState extends DurableObject {
     this._claimGate=new Promise(resolve=>{unlock=resolve;});
     await previousGate;
     try {
-      const previous=Number(await this.ctx.storage.get('manual_last_claim')||0);
+      const previous=Number(await this.ctx.storage.get(scope==='croma'?'croma_last_claim':'manual_last_claim')||0);
       const retryAfterMs=Math.max(0,previous+15*60*1000-now);
       if(retryAfterMs>0)return {allowed:false,retryAfterSeconds:Math.ceil(retryAfterMs/1000)};
-      await this.ctx.storage.put('manual_last_claim',now);
+      await this.ctx.storage.put(scope==='croma'?'croma_last_claim':'manual_last_claim',now);
       return {allowed:true,retryAfterSeconds:0};
     } finally {
       unlock();
     }
+  }
+  async saveCromaProbe(report) {
+    if(!report || report.sku!=='300154')throw new Error('INVALID_CROMA_REPORT');
+    await this.ctx.storage.put('latest_croma_probe',report);
+  }
+  async readCromaProbe() {
+    return (await this.ctx.storage.get('latest_croma_probe'))||null;
   }
   async saveLatest(report) {
     if (!report || report.kind!=='trustfolio_price_monitor'
@@ -194,6 +201,61 @@ async function one(input, useCache, ctx, env, browserProbe=false) {
     cached,itemLatencyMs:Date.now()-start};
 }
 
+
+// Read-only fixed SKU test of the existing VPS Croma search API via Cloudflare.
+// NEVER treat missing search results, HTTP errors or SKU mismatch as sold-out.
+async function probeCromaFixedSku() {
+  const api=new URL('https://api.croma.com/searchservices/v1/search');
+  const args={currentPage:'0',query:'Crompton Energion Hyperjet :relevance',
+    fields:'FULL',channel:'WEB',channelCode:'400049',spellOpt:'DEFAULT'};
+  for(const [key,value] of Object.entries(args))api.searchParams.set(key,value);
+  let response;
+  try{response=await fetch(api.toString(),{
+    method:'GET',headers:{accept:'application/json'},
+    signal:AbortSignal.timeout(6500),
+    redirect:'manual'
+  });}
+  catch(e){return {sku:'300154',status:'error',error:'croma_fetch_failed',
+    errorKind:String(e?.name||'network_error'),priceINR:null};}
+  if(response.status!==200)return {sku:'300154',status:'error',error:'croma_http_'+response.status,
+    httpStatus:response.status,priceINR:null};
+  let body;
+  try{body=await response.json()}catch(_){return {sku:'300154',status:'error',
+    error:'croma_invalid_json',httpStatus:200,priceINR:null}}
+  if(!Array.isArray(body?.products))return {sku:'300154',status:'error',
+    error:'croma_products_missing',httpStatus:200,priceINR:null};
+  const row=body.products.find(x=>x&&['code','skuId','productCode','id'].some(k=>String(x[k]??'')==='300154'));
+  if(!row)return {sku:'300154',status:'no_price',error:'exact_croma_sku_not_in_search',
+    httpStatus:200,priceINR:null,returnedProducts:body.products.length};
+  const money=(v)=>{
+    if(v&&typeof v==='object')return money(v.value??v.formattedValue);
+    const n=Number(String(v??'').replace(/[^0-9.]/g,''));
+    return Number.isFinite(n)&&n>=100&&n<100000000?n:null;
+  };
+  let price=null,source=null;
+  for(const key of ['price','pincodePrice']){
+    const p=row[key];
+    if(String(p?.priceType||'').toUpperCase()==='BUY'){
+      const candidate=money(p);
+      if(candidate!=null){price=candidate;source='croma_'+key+'_BUY';break;}
+    }
+  }
+  if(price===null){
+    for(const key of ['sellingPrice','offerPrice','finalPrice']){
+      const candidate=money(row[key]);
+      if(candidate!=null){price=candidate;source='croma_'+key;break;}
+    }
+  }
+  const result={sku:'300154',status:price===null?'no_price':'ok',
+    httpStatus:200,priceINR:price,source,
+    title:String(row.name||row.title||'').slice(0,140),
+    brand:String(row.brandName||row.brand||'').slice(0,70),
+    hasSpecifications:Boolean(row.specifications||row.attributes||row.classifications),
+    productFieldNames:Object.keys(row).filter(k=>/brand|spec|attr|model|code|price|categor/i.test(k)).slice(0,24),
+    error:price===null?'croma_buy_price_not_present':null};
+  return result;
+}
+
 const MONITORED_PRODUCTS = Object.freeze([
   {label:'Flipkart OPPO Reno 12 Pro 512 GB',pid:'MOBH2AHZH779MGYF',
     url:'https://www.flipkart.com/oppo-reno-12-pro-5g-space-brown-512-gb/p/itmed01efe011f83?pid=MOBH2AHZH779MGYF',platform:'flipkart'},
@@ -232,7 +294,7 @@ async function runScheduledPriceQA(worker,env,ctx,options={}) {
       error:verified?null:(value.error||record.error||'price_not_verified')};
   });
   const successes=checks.filter(x=>x.verified).length;
-  const report={kind:'trustfolio_price_monitor',version:'0.7.2',
+  const report={kind:'trustfolio_price_monitor',version:'0.8.0',
     checkedAt:new Date().toISOString(),cron:MONITOR_CRON,trigger:options.trigger==='manual'?'manual':'cron',
     total:checks.length,verified:successes,
     result:successes===checks.length?'PASS':'PRICE_UNVERIFIED',checks};
@@ -257,13 +319,29 @@ const worker = {
   async fetch(request, env, ctx) {
     const url=new URL(request.url);
     if (request.method==='GET' && (url.pathname==='/' || url.pathname==='/health'))
-      return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.7.2',
+      return json({ok:true,worker:'trustfolio-live-price-worker',version:'0.8.0',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
         monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs',
-          statusUrl:'/monitor/latest',testUrl:'/qa/sample',storageConfigured:Boolean(env.MONITOR_STATE)},
+          statusUrl:'/monitor/latest',testUrl:'/qa/sample',cromaTestUrl:'/qa/croma',storageConfigured:Boolean(env.MONITOR_STATE)},
         note:'Actual-price checks require configured secret and verifiable source content.'});
     // Controlled test-only public endpoint: exactly three hardcoded Mongo SKUs.
     // No arbitrary URLs, browser calls, credentials in responses, or writes to MongoDB.
+    if(request.method==='GET' && url.pathname==='/qa/croma') {
+      if(!env?.MONITOR_STATE)return json({error:'croma_probe_storage_not_configured'},503);
+      const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
+      let claim;
+      try{claim=await state.claimOnDemand(Date.now(),'croma')}
+      catch(_){return json({error:'croma_probe_rate_limit_unavailable'},503)}
+      if(!claim.allowed){
+        const latest=await state.readCromaProbe();
+        return json({fresh:false,rateLimited:true,retryAfterSeconds:claim.retryAfterSeconds,report:latest});
+      }
+      const result=await probeCromaFixedSku();
+      const report={kind:'croma_api_cloudflare_readonly_test',checkedAt:new Date().toISOString(),...result};
+      try{await state.saveCromaProbe(report)}
+      catch(_){return json({error:'croma_probe_storage_failed'},503)}
+      return json({fresh:true,rateLimited:false,report});
+    }
     if(request.method==='GET' && url.pathname==='/qa/sample') {
       if(!env?.TF_PRICE_WORKER_KEY||!env?.MONITOR_STATE)
         return json({error:'sample_test_not_configured'},503);
@@ -288,7 +366,7 @@ const worker = {
       try {
         const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
         const latest=await state.readLatest();
-        return json({ready:true,version:'0.7.2',state:latest?'available':'pending',latest});
+        return json({ready:true,version:'0.8.0',state:latest?'available':'pending',latest});
       } catch(e) {
         return json({ready:false,error:'monitor_storage_unavailable'},503);
       }
