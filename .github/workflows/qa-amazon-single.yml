@@ -19,6 +19,10 @@ jobs:
           health=$(curl -fsS --max-time 15 "$base/health")
           echo "$health"
           echo "$health" | grep -q '"amazonBrowserQALock":"per-asin-v2"'
-          echo '=== SINGLE_ASIN:B0DVH1HDVQ ==='
-          curl -fsS --max-time 45 "$base/qa/amazon-browser-one?sku=B0DVH1HDVQ"
-          echo
+          # Check the remaining three individually. Respect Free-plan 10-second Quick Action quota.
+          for asin in B074J9SPYX B08RC27RJM B0F24RTBDQ; do
+            echo "=== SINGLE_ASIN:$asin ==="
+            curl -fsS --max-time 45 "$base/qa/amazon-browser-one?sku=$asin"
+            echo
+            sleep 12
+          done
