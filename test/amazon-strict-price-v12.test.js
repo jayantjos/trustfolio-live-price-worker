@@ -16,7 +16,7 @@ test('malformed Amazon currency grouping never yields a 100x INR price',()=>{
 });
 test('HTTP200 generic Amazon.in soft-block is not verified product price',()=>{
  const p=extractAmazon(page('47,990.00',pid,'Amazon.in'),{id:pid,title:'MTC 43 Inch Smart TV'});
- assert.equal(p.priceNum,null);assert.equal(p.error,'amazon_product_identity_unverified');
+ assert.equal(p.priceNum,null);assert.equal(p.error,'product_identity_unverified');
 });
 test('wrong ASIN price rejected even if product title looks correct',()=>{
  const p=extractAmazon(page('47,990.00','B0UNRELATED'),{id:pid,title:'MTC 43 Inch Smart TV'});
