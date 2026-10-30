@@ -397,6 +397,22 @@ const worker = {
     // Each exact SKU can be fetched at most once every 3 hours across all users.
     // Price format diagnostic: five preidentified Amazon anomalies only.
     // Returns small price tokens, not raw HTML and not secret data.
+    // Read-only one-ASIN browser diagnostic, hardcoded and rate-limited.
+    // Never writes prices to MongoDB or exposes HTML/secrets.
+    if(request.method==='GET' && url.pathname==='/qa/amazon-browser-one') {
+      const sku='B0H75M7JKH';
+      if(!env?.MONITOR_STATE)return json({error:'monitor_state_missing'},503);
+      const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
+      let claim;try { claim=await state.claimOnDemand(Date.now(),'amazon_browser_one'); }
+      catch(_) {return json({error:'monitor_state_failed'},503)}
+      if(!claim.allowed)return json({sku,rateLimited:true,retryAfterSeconds:claim.retryAfterSeconds});
+      const item=identify(sku);
+      const result=await browserRenderedPrice(item,env);
+      return json({sku,rateLimited:false,diagnostic:result.diagnostic,
+        status:result.parsed?.status||'error',
+        priceINR:result.parsed?.status==='ok'?result.parsed.priceNum:null,
+        evidence:result.evidence});
+    }
     if(request.method==='GET' && url.pathname==='/qa/amazon-format') {
       const sku=String(url.searchParams.get('sku')||'');
       if(!['B0H75M7JKH','B0CGDBR9DC','B0FMS18RZ2','B0H2F9KKP9','B0H44SBX2T'].includes(sku))
