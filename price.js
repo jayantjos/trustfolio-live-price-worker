@@ -115,6 +115,25 @@ export function extractFlipkart(html, expected) {
     const distinct=[...new Set(amounts)];
     if(distinct.length===1) return ok(distinct[0],'flipkart_primary_price_element');
   }
+  // Scrape.do legacy "Buy at ₹..." rule, adapted conservatively:
+  // only accept within the primary product heading scope of the exact PID.
+  // A site-wide "Buy at" can belong to a recommendation, so never trust it.
+  if(expected?.id && html.toUpperCase().includes(String(expected.id).toUpperCase())) {
+    const headline=/<h1\b[^>]*>[\s\S]{0,1200}?<\/h1>/i.exec(html);
+    if(headline && variantMatch(expected.title,
+       headline[0].replace(/<[^>]*>/g,' ').replace(/\s+/g,' '))) {
+      const nearby=html.slice(Math.max(0,headline.index-1000),
+        Math.min(html.length,headline.index+4200));
+      if(nearby.toUpperCase().includes(String(expected.id).toUpperCase())) {
+        const matches=[...nearby.matchAll(/\bBuy\s+at\s*(?:₹|Rs\.?)\s*([\d,]{3,}(?:\.\d{1,2})?)/gi)]
+          .map(x=>parseMoney(x[1])).filter(x=>x!==null);
+        const unique=[...new Set(matches)];
+        if(unique.length===1 && !/NOTIFY_ME|notify\s+me/i.test(nearby)) {
+          return ok(unique[0],'flipkart_primary_buy_at');
+        }
+      }
+    }
+  }
   return failure('product_page_price_not_exposed');
 }
 export function extractAmazon(html, expected) {
