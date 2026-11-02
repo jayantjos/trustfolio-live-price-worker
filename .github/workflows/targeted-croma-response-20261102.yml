@@ -1,0 +1,35 @@
+name: Diagnose Croma comparison response contract
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/targeted-croma-response-20261102.yml']
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read six fixed responses; existing cooldown remains enforced
+        run: |
+          python3 - <<'PY'
+          import json,time
+          from urllib.request import Request,urlopen
+          from urllib.error import HTTPError
+          results=[]
+          for sku in ['317463','300154','316459','311096','317201','312748']:
+              req=Request('https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/qa/croma?sku='+sku,headers={'User-Agent':'TrustFolio-Croma-ReadOnly-QA/1.0','Accept':'application/json'})
+              try:
+                  with urlopen(req,timeout=40) as r:status,body=r.status,r.read().decode()
+              except HTTPError as e:status,body=e.code,e.read().decode()
+              except Exception as e:results.append({'sku':sku,'errorType':type(e).__name__});continue
+              try:payload=json.loads(body)
+              except:payload={'non_json':body[:300]}
+              results.append({'sku':sku,'httpStatus':status,'response':payload})
+          print('CROMA_RESPONSE='+json.dumps(results,separators=(',',':')))
+          open('croma-response.json','w').write(json.dumps(results,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: croma-response-contract
+          path: croma-response.json
