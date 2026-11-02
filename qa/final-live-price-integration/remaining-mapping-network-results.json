@@ -1,0 +1,37 @@
+{
+  "status": "BLOCKED",
+  "productionWrites": 0,
+  "records": [
+    {
+      "sequence": 155,
+      "brand": "gamesoul",
+      "model": "js39p",
+      "url": "https://www.flipkart.com/gamesoul-js39p-4k-brushless-motor-gimbal-camera-drone-display-remote/p/itmf65781027269c",
+      "status": "BLOCKED",
+      "httpStatus": 200,
+      "finalUrl": "https://www.flipkart.com/gamesoul-js39p-4k-brushless-motor-gimbal-camera-drone-display-remote/p/itmf65781027269c",
+      "bytes": 376196,
+      "sha256": "6b9234554438167ba76b5513cb51885026ab5a0e4888ff9ece561a3a0501e93f",
+      "productCount": 0,
+      "canonical": "https://www.flipkart.com/gamesoul-js39p-4k-brushless-motor-gimbal-camera-drone-display-remote/p/itmf65781027269c",
+      "reason": "No trustworthy unique primary Product SKU/PID matching catalog identity",
+      "latencyMs": 1383
+    },
+    {
+      "sequence": 234,
+      "brand": "dzab",
+      "model": "di5",
+      "url": "https://www.flipkart.com/dzab-gaming-core-i5-16-gb-ddr4-512-ssd-windows-11-home-4-gb-22-inch-screen-di5-3470-61-16-512-22-11/p/itmf0e126c67d776",
+      "status": "BLOCKED",
+      "httpStatus": 200,
+      "finalUrl": "https://www.flipkart.com/dzab-gaming-core-i5-16-gb-ddr4-512-ssd-windows-11-home-4-gb-22-inch-screen-di5-3470-61-16-512-22-11/p/itmf0e126c67d776",
+      "bytes": 1210794,
+      "sha256": "0e48681730dfe683aede63fa8eee54406da12d1eb854a2b6efbade3237938a3e",
+      "productCount": 0,
+      "canonical": "https://www.flipkart.com/dzab-gaming-core-i5-16-gb-ddr4-512-ssd-windows-11-home-4-gb-22-inch-screen-di5-3470-61-16-512-22-11/p/itmf0e126c67d776",
+      "reason": "No trustworthy unique primary Product SKU/PID matching catalog identity",
+      "latencyMs": 2434
+    }
+  ],
+  "atUTC": "2026-11-02T19:04:26.613811+00:00"
+}

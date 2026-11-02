@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "cleanupRun": 41507821821,
+  "databasesDropped": true,
+  "artifacts": [
+    {
+      "run": 41506362145,
+      "remainingArtifacts": [
+        {
+          "id": 13171026880,
+          "name": "final-real-live-integration",
+          "expired": false
+        }
+      ]
+    },
+    {
+      "run": 41507384017,
+      "remainingArtifacts": [
+        {
+          "id": 13172160588,
+          "name": "final-real-live-integration",
+          "expired": false
+        }
+      ]
+    }
+  ]
+}

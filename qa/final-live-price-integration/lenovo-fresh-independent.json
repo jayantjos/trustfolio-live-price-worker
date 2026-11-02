@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "url": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+  "atUTC": "2026-11-02T19:10:33.931091+00:00",
+  "kind": "independent retailer HTML; not a Worker request",
+  "httpStatus": 200,
+  "finalUrl": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+  "bytes": 1578043,
+  "sha256": "4bf61605e17164d9c1fa69a8b2194036bb251e4df4157bb9ad82bb21943080dd",
+  "productCount": 1,
+  "products": [
+    {
+      "name": "Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromebook 11IJL9 Chromebook",
+      "sku": "COMHCYMG83BGNQHH",
+      "productID": null,
+      "offers": {
+        "price": 22911,
+        "priceCurrency": "INR",
+        "availability": "https://schema.org/InStock",
+        "itemCondition": "https://schema.org/NewCondition",
+        "shippingDetails": {
+          "shippingRate": {
+            "value": 0,
+            "currency": "INR",
+            "@type": "MonetaryAmount"
+          },
+          "shippingDestination": {
+            "addressCountry": "IN",
+            "@type": "DefinedRegion"
+          },
+          "@type": "OfferShippingDetails"
+        },
+        "hasMerchantReturnPolicy": {
+          "applicableCountry": "IN",
+          "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
+          "description": "Returns are not permitted. We offer a 7 days replacement-only policy.",
+          "@type": "MerchantReturnPolicy"
+        },
+        "@type": "Offer"
+      }
+    }
+  ],
+  "primaryPrice": 22911,
+  "matchesCurrentCanary22911": true,
+  "latencyMs": 1109
+}
