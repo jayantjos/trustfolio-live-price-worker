@@ -17,6 +17,13 @@ export function catalogVariantConflicts(sample,product) {
   const cpu=s=>/\b(ryzen|ath[oa]lon|celeron|pentium)\b/.exec(s)?.[1];
   if(cpu(expected)&&cpu(actual)&&cpu(expected)!==cpu(actual))
     conflicts.push({field:'processor_family',catalog:cpu(expected),retailer:cpu(actual)});
+  if(category==='induction-cooktops')check('power_watts',/\b(\d+)\s*w(?:atts?)?\b/);
+  if(category==='tablets'&&/\b[45]g\b/.test(expected)&&/\bwi[ -]?fi only\b/.test(actual))
+    conflicts.push({field:'connectivity',catalog:'cellular',retailer:'wi-fi only'});
+  const palette=['black','white','blue','green','red','maroon','silver','grey','gray','pink','purple','violet','yellow','orange','brown','gold'];
+  const color=s=>palette.find(c=>new RegExp('\\b'+c+'\\b').test(s))?.replace('gray','grey');
+  if(color(expected)&&color(actual)&&color(expected)!==color(actual))
+    conflicts.push({field:'color',catalog:color(expected),retailer:color(actual)});
   return conflicts;
 }
 
