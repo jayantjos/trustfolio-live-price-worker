@@ -1,0 +1,88 @@
+name: Staging 1042 identity diagnostics
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/staging-1042-diagnostics.yml']
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      CLOUDFLARE_ACCOUNT_ID: 354ff26b7db5ae21ded578fbae86c15f
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare isolated wrapper and credential
+        run: |
+          python3 - <<'PY'
+          import os,json,secrets
+          from pathlib import Path
+          name='trustfolio-diag-'+os.environ['GITHUB_RUN_ID']
+          key=secrets.token_urlsafe(32)
+          print('::add-mask::'+key)
+          with open(os.environ['GITHUB_ENV'],'a') as f:f.write('STAGING_NAME='+name+'\nSTAGING_KEY='+key+'\n')
+          Path('staging-wrapper.js').write_text("""import worker from './index.js';
+          export default {async fetch(request,env,ctx) {
+            const id=request.headers.get('x-staging-request-id');
+            console.log(JSON.stringify({event:'handler_enter',id,path:new URL(request.url).pathname,source:env.STAGING_SOURCE}));
+            const res=await worker.fetch(request,env,ctx);
+            const out=new Response(res.body,res);
+            out.headers.set('x-trustfolio-handler',env.STAGING_SOURCE);
+            out.headers.set('x-trustfolio-version',env.CF_VERSION_METADATA.id);
+            if(id)out.headers.set('x-staging-request-id',id);
+            return out;
+          }};""")
+          Path('staging-config.json').write_text(json.dumps({'name':name,'main':'staging-wrapper.js','compatibility_date':'2026-10-29','workers_dev':True,'observability':{'enabled':True},'version_metadata':{'binding':'CF_VERSION_METADATA'},'vars':{'STAGING_SOURCE':os.environ['GITHUB_SHA']}}))
+          Path('staging-secrets.json').write_text(json.dumps({'TF_PRICE_WORKER_KEY':key}))
+          PY
+      - name: Deploy one immutable staging version with secret
+        run: |
+          npx --yes wrangler@4.155.0 deploy --config staging-config.json --secrets-file staging-secrets.json > staging-deploy.txt 2>&1
+          cat staging-deploy.txt
+          rm -f staging-secrets.json
+          npx --yes wrangler@4.155.0 deployments list --config staging-config.json > staging-versions.txt 2>&1
+      - name: Auth only; record every response without retry substitution
+        run: |
+          python3 - <<'PY'
+          import os,json,time,uuid
+          from urllib.request import Request,urlopen
+          from urllib.error import HTTPError
+          base='https://'+os.environ['STAGING_NAME']+'.jayantjoshi-joshi.workers.dev'
+          rows=[]
+          for round in range(4):
+            for label,key in [('missing',None),('incorrect','intentionally-wrong'),('valid',os.environ['STAGING_KEY'])]:
+              rid=str(uuid.uuid4())
+              headers={'Content-Type':'application/json','User-Agent':'TrustFolio-Staging-Diagnostic/2.0','x-staging-request-id':rid}
+              if key:headers['x-api-key']=key
+              req=Request(base+'/api/check',headers=headers,data=b'{"items":["invalid-staging-product"],"useCache":false,"browserProbe":false}')
+              start=time.monotonic()
+              try:
+                with urlopen(req,timeout=15) as r:status=r.status;h=dict(r.headers);body=r.read().decode()
+              except HTTPError as e:status=e.code;h=dict(e.headers);body=e.read().decode()
+              except Exception as e:status=None;h={};body=type(e).__name__
+              safe={k:v for k,v in h.items() if k.lower() in ['cf-ray','server','date','cf-cache-status','x-trustfolio-handler','x-trustfolio-version','x-staging-request-id','content-type']}
+              rows.append({'round':round,'test':label,'requestId':rid,'httpStatus':status,'latencyMs':round_ms if False else int((time.monotonic()-start)*1000),'headers':safe,'body':body[:4000]})
+            time.sleep(3)
+          report={'status':'UNVERIFIED','kind':'genuine HTTP; zero retailer fetches; no MongoDB','sourceCommit':os.environ['GITHUB_SHA'],'stagingName':os.environ['STAGING_NAME'],'responses':rows}
+          open('staging-1042-responses.json','w').write(json.dumps(report,indent=2))
+          print('DIAGNOSTIC='+json.dumps(report))
+          assert all(x['httpStatus']==(200 if x['test']=='valid' else 401) and any(k.lower()=='x-trustfolio-handler' for k in x['headers']) for x in rows)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: staging-1042-evidence
+          path: |
+            staging-1042-responses.json
+            staging-deploy.txt
+            staging-versions.txt
+            staging-config.json
+      - name: Delete only this diagnostic Worker
+        if: always()
+        run: |
+          if [ -n "$STAGING_NAME" ]; then npx --yes wrangler@4.155.0 delete --name "$STAGING_NAME" --config staging-config.json --force; fi
