@@ -1,4 +1,4 @@
-name: Retest remaining cooled HP POCO and error200 cases
+name: Fresh error200 retest after the existing cooldown
 on:
   push:
     paths: ['.github/workflows/qa-resume-flipkart-final-20261102.yml']
@@ -13,11 +13,15 @@ jobs:
       - name: One request per cooled record, no Browser Run or Mongo writes
         run: |
           python3 - <<'PY'
-          import json,datetime,subprocess
+          import json,datetime,subprocess,time
           report={'mongo_writes':0,'browser_run_calls':0,'checks':[]}
           base='https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev'
-          for seq,due in [(159,'2026-11-02T10:58:10+00:00'),(183,'2026-11-02T11:11:02+00:00'),(200,'2026-11-02T11:30:23+00:00')]:
+          for seq,due in [(200,'2026-11-02T11:30:23+00:00')]:
               now=datetime.datetime.now(datetime.timezone.utc)
+              wait=(datetime.datetime.fromisoformat(due)-now).total_seconds()
+              if 0<wait<=60:
+                  time.sleep(wait+0.1)
+                  now=datetime.datetime.now(datetime.timezone.utc)
               if now<datetime.datetime.fromisoformat(due):
                   report['checks'].append({'sequence':seq,'attempted':False,'reason':'existing 3-hour cooldown','eligible_at':due});continue
               p=subprocess.run(['curl','-sS','--max-time','45',base+'/qa/audit-300?sequence='+str(seq)],capture_output=True,text=True,timeout=50)
