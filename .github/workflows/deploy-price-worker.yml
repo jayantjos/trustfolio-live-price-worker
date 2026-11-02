@@ -36,7 +36,7 @@ jobs:
           curl -fsS --retry 4 --retry-delay 3 --max-time 15 https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/health > /tmp/tf-worker-health.json
           cat /tmp/tf-worker-health.json
           grep -q '"amazonBrowserQALock":"per-asin-v2"' /tmp/tf-worker-health.json || { echo 'DEPLOY_VERIFY_FAILED'; exit 1; }
-          grep -q '\"amazonBrowserExtraction\":\"primary-sections-v2\"' /tmp/tf-worker-health.json || { echo 'DEPLOY_VERIFY_FAILED'; exit 1; }
+          grep -q '\"amazonBrowserExtraction\":\"primary-sections-v3\"' /tmp/tf-worker-health.json || { echo 'DEPLOY_VERIFY_FAILED'; exit 1; }
           echo 'DEPLOY_VERIFY_PASS'
       - name: One fresh Crompton diagnostic, no retries
         run: |

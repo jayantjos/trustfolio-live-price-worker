@@ -5,8 +5,8 @@ const item={platform:'amazon',id:'B074J9SPYX',url:'https://www.amazon.in/dp/B074
 const title='Crompton Super Briz Deco 1200 mm (48 Inch) High Speed Decorative Ceiling Fan (Smoked Brown), Pack Of 1, 4 stars';
 function fixture(body='<span id="priceToPay"><span class="a-price"><span class="a-offscreen">₹2,499.00</span></span></span>') {
   return [
-    {selector:'title',results:[{text:title+' - Amazon.in'}]},
-    {selector:'#productTitle',results:[{text:title}]},
+    {selector:'head > title',results:[{text:title+' - Amazon.in'}]},
+    {selector:'#centerCol #title #productTitle',results:[{text:title}]},
     {selector:'input#ASIN',results:[{attributes:[{name:'value',value:item.id}]}]},
     {selector:'link[rel="canonical"]',results:[{attributes:[{name:'href',value:item.url}]}]},
     {selector:'#apex_desktop',results:[{html:body}]},

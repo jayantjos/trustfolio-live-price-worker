@@ -1,5 +1,6 @@
 import { extractPrice } from './price.js';
 import { amazonBrowserPrice } from './amazon-browser.js';
+import { AUDIT_PRODUCTS } from './qa/audit-20261102/inventory.js';
 import { QA_100_PRODUCTS } from './qa/real-mongo-100-each.js';
 import { DurableObject } from 'cloudflare:workers';
 
@@ -14,7 +15,7 @@ export class PriceMonitorState extends DurableObject {
     this._claimGate=new Promise(resolve=>{unlock=resolve;});
     await previousGate;
     try {
-      const isBatch=/^qa100(?:v2|v3)?_(amazon|flipkart)_\d{1,2}$/.test(scope);
+      const isBatch=/^(?:qa100(?:v2|v3)?_(amazon|flipkart)_\d{1,2}|qa300_\d{1,3})$/.test(scope);
       const storageKey=isBatch?scope+'_last_claim':scope==='budget'?'budget_last_claim':scope==='croma'?'croma_last_claim':/^amazon_browser_one_B0[A-Z0-9]{8}$/.test(scope)?scope+'_last_claim':'manual_last_claim';
       const previous=Number(await this.ctx.storage.get(storageKey)||0);
       const retryAfterMs=Math.max(0,previous+(isBatch?3*60*60*1000:15*60*1000)-now);
@@ -389,7 +390,7 @@ const worker = {
     const url=new URL(request.url);
     if (request.method==='GET' && (url.pathname==='/' || url.pathname==='/health'))
       return json({ok:true,worker:'trustfolio-live-price-worker',version:'1.2.2',
-        amazonBrowserExtraction:'primary-sections-v2',
+        amazonBrowserExtraction:'primary-sections-v3',
         amazonBrowserQALock:'per-asin-v2',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
         monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs',
@@ -403,6 +404,21 @@ const worker = {
     // Returns small price tokens, not raw HTML and not secret data.
     // Read-only one-ASIN browser diagnostic, hardcoded and rate-limited.
     // Never writes prices to MongoDB or exposes HTML/secrets.
+    if(request.method==='GET' && url.pathname==='/qa/audit-300') {
+      const sequence=Number(url.searchParams.get('sequence'));
+      if(!Number.isInteger(sequence)||sequence<1||sequence>300)return json({error:'invalid_fixed_audit_sequence'},400);
+      if(!env?.MONITOR_STATE)return json({error:'monitor_state_missing'},503);
+      const sample=AUDIT_PRODUCTS[sequence-1];
+      if(!sample||sample.sequence!==sequence)return json({error:'audit_sample_missing'},404);
+      // Exact fixed inventory only. Never follow arbitrary affiliate URLs,
+      // invoke Browser Run, or call the database-mutating backend endpoint.
+      if(!sample.retailer_id)return json({sequence,productId:sample.product_id,status:'unverified',error:'canonical_product_identifier_missing',priceINR:null});
+      const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
+      const claim=await state.claimOnDemand(Date.now(),'qa300_'+sequence);
+      if(!claim.allowed)return json({sequence,rateLimited:true,retryAfterSeconds:claim.retryAfterSeconds,priceINR:null});
+      const result=await one(sample.platform==='amazon'?sample.retailer_id:sample.url,false,ctx,env,false);
+      return json({sequence,productId:sample.product_id,platform:sample.platform,sku:sample.retailer_id,checkedAt:new Date().toISOString(),fresh:true,result});
+    }
     if(request.method==='GET' && url.pathname==='/qa/amazon-browser-one') {
       const sku=String(url.searchParams.get('sku')||'B0H75M7JKH').trim().toUpperCase();
       if(!['B0H75M7JKH','B0DVH1HDVQ','B074J9SPYX','B08RC27RJM','B0F24RTBDQ'].includes(sku)) return json({error:'not_in_fixed_qa_allowlist'},400);

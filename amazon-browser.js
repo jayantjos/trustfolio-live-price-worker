@@ -3,7 +3,7 @@ import {extractAmazon} from './price.js';
 // Fetch only primary product sections. Whole rendered Amazon documents contain
 // megabytes of scripts/recommendations which are irrelevant to buy-box pricing.
 export const AMAZON_SELECTORS = Object.freeze([
-  'title', 'link[rel="canonical"]', 'input#ASIN', '#productTitle',
+  'head > title', 'link[rel="canonical"]', 'input#ASIN', '#centerCol #title #productTitle',
   '#apex_desktop', '#corePriceDisplay_desktop_feature_div',
   '#corePrice_feature_div', '#priceblock_dealprice', '#priceblock_ourprice',
   '#availability'
@@ -55,11 +55,11 @@ export async function amazonBrowserPrice(item,env) {
   }
   const one=selector=>{const rs=groups.get(selector)||[];return rs.length===1?rs[0]:null;};
   const asin=String(attr(one('input#ASIN'),'value')||'').toUpperCase();
-  const title=nodeText(one('title'));
-  const heading=nodeText(one('#productTitle'));
+  const title=nodeText(one('head > title'));
+  const heading=nodeText(one('#centerCol #title #productTitle'));
   const evidence={responseBytes:new TextEncoder().encode(raw).length,
     browserTitle:String(title||'').slice(0,130),mainHeading:String(heading||'').slice(0,130),
-    primaryAsin:asin||null,identityVerified:asin===item.id,mode:'amazon-primary-sections-v2',
+    primaryAsin:asin||null,identityVerified:asin===item.id,mode:'amazon-primary-sections-v3',
     selectorCounts:Object.fromEntries([...groups].map(([key,value])=>[key,value.length]))};
   if(asin!==item.id||!title||!heading)return fail('amazon_product_identity_unverified',evidence);
   const canonical=attr(one('link[rel="canonical"]'),'href');
@@ -70,7 +70,7 @@ export async function amazonBrowserPrice(item,env) {
       return fail('browser_product_redirect_mismatch',evidence);
   }
   let html='<html><title>'+escape(title)+'</title><body><input id="ASIN" value="'+escape(asin)+'"><h1>'+escape(heading)+'</h1>';
-  for(const selector of AMAZON_SELECTORS.filter(x=>x.startsWith('#')&&x!=='#productTitle')) {
+  for(const selector of AMAZON_SELECTORS.filter(x=>x.startsWith('#')&&x!=='#centerCol #title #productTitle')) {
     const rs=groups.get(selector)||[];
     if(rs.length>1)return fail('browser_ambiguous_primary_section',evidence);
     if(rs.length===1) {
