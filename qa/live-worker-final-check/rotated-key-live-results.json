@@ -1,0 +1,1331 @@
+{
+  "status": "UNVERIFIED",
+  "sourceCommit": "1293402048d1896a6d9af6aed3dc5aadfc9c487b",
+  "observedAtUTC": "2026-11-02T17:57:27.652724+00:00",
+  "keyConfigured": true,
+  "metadata": [
+    {
+      "test": "deployment",
+      "requestId": "58ad074a-88ac-4f70-94ad-a7f7f1598263",
+      "atUTC": "2026-11-02T17:57:27.901379+00:00",
+      "url": "https://api.cloudflare.com/client/v4/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/scripts/trustfolio-live-price-worker/deployments",
+      "httpStatus": 200,
+      "latencyMs": 249,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:57:27 GMT",
+        "Content-Type": "application/json; charset=UTF-8",
+        "CF-Ray": "a54505901fd5ad14-MSP",
+        "Server": "cloudflare"
+      },
+      "body": {
+        "success": true,
+        "deployments": [
+          {
+            "id": "2900b889-bf56-461c-a384-3e1b5af0af5f",
+            "created_on": "2026-11-02T17:54:01.042032Z",
+            "versions": [
+              {
+                "version_id": "4c503467-81e3-4321-8d1b-80f408f1beaa",
+                "percentage": 100
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": "route",
+      "requestId": "dfbba752-dce3-4f0c-b1cc-0a15f3471b5d",
+      "atUTC": "2026-11-02T17:57:28.145952+00:00",
+      "url": "https://api.cloudflare.com/client/v4/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/scripts/trustfolio-live-price-worker/subdomain",
+      "httpStatus": 200,
+      "latencyMs": 244,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:57:28 GMT",
+        "Content-Type": "application/json; charset=UTF-8",
+        "CF-Ray": "a54505918c3ea1f7-MSP",
+        "Server": "cloudflare"
+      },
+      "body": {
+        "result": {
+          "enabled": true,
+          "previews_enabled": true
+        },
+        "success": true,
+        "errors": [],
+        "messages": []
+      }
+    }
+  ],
+  "auth": [
+    {
+      "test": "missing",
+      "requestId": "a25234c7-3057-402b-8c7b-717915fd97c4",
+      "atUTC": "2026-11-02T17:57:28.408334+00:00",
+      "url": "https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/api/check",
+      "httpStatus": 401,
+      "latencyMs": 109,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:57:28 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Server": "cloudflare",
+        "CF-RAY": "a54505945f1d3beb-MEM"
+      },
+      "body": {
+        "error": "unauthorized"
+      }
+    },
+    {
+      "test": "wrong",
+      "requestId": "e8ccbe9c-03fd-495e-a7e8-cfb5f492c33f",
+      "atUTC": "2026-11-02T17:57:28.487699+00:00",
+      "url": "https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/api/check",
+      "httpStatus": 401,
+      "latencyMs": 79,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:57:28 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Server": "cloudflare",
+        "CF-RAY": "a5450594e860a8ce-STL"
+      },
+      "body": {
+        "error": "unauthorized"
+      }
+    },
+    {
+      "test": "valid",
+      "requestId": "5c16b268-ef68-40e0-8f2e-57f4403b3a40",
+      "atUTC": "2026-11-02T17:57:28.589037+00:00",
+      "url": "https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/api/check",
+      "httpStatus": 200,
+      "latencyMs": 101,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:57:28 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Server": "cloudflare",
+        "CF-RAY": "a54505958e9c95c3-MEM"
+      },
+      "body": {
+        "success": true,
+        "results": [
+          {
+            "asin": null,
+            "pid": null,
+            "input": "invalid-staging-product",
+            "amazon": {
+              "platform": "Amazon",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "flipkart": {
+              "platform": "Flipkart",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "croma": {
+              "platform": "Croma",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "not_supported"
+            },
+            "bestDeal": {
+              "winner": null,
+              "savings": 0,
+              "status": "no_price"
+            },
+            "cached": false,
+            "itemLatencyMs": 0,
+            "error": "unsupported_product_url"
+          }
+        ]
+      }
+    }
+  ],
+  "products": [
+    {
+      "test": "fresh_1",
+      "requestId": "d9e706b2-1522-4aec-adc2-dc025f3d074d",
+      "atUTC": "2026-11-02T17:57:31.255717+00:00",
+      "url": "https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/api/check",
+      "httpStatus": 200,
+      "latencyMs": 2665,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:57:31 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Server": "cloudflare",
+        "CF-RAY": "a545059629d00df0-MEM"
+      },
+      "body": {
+        "success": true,
+        "results": [
+          {
+            "asin": "B074J9SPYX",
+            "pid": "B074J9SPYX",
+            "input": "B074J9SPYX",
+            "amazon": {
+              "platform": "Amazon",
+              "url": "https://www.amazon.in/dp/B074J9SPYX",
+              "title": "Buy Crompton Super Briz Deco 1200 mm (48 Inch) High Speed Decorative Ceiling Fan (Smoked Brown), Pack Of 1, 4 stars Online at Low Prices in India - Amazon.in",
+              "price": "₹2,499",
+              "priceNum": 2499,
+              "inStock": true,
+              "in_stock": true,
+              "status": "ok",
+              "verificationStatus": "ok",
+              "verificationOutcome": "selling_price_verified",
+              "availability": null,
+              "error": null,
+              "httpStatus": 200,
+              "extractionSource": "amazon_price_to_pay",
+              "bytesRead": "2071 KB",
+              "latencyMs": 2525
+            },
+            "flipkart": {
+              "platform": "Flipkart",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "croma": {
+              "platform": "Croma",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "not_supported"
+            },
+            "bestDeal": {
+              "winner": "amazon",
+              "savings": 0,
+              "status": "ok"
+            },
+            "cached": false,
+            "itemLatencyMs": 2525
+          }
+        ]
+      },
+      "auditSequence": 1,
+      "platform": "amazon",
+      "expectedIdentifier": "B074J9SPYX",
+      "catalogTitle": "Crompton Super Briz Deco 1200 mm (48 Inch) High Speed Decorative Ceiling Fan (Smoked Brown), Pack Of 1, 4 stars",
+      "freshRequested": true,
+      "returnedIdentifier": "B074J9SPYX",
+      "identifierMatch": true,
+      "store": {
+        "platform": "Amazon",
+        "url": "https://www.amazon.in/dp/B074J9SPYX",
+        "title": "Buy Crompton Super Briz Deco 1200 mm (48 Inch) High Speed Decorative Ceiling Fan (Smoked Brown), Pack Of 1, 4 stars Online at Low Prices in India - Amazon.in",
+        "price": "₹2,499",
+        "priceNum": 2499,
+        "inStock": true,
+        "in_stock": true,
+        "status": "ok",
+        "verificationStatus": "ok",
+        "verificationOutcome": "selling_price_verified",
+        "availability": null,
+        "error": null,
+        "httpStatus": 200,
+        "extractionSource": "amazon_price_to_pay",
+        "bytesRead": "2071 KB",
+        "latencyMs": 2525
+      },
+      "cached": false,
+      "itemLatencyMs": 2525,
+      "transportOverheadEstimateMs": 140,
+      "withinBackend6000ms": true,
+      "acceptedPrice": 2499,
+      "unacceptedPriceLeak": false,
+      "status": "UNVERIFIED"
+    },
+    {
+      "test": "fresh_2",
+      "requestId": "68f87915-32c4-4f4d-83ba-f5cf9f24b972",
+      "atUTC": "2026-11-02T17:57:30.838505+00:00",
+      "url": "https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/api/check",
+      "httpStatus": 200,
+      "latencyMs": 2248,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:57:30 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Server": "cloudflare",
+        "CF-RAY": "a54505962f4826b1-MEM"
+      },
+      "body": {
+        "success": true,
+        "results": [
+          {
+            "asin": "B0GD16BJ1Z",
+            "pid": "B0GD16BJ1Z",
+            "input": "B0GD16BJ1Z",
+            "amazon": {
+              "platform": "Amazon",
+              "url": "https://www.amazon.in/dp/B0GD16BJ1Z",
+              "title": "Samsung 1.5 Ton 4 Star Bespoke AI WindFree Inverter Smart Split AC (WiFi, Energy Saving, Voice Control, Powerful Cooling, Digital Inverter, 4 Way swing, 5 Step Convertible, AR60H19D1AWNNA,180 sq ft) : Amazon.in: Home &amp; Kitchen",
+              "price": null,
+              "priceNum": null,
+              "inStock": false,
+              "in_stock": false,
+              "status": "out_of_stock",
+              "verificationStatus": "out_of_stock",
+              "verificationOutcome": "out_of_stock",
+              "availability": "out_of_stock",
+              "availabilityEvidence": "Currently unavailable. We don't know when or if this item will be back in stock.",
+              "error": "out_of_stock",
+              "httpStatus": 200,
+              "extractionSource": null,
+              "bytesRead": "1604 KB",
+              "latencyMs": 2124
+            },
+            "flipkart": {
+              "platform": "Flipkart",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "croma": {
+              "platform": "Croma",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "not_supported"
+            },
+            "bestDeal": {
+              "winner": null,
+              "savings": 0,
+              "status": "no_price"
+            },
+            "cached": false,
+            "itemLatencyMs": 2124
+          }
+        ]
+      },
+      "auditSequence": 2,
+      "platform": "amazon",
+      "expectedIdentifier": "B0GD16BJ1Z",
+      "catalogTitle": "Samsung 1.5 Ton 4 Star Bespoke AI WindFree Inverter Smart Split AC (2026 Model, WiFi, Energy Saving, Voice Control, Powerful Cooling, Digital Inverter, 4 Way swing, 5 Step Convertible, AR60H19D1AWNNA)",
+      "freshRequested": true,
+      "returnedIdentifier": "B0GD16BJ1Z",
+      "identifierMatch": true,
+      "store": {
+        "platform": "Amazon",
+        "url": "https://www.amazon.in/dp/B0GD16BJ1Z",
+        "title": "Samsung 1.5 Ton 4 Star Bespoke AI WindFree Inverter Smart Split AC (WiFi, Energy Saving, Voice Control, Powerful Cooling, Digital Inverter, 4 Way swing, 5 Step Convertible, AR60H19D1AWNNA,180 sq ft) : Amazon.in: Home &amp; Kitchen",
+        "price": null,
+        "priceNum": null,
+        "inStock": false,
+        "in_stock": false,
+        "status": "out_of_stock",
+        "verificationStatus": "out_of_stock",
+        "verificationOutcome": "out_of_stock",
+        "availability": "out_of_stock",
+        "availabilityEvidence": "Currently unavailable. We don't know when or if this item will be back in stock.",
+        "error": "out_of_stock",
+        "httpStatus": 200,
+        "extractionSource": null,
+        "bytesRead": "1604 KB",
+        "latencyMs": 2124
+      },
+      "cached": false,
+      "itemLatencyMs": 2124,
+      "transportOverheadEstimateMs": 124,
+      "withinBackend6000ms": true,
+      "acceptedPrice": null,
+      "unacceptedPriceLeak": false,
+      "status": "UNVERIFIED"
+    },
+    {
+      "test": "fresh_3",
+      "requestId": "a7850661-565a-4acc-ad2c-c21a1e88e8bf",
+      "atUTC": "2026-11-02T17:57:33.375835+00:00",
+      "url": "https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/api/check",
+      "httpStatus": 200,
+      "latencyMs": 2120,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:57:33 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Server": "cloudflare",
+        "CF-RAY": "a54505a6ddc23207-MEM"
+      },
+      "body": {
+        "success": true,
+        "results": [
+          {
+            "asin": "B0GCKJ24Y3",
+            "pid": "B0GCKJ24Y3",
+            "input": "B0GCKJ24Y3",
+            "amazon": {
+              "platform": "Amazon",
+              "url": "https://www.amazon.in/dp/B0GCKJ24Y3",
+              "title": "Havai Thunder-75 Tower Air Cooler | 70L Tank | 12″ Blade | Ideal for 150 sq ft Rooms | 130W Power | 10 ft Air Throw | 1350 RPM | Auto-Louver | 3-Speed | 1-Year On-Site Motor Warranty (Black &amp; Grey) : Amazon.in: Home &amp; Kitchen",
+              "price": null,
+              "priceNum": null,
+              "inStock": false,
+              "in_stock": false,
+              "status": "out_of_stock",
+              "verificationStatus": "out_of_stock",
+              "verificationOutcome": "out_of_stock",
+              "availability": "out_of_stock",
+              "availabilityEvidence": "Currently unavailable. We don't know when or if this item will be back in stock.",
+              "error": "out_of_stock",
+              "httpStatus": 200,
+              "extractionSource": null,
+              "bytesRead": "1879 KB",
+              "latencyMs": 1996
+            },
+            "flipkart": {
+              "platform": "Flipkart",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "croma": {
+              "platform": "Croma",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "not_supported"
+            },
+            "bestDeal": {
+              "winner": null,
+              "savings": 0,
+              "status": "no_price"
+            },
+            "cached": false,
+            "itemLatencyMs": 1996
+          }
+        ]
+      },
+      "auditSequence": 3,
+      "platform": "amazon",
+      "expectedIdentifier": "B0GCKJ24Y3",
+      "catalogTitle": "HAVAI Thunder-75 Tower Air Cooler | 70L Tank | 12″ Blade | Ideal for 150 sq ft Rooms | 130W Power | 10 ft Air Throw | 1350 RPM | Auto-Louver | 3-Speed | 1-Year On-Site Motor Warranty (Black & Grey)",
+      "freshRequested": true,
+      "returnedIdentifier": "B0GCKJ24Y3",
+      "identifierMatch": true,
+      "store": {
+        "platform": "Amazon",
+        "url": "https://www.amazon.in/dp/B0GCKJ24Y3",
+        "title": "Havai Thunder-75 Tower Air Cooler | 70L Tank | 12″ Blade | Ideal for 150 sq ft Rooms | 130W Power | 10 ft Air Throw | 1350 RPM | Auto-Louver | 3-Speed | 1-Year On-Site Motor Warranty (Black &amp; Grey) : Amazon.in: Home &amp; Kitchen",
+        "price": null,
+        "priceNum": null,
+        "inStock": false,
+        "in_stock": false,
+        "status": "out_of_stock",
+        "verificationStatus": "out_of_stock",
+        "verificationOutcome": "out_of_stock",
+        "availability": "out_of_stock",
+        "availabilityEvidence": "Currently unavailable. We don't know when or if this item will be back in stock.",
+        "error": "out_of_stock",
+        "httpStatus": 200,
+        "extractionSource": null,
+        "bytesRead": "1879 KB",
+        "latencyMs": 1996
+      },
+      "cached": false,
+      "itemLatencyMs": 1996,
+      "transportOverheadEstimateMs": 124,
+      "withinBackend6000ms": true,
+      "acceptedPrice": null,
+      "unacceptedPriceLeak": false,
+      "status": "UNVERIFIED"
+    },
+    {
+      "test": "fresh_4",
+      "requestId": "66c92306-3bd1-49b3-8138-db916e5389de",
+      "atUTC": "2026-11-02T17:57:35.242148+00:00",
+      "url": "https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/api/check",
+      "httpStatus": 200,
+      "latencyMs": 1866,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:57:35 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Server": "cloudflare",
+        "CF-RAY": "a54505b40bc10df0-MEM"
+      },
+      "body": {
+        "success": true,
+        "results": [
+          {
+            "asin": "B0BH9647DC",
+            "pid": "B0BH9647DC",
+            "input": "B0BH9647DC",
+            "amazon": {
+              "platform": "Amazon",
+              "url": "https://www.amazon.in/dp/B0BH9647DC",
+              "title": "Buy LUXAIRE LUX AA0031 Chandelier Ceiling Fan LED Light, BLDC Motor, Noiseless Retractable Blade with Remote Control For Summer winter mode, Matt White Online at Low Prices in India - Amazon.in",
+              "price": "₹34,220",
+              "priceNum": 34220,
+              "inStock": true,
+              "in_stock": true,
+              "status": "ok",
+              "verificationStatus": "ok",
+              "verificationOutcome": "selling_price_verified",
+              "availability": null,
+              "error": null,
+              "httpStatus": 200,
+              "extractionSource": "amazon_price_to_pay",
+              "bytesRead": "1253 KB",
+              "latencyMs": 1746
+            },
+            "flipkart": {
+              "platform": "Flipkart",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "croma": {
+              "platform": "Croma",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "not_supported"
+            },
+            "bestDeal": {
+              "winner": "amazon",
+              "savings": 0,
+              "status": "ok"
+            },
+            "cached": false,
+            "itemLatencyMs": 1746
+          }
+        ]
+      },
+      "auditSequence": 4,
+      "platform": "amazon",
+      "expectedIdentifier": "B0BH9647DC",
+      "catalogTitle": "LUX AA0031 Chandelier Ceiling Fan LED Light, BLDC Motor, Noiseless Retractable Blade with Remote Control for Summer Winter Mode, Matt White",
+      "freshRequested": true,
+      "returnedIdentifier": "B0BH9647DC",
+      "identifierMatch": true,
+      "store": {
+        "platform": "Amazon",
+        "url": "https://www.amazon.in/dp/B0BH9647DC",
+        "title": "Buy LUXAIRE LUX AA0031 Chandelier Ceiling Fan LED Light, BLDC Motor, Noiseless Retractable Blade with Remote Control For Summer winter mode, Matt White Online at Low Prices in India - Amazon.in",
+        "price": "₹34,220",
+        "priceNum": 34220,
+        "inStock": true,
+        "in_stock": true,
+        "status": "ok",
+        "verificationStatus": "ok",
+        "verificationOutcome": "selling_price_verified",
+        "availability": null,
+        "error": null,
+        "httpStatus": 200,
+        "extractionSource": "amazon_price_to_pay",
+        "bytesRead": "1253 KB",
+        "latencyMs": 1746
+      },
+      "cached": false,
+      "itemLatencyMs": 1746,
+      "transportOverheadEstimateMs": 120,
+      "withinBackend6000ms": true,
+      "acceptedPrice": 34220,
+      "unacceptedPriceLeak": false,
+      "status": "UNVERIFIED"
+    },
+    {
+      "test": "fresh_5",
+      "requestId": "2a198113-735b-48f0-a033-473228ee727d",
+      "atUTC": "2026-11-02T17:57:37.895283+00:00",
+      "url": "https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/api/check",
+      "httpStatus": 200,
+      "latencyMs": 2653,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:57:37 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Server": "cloudflare",
+        "CF-RAY": "a54505bf9cada8ce-STL"
+      },
+      "body": {
+        "success": true,
+        "results": [
+          {
+            "asin": "B0GJDLKM5H",
+            "pid": "B0GJDLKM5H",
+            "input": "B0GJDLKM5H",
+            "amazon": {
+              "platform": "Amazon",
+              "url": "https://www.amazon.in/dp/B0GJDLKM5H",
+              "title": "HP All-in-One, AMD Ryzen 7 7730U (16GB DDR4, 512GB SSD) IPS, Three-Sided, Micro-Edge, Anti-Glare, FHD, 23.8&#x27;&#x27;(60.5 cm), Win 11 Home, Office 24, 5.27kg, FHD IR Camera, 24-cr0023in : Amazon.in: Computers &amp; Accessories",
+              "price": "₹69,990",
+              "priceNum": 69990,
+              "inStock": true,
+              "in_stock": true,
+              "status": "ok",
+              "verificationStatus": "ok",
+              "verificationOutcome": "selling_price_verified",
+              "availability": null,
+              "error": null,
+              "httpStatus": 200,
+              "extractionSource": "amazon_price_to_pay",
+              "bytesRead": "1374 KB",
+              "latencyMs": 2547
+            },
+            "flipkart": {
+              "platform": "Flipkart",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "croma": {
+              "platform": "Croma",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "not_supported"
+            },
+            "bestDeal": {
+              "winner": "amazon",
+              "savings": 0,
+              "status": "ok"
+            },
+            "cached": false,
+            "itemLatencyMs": 2547
+          }
+        ]
+      },
+      "auditSequence": 5,
+      "platform": "amazon",
+      "expectedIdentifier": "B0GJDLKM5H",
+      "catalogTitle": "HP All-in-One, AMD Ryzen 7 7730U (16GB DDR4, 512GB SSD) IPS, Three-Sided, Micro-Edge, Anti-Glare, FHD, 23.8''(60.5 cm), Win 11 Home, Office 24, 5.27kg, FHD IR Camera, 24-cr0023in",
+      "freshRequested": true,
+      "returnedIdentifier": "B0GJDLKM5H",
+      "identifierMatch": true,
+      "store": {
+        "platform": "Amazon",
+        "url": "https://www.amazon.in/dp/B0GJDLKM5H",
+        "title": "HP All-in-One, AMD Ryzen 7 7730U (16GB DDR4, 512GB SSD) IPS, Three-Sided, Micro-Edge, Anti-Glare, FHD, 23.8&#x27;&#x27;(60.5 cm), Win 11 Home, Office 24, 5.27kg, FHD IR Camera, 24-cr0023in : Amazon.in: Computers &amp; Accessories",
+        "price": "₹69,990",
+        "priceNum": 69990,
+        "inStock": true,
+        "in_stock": true,
+        "status": "ok",
+        "verificationStatus": "ok",
+        "verificationOutcome": "selling_price_verified",
+        "availability": null,
+        "error": null,
+        "httpStatus": 200,
+        "extractionSource": "amazon_price_to_pay",
+        "bytesRead": "1374 KB",
+        "latencyMs": 2547
+      },
+      "cached": false,
+      "itemLatencyMs": 2547,
+      "transportOverheadEstimateMs": 106,
+      "withinBackend6000ms": true,
+      "acceptedPrice": 69990,
+      "unacceptedPriceLeak": false,
+      "status": "UNVERIFIED"
+    },
+    {
+      "test": "fresh_199",
+      "requestId": "f4e1f584-5640-46a0-bedd-ed95eaaef1b7",
+      "atUTC": "2026-11-02T17:57:39.295690+00:00",
+      "url": "https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/api/check",
+      "httpStatus": 200,
+      "latencyMs": 1400,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:57:39 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Server": "cloudflare",
+        "CF-RAY": "a54505d04f63535d-MEM"
+      },
+      "body": {
+        "success": true,
+        "results": [
+          {
+            "asin": null,
+            "pid": "COMHCYMG83BGNQHH",
+            "input": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+            "amazon": {
+              "platform": "Amazon",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "flipkart": {
+              "platform": "Flipkart",
+              "url": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+              "title": "Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromebook 11IJL9 Chromebook Rs.36502  Price in India - Buy Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromebook 11IJL9 Chromebook Maca Blue Online - Lenovo : Flipkart.com",
+              "price": "₹36,502",
+              "priceNum": 36502,
+              "inStock": true,
+              "in_stock": true,
+              "status": "ok",
+              "verificationStatus": "ok",
+              "verificationOutcome": "selling_price_verified",
+              "availability": null,
+              "error": null,
+              "httpStatus": 200,
+              "extractionSource": "jsonld_product_offer",
+              "bytesRead": "1593 KB",
+              "latencyMs": 1259
+            },
+            "croma": {
+              "platform": "Croma",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "not_supported"
+            },
+            "bestDeal": {
+              "winner": "flipkart",
+              "savings": 0,
+              "status": "ok"
+            },
+            "cached": false,
+            "itemLatencyMs": 1259
+          }
+        ]
+      },
+      "auditSequence": 199,
+      "platform": "flipkart",
+      "expectedIdentifier": "COMHCYMG83BGNQHH",
+      "catalogTitle": "Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromeboo...",
+      "freshRequested": true,
+      "returnedIdentifier": "COMHCYMG83BGNQHH",
+      "identifierMatch": true,
+      "store": {
+        "platform": "Flipkart",
+        "url": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+        "title": "Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromebook 11IJL9 Chromebook Rs.36502  Price in India - Buy Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromebook 11IJL9 Chromebook Maca Blue Online - Lenovo : Flipkart.com",
+        "price": "₹36,502",
+        "priceNum": 36502,
+        "inStock": true,
+        "in_stock": true,
+        "status": "ok",
+        "verificationStatus": "ok",
+        "verificationOutcome": "selling_price_verified",
+        "availability": null,
+        "error": null,
+        "httpStatus": 200,
+        "extractionSource": "jsonld_product_offer",
+        "bytesRead": "1593 KB",
+        "latencyMs": 1259
+      },
+      "cached": false,
+      "itemLatencyMs": 1259,
+      "transportOverheadEstimateMs": 141,
+      "withinBackend6000ms": true,
+      "acceptedPrice": 36502,
+      "unacceptedPriceLeak": false,
+      "status": "UNVERIFIED"
+    },
+    {
+      "test": "fresh_212",
+      "requestId": "a0a220c3-80d0-411d-a222-81f6fd7f9cba",
+      "atUTC": "2026-11-02T17:57:40.343531+00:00",
+      "url": "https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/api/check",
+      "httpStatus": 200,
+      "latencyMs": 1048,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:57:40 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Server": "cloudflare",
+        "CF-RAY": "a54505d91a1895c3-MEM"
+      },
+      "body": {
+        "success": true,
+        "results": [
+          {
+            "asin": null,
+            "pid": "AICGETHFNCZCX7PA",
+            "input": "https://www.flipkart.com/crompton-100-l-desert-air-cooler/p/itmfdwa95yeshx4x?pid=AICGETHFNCZCX7PA",
+            "amazon": {
+              "platform": "Amazon",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "flipkart": {
+              "platform": "Flipkart",
+              "url": "https://www.flipkart.com/crompton-100-l-desert-air-cooler/p/itmfdwa95yeshx4x?pid=AICGETHFNCZCX7PA",
+              "title": "Crompton 100 L Desert Air Cooler Price in India - Buy Crompton 100 L Desert Air Cooler online at Flipkart.com",
+              "price": null,
+              "priceNum": null,
+              "inStock": false,
+              "in_stock": false,
+              "status": "out_of_stock",
+              "verificationStatus": "out_of_stock",
+              "verificationOutcome": "out_of_stock",
+              "availability": "out_of_stock",
+              "error": "out_of_stock",
+              "httpStatus": 200,
+              "extractionSource": "jsonld_product_offer",
+              "bytesRead": "1430 KB",
+              "latencyMs": 916
+            },
+            "croma": {
+              "platform": "Croma",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "not_supported"
+            },
+            "bestDeal": {
+              "winner": null,
+              "savings": 0,
+              "status": "no_price"
+            },
+            "cached": false,
+            "itemLatencyMs": 916
+          }
+        ]
+      },
+      "auditSequence": 212,
+      "platform": "flipkart",
+      "expectedIdentifier": "AICGETHFNCZCX7PA",
+      "catalogTitle": "Crompton 100 L Desert Air Cooler",
+      "freshRequested": true,
+      "returnedIdentifier": "AICGETHFNCZCX7PA",
+      "identifierMatch": true,
+      "store": {
+        "platform": "Flipkart",
+        "url": "https://www.flipkart.com/crompton-100-l-desert-air-cooler/p/itmfdwa95yeshx4x?pid=AICGETHFNCZCX7PA",
+        "title": "Crompton 100 L Desert Air Cooler Price in India - Buy Crompton 100 L Desert Air Cooler online at Flipkart.com",
+        "price": null,
+        "priceNum": null,
+        "inStock": false,
+        "in_stock": false,
+        "status": "out_of_stock",
+        "verificationStatus": "out_of_stock",
+        "verificationOutcome": "out_of_stock",
+        "availability": "out_of_stock",
+        "error": "out_of_stock",
+        "httpStatus": 200,
+        "extractionSource": "jsonld_product_offer",
+        "bytesRead": "1430 KB",
+        "latencyMs": 916
+      },
+      "cached": false,
+      "itemLatencyMs": 916,
+      "transportOverheadEstimateMs": 132,
+      "withinBackend6000ms": true,
+      "acceptedPrice": null,
+      "unacceptedPriceLeak": false,
+      "status": "UNVERIFIED"
+    },
+    {
+      "auditSequence": 155,
+      "platform": "flipkart",
+      "expectedIdentifier": null,
+      "status": "BLOCKED",
+      "reason": "No verified exact PID in saved evidence; no substitute or invented PID",
+      "httpStatus": null,
+      "acceptedPrice": null
+    },
+    {
+      "test": "fresh_239",
+      "requestId": "dd905fff-cd42-4984-8399-ab3675ba63cd",
+      "atUTC": "2026-11-02T17:57:41.423200+00:00",
+      "url": "https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/api/check",
+      "httpStatus": 200,
+      "latencyMs": 1080,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:57:41 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Server": "cloudflare",
+        "CF-RAY": "a54505df9bcf3beb-MEM"
+      },
+      "body": {
+        "success": true,
+        "results": [
+          {
+            "asin": null,
+            "pid": "COMGSV3GZYUDG6NP",
+            "input": "https://www.flipkart.com/acer-chromebook-intel-celeron-dual-core-n4500-8-gb-128-gb-emmc-storage-chrome-os-cb314-3h-c5qe-cb314-3h-c0bz/p/itm04458b376eefa?pid=COMGSV3GZYUDG6NP",
+            "amazon": {
+              "platform": "Amazon",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "flipkart": {
+              "platform": "Flipkart",
+              "url": "https://www.flipkart.com/acer-chromebook-intel-celeron-dual-core-n4500-8-gb-128-gb-emmc-storage-chrome-os-cb314-3h-c5qe-cb314-3h-c0bz/p/itm04458b376eefa?pid=COMGSV3GZYUDG6NP",
+              "title": "Acer Chromebook Intel Celeron Dual Core N4500 - (8 GB/64 GB EMMC Storage/Chrome OS) CB314-3H-C5QE/ CB314-3H-COBZ Chromebook Rs.35999  Price in India - Buy Acer Chromebook Intel Celeron Dual Core N4500 - (8 GB/64 GB EMMC Storage/Chrome OS) CB314-3H-C5QE/ CB314-3H-COBZ Chromebook Silver Online - Acer : Flipkart.com",
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "in_stock": null,
+              "status": "error",
+              "verificationStatus": "price_unverified",
+              "verificationOutcome": "price_unverified",
+              "availability": null,
+              "error": "product_identity_unverified",
+              "httpStatus": 200,
+              "extractionSource": null,
+              "bytesRead": "1597 KB",
+              "latencyMs": 963
+            },
+            "croma": {
+              "platform": "Croma",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "not_supported"
+            },
+            "bestDeal": {
+              "winner": null,
+              "savings": 0,
+              "status": "no_price"
+            },
+            "cached": false,
+            "itemLatencyMs": 963
+          }
+        ]
+      },
+      "auditSequence": 239,
+      "platform": "flipkart",
+      "expectedIdentifier": "COMGSV3GZYUDG6NP",
+      "catalogTitle": "Acer Chromebook Intel Celeron Dual Core N4500 - (8 GB/128 GB EMMC Storage/Chrome OS) CB314-3H-C5QE/ CB...",
+      "freshRequested": true,
+      "returnedIdentifier": "COMGSV3GZYUDG6NP",
+      "identifierMatch": true,
+      "store": {
+        "platform": "Flipkart",
+        "url": "https://www.flipkart.com/acer-chromebook-intel-celeron-dual-core-n4500-8-gb-128-gb-emmc-storage-chrome-os-cb314-3h-c5qe-cb314-3h-c0bz/p/itm04458b376eefa?pid=COMGSV3GZYUDG6NP",
+        "title": "Acer Chromebook Intel Celeron Dual Core N4500 - (8 GB/64 GB EMMC Storage/Chrome OS) CB314-3H-C5QE/ CB314-3H-COBZ Chromebook Rs.35999  Price in India - Buy Acer Chromebook Intel Celeron Dual Core N4500 - (8 GB/64 GB EMMC Storage/Chrome OS) CB314-3H-C5QE/ CB314-3H-COBZ Chromebook Silver Online - Acer : Flipkart.com",
+        "price": null,
+        "priceNum": null,
+        "inStock": null,
+        "in_stock": null,
+        "status": "error",
+        "verificationStatus": "price_unverified",
+        "verificationOutcome": "price_unverified",
+        "availability": null,
+        "error": "product_identity_unverified",
+        "httpStatus": 200,
+        "extractionSource": null,
+        "bytesRead": "1597 KB",
+        "latencyMs": 963
+      },
+      "cached": false,
+      "itemLatencyMs": 963,
+      "transportOverheadEstimateMs": 117,
+      "withinBackend6000ms": true,
+      "acceptedPrice": null,
+      "unacceptedPriceLeak": false,
+      "status": "UNVERIFIED"
+    },
+    {
+      "auditSequence": 234,
+      "platform": "flipkart",
+      "expectedIdentifier": null,
+      "status": "BLOCKED",
+      "reason": "No verified exact PID in saved evidence; no substitute or invented PID",
+      "httpStatus": null,
+      "acceptedPrice": null
+    }
+  ],
+  "cache": [
+    {
+      "test": "cached_1",
+      "requestId": "63c74fbe-649f-4920-8c8f-1acc6b1abd6b",
+      "atUTC": "2026-11-02T17:57:41.524599+00:00",
+      "url": "https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/api/check",
+      "httpStatus": 200,
+      "latencyMs": 101,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:57:41 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Server": "cloudflare",
+        "CF-RAY": "a54505e65f3126b1-MEM"
+      },
+      "body": {
+        "success": true,
+        "results": [
+          {
+            "asin": "B074J9SPYX",
+            "pid": "B074J9SPYX",
+            "input": "B074J9SPYX",
+            "amazon": {
+              "platform": "Amazon",
+              "url": "https://www.amazon.in/dp/B074J9SPYX",
+              "title": "Buy Crompton Super Briz Deco 1200 mm (48 Inch) High Speed Decorative Ceiling Fan (Smoked Brown), Pack Of 1, 4 stars Online at Low Prices in India - Amazon.in",
+              "price": "₹2,499",
+              "priceNum": 2499,
+              "inStock": true,
+              "in_stock": true,
+              "status": "ok",
+              "verificationStatus": "ok",
+              "verificationOutcome": "selling_price_verified",
+              "availability": null,
+              "error": null,
+              "httpStatus": 200,
+              "extractionSource": "amazon_price_to_pay",
+              "bytesRead": "2071 KB",
+              "latencyMs": 2525
+            },
+            "flipkart": {
+              "platform": "Flipkart",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "croma": {
+              "platform": "Croma",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "not_supported"
+            },
+            "bestDeal": {
+              "winner": "amazon",
+              "savings": 0,
+              "status": "ok"
+            },
+            "cached": true,
+            "itemLatencyMs": 0
+          }
+        ]
+      },
+      "auditSequence": 1,
+      "platform": "amazon",
+      "expectedIdentifier": "B074J9SPYX",
+      "catalogTitle": "Crompton Super Briz Deco 1200 mm (48 Inch) High Speed Decorative Ceiling Fan (Smoked Brown), Pack Of 1, 4 stars",
+      "freshRequested": false,
+      "returnedIdentifier": "B074J9SPYX",
+      "identifierMatch": true,
+      "store": {
+        "platform": "Amazon",
+        "url": "https://www.amazon.in/dp/B074J9SPYX",
+        "title": "Buy Crompton Super Briz Deco 1200 mm (48 Inch) High Speed Decorative Ceiling Fan (Smoked Brown), Pack Of 1, 4 stars Online at Low Prices in India - Amazon.in",
+        "price": "₹2,499",
+        "priceNum": 2499,
+        "inStock": true,
+        "in_stock": true,
+        "status": "ok",
+        "verificationStatus": "ok",
+        "verificationOutcome": "selling_price_verified",
+        "availability": null,
+        "error": null,
+        "httpStatus": 200,
+        "extractionSource": "amazon_price_to_pay",
+        "bytesRead": "2071 KB",
+        "latencyMs": 2525
+      },
+      "cached": true,
+      "itemLatencyMs": 0,
+      "transportOverheadEstimateMs": 101,
+      "withinBackend6000ms": true,
+      "acceptedPrice": 2499,
+      "unacceptedPriceLeak": false,
+      "status": "UNVERIFIED"
+    },
+    {
+      "test": "cached_199",
+      "requestId": "8571ad22-5c9d-4d68-8c34-18852d3c0d45",
+      "atUTC": "2026-11-02T17:57:41.624661+00:00",
+      "url": "https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/api/check",
+      "httpStatus": 200,
+      "latencyMs": 100,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:57:41 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Server": "cloudflare",
+        "CF-RAY": "a54505e6faea0df0-MEM"
+      },
+      "body": {
+        "success": true,
+        "results": [
+          {
+            "asin": null,
+            "pid": "COMHCYMG83BGNQHH",
+            "input": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+            "amazon": {
+              "platform": "Amazon",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "flipkart": {
+              "platform": "Flipkart",
+              "url": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+              "title": "Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromebook 11IJL9 Chromebook Rs.36502  Price in India - Buy Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromebook 11IJL9 Chromebook Maca Blue Online - Lenovo : Flipkart.com",
+              "price": "₹36,502",
+              "priceNum": 36502,
+              "inStock": true,
+              "in_stock": true,
+              "status": "ok",
+              "verificationStatus": "ok",
+              "verificationOutcome": "selling_price_verified",
+              "availability": null,
+              "error": null,
+              "httpStatus": 200,
+              "extractionSource": "jsonld_product_offer",
+              "bytesRead": "1593 KB",
+              "latencyMs": 1259
+            },
+            "croma": {
+              "platform": "Croma",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "not_supported"
+            },
+            "bestDeal": {
+              "winner": "flipkart",
+              "savings": 0,
+              "status": "ok"
+            },
+            "cached": true,
+            "itemLatencyMs": 0
+          }
+        ]
+      },
+      "auditSequence": 199,
+      "platform": "flipkart",
+      "expectedIdentifier": "COMHCYMG83BGNQHH",
+      "catalogTitle": "Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromeboo...",
+      "freshRequested": false,
+      "returnedIdentifier": "COMHCYMG83BGNQHH",
+      "identifierMatch": true,
+      "store": {
+        "platform": "Flipkart",
+        "url": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+        "title": "Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromebook 11IJL9 Chromebook Rs.36502  Price in India - Buy Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromebook 11IJL9 Chromebook Maca Blue Online - Lenovo : Flipkart.com",
+        "price": "₹36,502",
+        "priceNum": 36502,
+        "inStock": true,
+        "in_stock": true,
+        "status": "ok",
+        "verificationStatus": "ok",
+        "verificationOutcome": "selling_price_verified",
+        "availability": null,
+        "error": null,
+        "httpStatus": 200,
+        "extractionSource": "jsonld_product_offer",
+        "bytesRead": "1593 KB",
+        "latencyMs": 1259
+      },
+      "cached": true,
+      "itemLatencyMs": 0,
+      "transportOverheadEstimateMs": 100,
+      "withinBackend6000ms": true,
+      "acceptedPrice": 36502,
+      "unacceptedPriceLeak": false,
+      "status": "UNVERIFIED"
+    }
+  ],
+  "concurrency": [
+    {
+      "kind": "two fresh single-product requests",
+      "sequences": [
+        1,
+        2
+      ],
+      "wallMs": 2667,
+      "memberLatencyMs": [
+        2665,
+        2248
+      ]
+    }
+  ],
+  "independent": [
+    {
+      "auditSequence": 1,
+      "status": "UNVERIFIED",
+      "url": "https://www.amazon.in/dp/B074J9SPYX",
+      "verifiedPrimaryPrice": null,
+      "comparison": "UNVERIFIED",
+      "httpStatus": 200,
+      "finalUrl": "https://www.amazon.in/dp/B074J9SPYX",
+      "bytes": 3793,
+      "sha256": "650c6fc4c7574dec87e943a501ca95e3a6cffe4ac842aca3eba252df69da05eb",
+      "pageTitle": "Amazon.in",
+      "canonicalUrl": null,
+      "asinInputs": [],
+      "identityVerified": false,
+      "primaryScopes": [],
+      "reason": "Independent exact identity/unique primary price not established",
+      "latencyMs": 251
+    },
+    {
+      "auditSequence": 4,
+      "status": "UNVERIFIED",
+      "url": "https://www.amazon.in/dp/B0BH9647DC",
+      "verifiedPrimaryPrice": null,
+      "comparison": "UNVERIFIED",
+      "httpStatus": 200,
+      "finalUrl": "https://www.amazon.in/dp/B0BH9647DC",
+      "bytes": 3793,
+      "sha256": "ff17acd2fd65d9d8df8847230482ec2fbaad599b67976d68e1eba38a3454bc4b",
+      "pageTitle": "Amazon.in",
+      "canonicalUrl": null,
+      "asinInputs": [],
+      "identityVerified": false,
+      "primaryScopes": [],
+      "reason": "Independent exact identity/unique primary price not established",
+      "latencyMs": 192
+    },
+    {
+      "auditSequence": 5,
+      "status": "PASS",
+      "url": "https://www.amazon.in/dp/B0GJDLKM5H",
+      "verifiedPrimaryPrice": 69990,
+      "comparison": "MATCH",
+      "httpStatus": 200,
+      "finalUrl": "https://www.amazon.in/dp/B0GJDLKM5H",
+      "bytes": 667446,
+      "sha256": "06620c39027727e1da5ca48f672fd634c7b65f50eb90a643feb3a9bc63472a06",
+      "pageTitle": "HP All-in-One, AMD Ryzen 7 7730U (16GB DDR4, 512GB SSD) IPS, Three-Sided, Micro-Edge, Anti-Glare, FHD, 23.8''(60.5 cm), Win 11 Home, Office 24, 5.27kg, FHD IR Camera, 24-cr0023in : Amazon.in: Computers & Accessories",
+      "canonicalUrl": "https://www.amazon.in/HP-Three-Sided-Micro-Edge-Anti-Glare-24-cr0023in/dp/B0GJDLKM5H",
+      "asinInputs": [
+        "B0GJDLKM5H"
+      ],
+      "identityVerified": true,
+      "primaryScopes": [
+        {
+          "scope": "class:priceToPay",
+          "text": "₹ 69,990"
+        }
+      ],
+      "latencyMs": 1108
+    },
+    {
+      "auditSequence": 199,
+      "status": "UNVERIFIED",
+      "url": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+      "verifiedPrimaryPrice": null,
+      "comparison": "UNVERIFIED",
+      "httpStatus": 200,
+      "finalUrl": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+      "bytes": 1500001,
+      "sha256": "a2026959b96cfda50e965a5b3fcc261c634100ac68b465f453ca0ed10a939f60",
+      "reason": "Bounded evidence exceeded 1.5 MB; not parsed",
+      "latencyMs": 1012
+    }
+  ],
+  "productionChanges": 0,
+  "deploymentPerformed": false,
+  "health": {
+    "test": "health",
+    "requestId": "e589d996-7f70-4ca1-a039-fb59d69604e0",
+    "atUTC": "2026-11-02T17:57:28.299440+00:00",
+    "url": "https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/health",
+    "httpStatus": 200,
+    "latencyMs": 153,
+    "headers": {
+      "Date": "Mon, 02 Nov 2026 17:57:28 GMT",
+      "Content-Type": "application/json; charset=utf-8",
+      "Server": "cloudflare",
+      "CF-RAY": "a54505939dfa535d-MEM"
+    },
+    "body": {
+      "ok": true,
+      "worker": "trustfolio-live-price-worker",
+      "version": "1.2.2",
+      "cromaSearchComparison": "fixed-six-v1",
+      "priceVerificationContract": "seven-states-v1",
+      "amazonPrimaryScope": "balanced-elements-v1",
+      "flipkartFspIdentity": "json-owner-v1",
+      "amazonBrowserExtraction": "primary-sections-v3",
+      "amazonCanonicalIdentity": "exact-canonical-v1",
+      "flipkartAuditResolution": "fixed-primary-jsonld-v4",
+      "productTitleIdentity": "bounded-2048-v1",
+      "flipkartAuditIdentity": "primary-product-v1",
+      "flipkartAuditVariant": "explicit-dimensions-v1",
+      "fixedAuditErrors": "structured-v1",
+      "fixedAuditCatalogIdentity": "shared-variants-v2",
+      "amazonBrowserQALock": "per-asin-v2",
+      "ready": true,
+      "monitoring": {
+        "cronUTC": "5 */6 * * *",
+        "items": 3,
+        "logs": "Workers Logs",
+        "statusUrl": "/monitor/latest",
+        "testUrl": "/qa/sample",
+        "cromaTestUrl": "/qa/croma",
+        "budgetTestUrl": "/qa/budget20k",
+        "batch100Url": "/qa/check-100",
+        "storageConfigured": true
+      },
+      "note": "Actual-price checks require configured secret and verifiable source content."
+    }
+  },
+  "authentication": "PASS",
+  "executionLogs": {
+    "test": "execution_log_query",
+    "requestId": "279b3a2e-a40d-40b5-aab0-4da7fc480a22",
+    "atUTC": "2026-11-02T17:57:44.833350+00:00",
+    "url": "https://api.cloudflare.com/client/v4/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/observability/telemetry/query",
+    "httpStatus": 200,
+    "latencyMs": 646,
+    "headers": {
+      "Date": "Mon, 02 Nov 2026 17:57:44 GMT",
+      "Content-Type": "application/json",
+      "CF-Ray": "a54505f75b7ca207-MSP",
+      "Server": "cloudflare"
+    },
+    "body": {
+      "success": true,
+      "count": 0,
+      "events": []
+    }
+  },
+  "platform1042Observed": false,
+  "freshWorkerProductRequests": 8,
+  "independentRetailerRequests": 4,
+  "allCasesFinished": true
+}

@@ -1,131 +1,110 @@
-# Amazon & Flipkart live Worker acceptance — 2 November 2026
+# Amazon & Flipkart live acceptance after secret rotation
 
-**Overall: BLOCKED. No new product price or availability acceptance is claimed.**
-The existing permanent Worker responds correctly to health and unauthorized requests. The job received neither expected caller credential, so valid authentication and the requested ten authenticated retailer tests could not proceed. This is a credential-access blocker, not a demonstrated parser defect.
+**Result: authentication PASS; 8 exact live Worker checks completed; 2 independently matching selling prices PASS; 2 missing-PID cases BLOCKED. Overall acceptance remains UNVERIFIED.**
 
-Evidence: [run 41489945467](https://github.com/jayantjos/trustfolio-live-price-worker/actions/runs/41489945467), job 125430028160, source `334830fe1057ce1fe2c8e9242ce5bad04d1ac047`. The workflow's success means evidence was captured; it does not mean live-price acceptance passed. Raw safe evidence: `permanent-worker-connectivity.json`. Selected cases: `selected-product-cases.json`.
+**Next step: a controlled, disposable staging backend canary may proceed using the independently verified HP and Lenovo mappings. Full Top-5 acceptance and production cutover are not approved.** No backend/Mongo integration was performed in this task.
 
-## 1. Existing active Worker
+Evidence: [live run 41495950447](https://github.com/jayantjos/trustfolio-live-price-worker/actions/runs/41495950447), source `1293402048d1896a6d9af6aed3dc5aadfc9c487b`; [independent Lenovo completion 41496321270](https://github.com/jayantjos/trustfolio-live-price-worker/actions/runs/41496321270), source `51f9d4e53596d8e52a4c50a55251f0d0f0c6c085`.
+Saved data: `rotated-key-live-results.json`, `independent-flipkart-199.json`, updated `selected-product-cases.json`.
+Earlier credential-blocked evidence is retained in `permanent-worker-connectivity.json` and report history at commit `bf4b3c098c56f08b94754a481f581d6076c8f0ab`.
 
-| Check | Result | Evidence |
-|---|---|---|
-| Active deployment lookup | PASS, metadata only | Deployment b5647cfe-fed7-4165-9941-0d4b7d91d473; active version **d993efa1-adcd-46b0-bb56-452781c8f12a**, 100%; created 2026-11-02 16:43:47.935062 UTC |
-| workers.dev exposure | PASS, metadata only | enabled true, previews_enabled true |
-| Compatibility | PASS, source/config observation | 2026-10-29; flags []; standard usage model |
-| Health | PASS | HTTP 200; worker trustfolio-live-price-worker; application version **1.2.2**; ready true; 133 ms |
-| Secret binding exists on Worker | PASS, metadata only | TF_PRICE_WORKER_KEY secret_text binding; value was not read |
-| Valid authenticated handler connectivity | BLOCKED | No existing caller key was supplied by either expected GitHub Actions secret binding |
+## Active version and authentication
 
 Permanent endpoint: `https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev`.
 
-Observed 2026-11-02 17:18:48–17:18:49 UTC. The health body contains existing feature markers including seven-states-v1, balanced-elements-v1, json-owner-v1 and shared-variants-v2. The UUID above is from the deployment API; the health body returns application version 1.2.2, not that UUID. A deployment-API success alone is not counted as handler/price acceptance.
+| Check | Result | HTTP / evidence | Latency |
+|---|---|---|---|
+| Active deployment | PASS, metadata | Version **4c503467-81e3-4321-8d1b-80f408f1beaa**, 100%; deployment 2900b889-bf56-461c-a384-3e1b5af0af5f; created 2026-11-02 17:54:01.042032 UTC | — |
+| workers.dev route | PASS, metadata | enabled true; previews_enabled true | — |
+| Health | PASS | 200; worker trustfolio-live-price-worker; application version **1.2.2**; ready true | 153 ms |
+| Missing key | PASS | 401 / unauthorized | 109 ms |
+| Wrong key | PASS | 401 / unauthorized | 79 ms |
+| Newly configured matching key | **PASS** | 200 / success true; actual handler returned unsupported_product_url for the controlled invalid product | 101 ms |
+| Cloudflare 1042 | PASS for this sample | Not observed in auth or eight product requests; historical root cause is not declared resolved | — |
 
-## 2. Authentication and 1042
+The matching key came only from the GitHub Actions secret `TF_PRICE_WORKER_KEY`; its value was never printed, logged, committed or rotated here. Authentication controls did not call a retailer. The valid application response plus real product responses demonstrate handler execution, not merely API-deployment success.
 
-All authentication control requests used `items:["invalid-staging-product"]`, `useCache:false`, `browserProbe:false`; no retailer fetch was initiated.
+Valid-auth Ray: `a54505958e9c95c3-MEM`; client correlation ID `5c16b268-ef68-40e0-8f2e-57f4403b3a40`; 2026-11-02 17:57:28 UTC. Raw evidence includes Ray IDs, timestamps and local correlation IDs for every Worker request. Correlation IDs were sent; no unsupported claim of server-side echo is made. The deployed UUID is from the active deployment API; the handler exposes application version 1.2.2, not a version UUID header.
 
-| Request | Result | HTTP / body | Latency | Ray ID |
-|---|---|---|---|---|
-| GET /health | PASS | 200 / expected Worker JSON | 133 ms | a544ccf7a898a2e0-LAX |
-| POST /api/check, no key | PASS | 401 / unauthorized | 119 ms | a544ccf84cdedbc6-LAX |
-| POST /api/check, deliberately wrong key | PASS | 401 / unauthorized | 176 ms | a544ccf95d0e2e7e-DFW |
-| POST /api/check, valid existing key | BLOCKED, not attempted | Existing credential unavailable | — | — |
+## Compact product results
 
-The workflow checked only the established `secrets.TF_PRICE_WORKER_KEY` and `secrets.PRICE_WORKER_KEY` bindings; both were empty/unavailable to this job. It did not guess credentials, read unrelated secrets, rotate the Worker's existing key, or substitute a public diagnostic endpoint for authenticated acceptance.
+Every executed fresh request used `useCache:false`, `browserProbe:false`. Returned ASIN/PID matched the exact requested identifier in all eight executed cases. “Quote” means a Worker-returned price whose independent accuracy remains unverified. Unknown stock is not converted to true.
 
-**1042: not observed in these three permanent-endpoint requests.** Thus the permanent endpoint was reachable during this bounded sample, unlike the earlier disposable-Worker samples. This does **not** prove that 1042 occurs only on temporary Workers, that authorized requests are reliable, or that the historical root cause has been resolved. The historical 39 failures and unresolved Support case remain separate evidence. No failed experiment was repeated and no new disposable Worker was created.
+| Platform | Product ID | Actual price / quote | Availability | Worker status / verification | Fresh latency | PASS / FAIL / other |
+|---|---|---|---|---|---|---|
+| Amazon | B074J9SPYX — Crompton fan | **Quote ₹2,499** | Worker: in stock | ok / ok | 2,665 ms | UNVERIFIED independent price |
+| Amazon | B0GD16BJ1Z — Samsung AC | null | Worker: currently unavailable | out_of_stock / out_of_stock | 2,248 ms | UNVERIFIED stock accuracy; null-price safety PASS |
+| Amazon | B0GCKJ24Y3 — HAVAI cooler | null | Worker: currently unavailable | out_of_stock / out_of_stock | 2,120 ms | UNVERIFIED stock accuracy; null-price safety PASS |
+| Amazon | B0BH9647DC — LUX fan | **Quote ₹34,220** | Worker: in stock | ok / ok | 1,866 ms | UNVERIFIED independent price |
+| Amazon | B0GJDLKM5H — HP 24-cr0023in | **₹69,990 — independently matched** | Worker: in stock | ok / ok | 2,653 ms | **PASS primary selling price** |
+| Flipkart | COMHCYMG83BGNQHH — record 199 Lenovo | **₹36,502 — independently matched** | Worker and primary Offer: InStock | ok / ok | 1,400 ms | **PASS primary selling price** |
+| Flipkart | AICGETHFNCZCX7PA — record 212 Crompton | null | Worker: out of stock | out_of_stock / out_of_stock | 1,048 ms | UNVERIFIED independent stock; null-price safety PASS |
+| Flipkart | Record 155 GAMESOUL — PID unknown | Not requested / null | Unknown | Not tested | — | **BLOCKED exact PID** |
+| Flipkart | COMGSV3GZYUDG6NP — record 239 Acer | null | Unknown | error / price_unverified; product_identity_unverified | 1,080 ms | UNVERIFIED catalog identity; safe refusal PASS |
+| Flipkart | Record 234 DZAB — PID unknown | Not requested / null | Unknown | Not tested | — | **BLOCKED exact PID** |
 
-**Authentication overall: BLOCKED**, with missing/wrong-key controls PASS.
+There were four positive Worker prices, three unavailable responses with null price/false stock, and one unverified-identity response with null price/null stock. No unaccepted-price leak was observed. These are response-contract observations, not eight independent retailer acceptances.
 
-## 3. Five Amazon cases
+### Selling-price and availability evidence
 
-Cases reuse existing audit identifiers and prior evidence. Because valid authentication was blocked, **none received a fresh Worker product request**. No stored, historical, cart-gated, MRP or other-seller price is represented as a verified current selling price.
+- **HP PASS:** a fresh independent standard HTML request returned the exact canonical ASIN and matching ASIN input; the primary priceToPay scope contained ₹69,990. Full product title matches Ryzen 7 7730U, 16 GB DDR4, 512 GB SSD and model 24-cr0023in. No MRP, seller minimum or promotional/coupon amount was substituted. Body SHA-256 and primary-scope text are saved.
+- **Lenovo PASS:** a separate fresh retailer HTML response contained exactly one primary Product, SKU COMHCYMG83BGNQHH, model 11IJL9 / 4 GB / 64 GB, and one INR Offer for 36,502 with schema.org/InStock. Its price matched the fresh Worker quote. This is listing-level offer evidence, not postcode delivery verification.
+- **Crompton and LUX independent prices UNVERIFIED:** their separate direct HTML responses contained no verifiable canonical ASIN/primary price scope. They were not retried with alternate identities or access-control workarounds. Their Worker quotes remain labelled as quotes.
+- **Samsung/HAVAI unavailable evidence:** actual Worker responses retained primary availability text, “Currently unavailable. We don't know when or if this item will be back in stock.” Both returned null accepted prices. No independent second stock source was collected, and no permanence/deletion claim is made.
+- **Flipkart Crompton:** real exact-PID JSON-LD extraction returned OOS, false stock and null price. Independent availability accuracy remains unverified.
+- **Acer 239:** ordinary item-only API returned product_identity_unverified / price_unverified and no accepted price. The known catalog 128 GB versus retailer-title 64 GB conflict remains visible. **No catalog-context payload was sent; therefore generalized catalog variant protection is not demonstrated.** This safe rejection must not be represented as proof that ordinary API always validates unseen Mongo catalog specs.
+- **Records 155/234:** saved cases have affiliate links and no verified exact PID. Existing earlier primary evidence was insufficient. No PID was invented and no different product was substituted.
 
-| Audit record | Product | Exact ASIN | Current selling price / stock | Result |
-|---|---|---|---|---|
-| 1 | Crompton Super Briz Deco 1200 mm ceiling fan, Smoked Brown | B074J9SPYX | Unverified / unknown | BLOCKED |
-| 2 | Samsung Bespoke AI WindFree 1.5 Ton AC, AR60H19D1AWNNA | B0GD16BJ1Z | Unverified / unknown | BLOCKED |
-| 3 | HAVAI Thunder-75 tower cooler, Black & Grey | B0GCKJ24Y3 | Unverified / unknown | BLOCKED |
-| 4 | LUX AA0031 retractable ceiling fan, Matt White | B0BH9647DC | Unverified / unknown | BLOCKED |
-| 5 | HP All-in-One Ryzen 7, 16 GB / 512 GB, 24-cr0023in | B0GJDLKM5H | Unverified / unknown | BLOCKED |
+One independent Lenovo capture hit the harness's 1.5 MB byte limit. Only that independent comparison was repeated with a 2.5 MB bound, yielding a complete 1,634,763-byte page and the exact primary Offer. This was a harness evidence-limit completion, not a Worker/parser fix or repeated price sweep. Total: **8 fresh Worker product requests, 2 successful cache probes, 5 independent retailer HTML requests**. No screenshots or Browser Rendering were used.
 
-For each case: live ASIN/retailer identity, primary selling price, MRP exclusion, other-seller exclusion, stock, error classification and product-response latency remain **UNVERIFIED** in this run. Audit record 1 previously yielded Worker ₹2,499; a different historical staged ASIN B0DVH1HDVQ yielded ₹26,030. Neither historical value is promoted to a new accepted quote.
+## Performance and six-second compatibility
 
-Fresh independent retailer comparison was not initiated without an authenticated Worker quote to compare. No hidden price was guessed and no screenshot/Browser Rendering was used.
-
-## 4. Five Flipkart cases
-
-| Audit record | Intended coverage / product | Existing exact PID evidence | Current price / stock | Result |
-|---|---|---|---|---|
-| 199 | Available price — Lenovo Chromebook 11IJL9, 4 GB / 64 GB | COMHCYMG83BGNQHH | Unverified / unknown | BLOCKED |
-| 212 | Out of Stock — Crompton 100 L desert cooler | AICGETHFNCZCX7PA | Unverified / unknown | BLOCKED |
-| 155 | Missing primary price — GAMESOUL JS39P drone | UNVERIFIED; saved affiliate/path evidence has no verified PID | Unverified / unknown | BLOCKED |
-| 239 | Wrong catalog variant — Acer Chromebook; catalog 128 GB versus retailer 64 GB | COMGSV3GZYUDG6NP | Unverified / unknown | BLOCKED |
-| 234 | Previously problematic listing — DZAB gaming desktop | UNVERIFIED; no exact PID in saved usable primary evidence | Unverified / unknown | BLOCKED |
-
-The selected-product JSON retains saved URLs. Records 155/234 additionally require exact-PID resolution from genuine primary evidence; an affiliate URL or product-path fragment must not be invented into a PID.
-
-Historical evidence reused, without relabelling it as a fresh acceptance:
-- Record 199: earlier Worker ₹36,502 at 15:32:00 UTC; older independent evidence was from a different time.
-- Record 212: earlier genuine Worker response explicitly out_of_stock, false stock, null price.
-- Records 155/234: earlier price_unverified with no accepted price.
-- Record 239: earlier fixed audit guard returned identity_mismatch with storage conflict 128 GB versus 64 GB. This fixed-audit/catalog-context protection does not establish that the ordinary item-only /api/check request validates unseen catalog specs.
-
-No current unavailable/unverified product received an accepted price in this run because **zero product requests ran**. This is not a live test PASS for rejection behavior.
-
-## 5. Speed and user experience
-
-| Metric | Result |
+| Measurement | Observed result |
 |---|---|
-| Health response | PASS measurement: 133 ms, one request |
-| Unauthorized handler response | PASS measurements: 119 ms missing key; 176 ms wrong key |
-| Real individual retailer request latency | BLOCKED |
-| Retailer API overhead, separated from upstream time | UNVERIFIED |
-| Product-request timeout frequency | UNVERIFIED; no product samples |
-| Cached versus fresh quote latency | BLOCKED |
-| Concurrent product-request behavior | BLOCKED |
-| Real budget-based Top-5 delay | UNVERIFIED |
-| Compatibility with backend's 6000 ms timeout | UNVERIFIED under live load |
+| Eight fresh product round trips | **1,048–2,665 ms**, median 1,993 ms; mean 1,885 ms |
+| Worker-reported item handling | 916–2,547 ms, including upstream fetch/parsing; not CPU time |
+| Client RTT minus item handling | 106–141 ms estimate; not a pure CPU/API-cost measurement |
+| Amazon cache probe | 101 ms, cached true, itemLatencyMs 0 |
+| Flipkart cache probe | 100 ms, cached true, itemLatencyMs 0 |
+| Bounded fresh concurrency | First two Amazon requests overlapped; total wall time 2,667 ms; individual RTTs 2,665 / 2,248 ms |
+| Unexpected HTTP errors/timeouts | 0/8 fresh product requests; 401 controls were intentional |
+| Existing 6000 ms caller deadline | All 8 measured fresh responses were below it; **tail/load compatibility UNVERIFIED** |
+| Cloudflare CPU/wall execution logs | Historical-Ray query succeeded but returned zero matching events; CPU measurements UNVERIFIED |
+| Actual budget Top-5/ranker latency | Not tested; UNVERIFIED |
 
-Cloudflare management API durations (251/234/534 ms) are metadata timings and are **not** retailer or frontend request latency. The three lightweight endpoint responses are not evidence that a price check or Top-5 finishes in the same time.
+Cached responses retain original quote/store latency metadata; current cache-probe latency is the measured RTT and itemLatencyMs 0. They are not new retailer checks. Two cache hits do not establish cross-POP cache reliability.
 
-Source evidence: normal Worker upstream timeout is 6500 ms, existing backend caller timeout is 6000 ms, and Worker success cache TTL is 45 seconds. Therefore URL replacement alone does not establish a safe timeout budget. Normal five-item Worker batches iterate items sequentially, while the current backend normally sends individual one-item requests in parallel. Neither behavior has new load-test evidence here. No millisecond retailer response promise or Top-5 performance approval is made.
+Existing source still has a **6500 ms Worker upstream timeout versus a 6000 ms backend caller timeout**. These eight fast samples do not remove that worst-case budget mismatch. Two concurrent requests are not a five-candidate load test, and these products span different categories. No promise of millisecond live retailer extraction, full-load reliability or acceptable real Top-5 completion is made.
 
-## 6. Future backend contract
+## Existing backend compatibility
 
-**Source-level compatibility: PASS for the legacy basic shape; real connected acceptance: BLOCKED.** Current repository source and the already captured actual developer backend source were inspected; existing successful parser/compatibility tests were reused, not rerun.
+**Basic request/response interface: PASS by source review plus real responses. General safe backend integration: not yet accepted.**
 
-| Field / selection | Existing source behavior | New live verification |
-|---|---|---|
-| Identifier | Top-level asin/pid; backend selects amazon when r.asin is truthy, otherwise flipkart | BLOCKED; exact returned identifier still needs comparison with requested product |
-| status | Selected store keeps ok/error/out_of_stock legacy statuses | BLOCKED |
-| priceNum / price | Accepted store results carry numeric and formatted price; rich adapter nulls unaccepted prices | BLOCKED |
-| inStock / in_stock | Rich results expose both aliases; unknown is intended to remain null | BLOCKED |
-| verificationStatus | Seven-state additive contract | BLOCKED |
-| extractionSource | Normal retrieval exposes parsed source under extractionSource; missing source is not fresh-price evidence | BLOCKED |
+| Interface element | Finding |
+|---|---|
+| Request | Actual developer LivePriceService sends POST /api/check, x-api-key and items:[item], useCache:true. Fresh acceptance uses useCache:false. |
+| Identifier | Executed responses preserve expected ASIN/PID. Backend still needs to validate the returned ID against the selected listing. |
+| status / priceNum / price | Real priced rows expose ok, finite positive numeric price and formatted price; unaccepted rows returned null price. |
+| inStock / in_stock | Both spellings were present and agreed in every executed selected-store response; unknown Acer stock remained null. |
+| verificationStatus | Present on all eight executed selected-store results. |
+| extractionSource | amazon_price_to_pay for priced Amazon; jsonld_product_offer for priced/OOS Flipkart; null for unsupported price/identity evidence. |
+| Croma | Existing VPS direct adapter remains unchanged and was not called. |
 
-The existing backend consumes status, priceNum and stock for persistence but does not fully retain/use rich verification and extraction provenance. Unsupported/skipped/error paths need not contain every successful-price field, so presence alone is not proof of acceptance.
+Reuse the actual backend source snapshot and existing proven fixtures. Remaining **minimal staging-only** safeguards:
+1. Add product_url URL selection/projection and do not treat unresolved affiliate links as exact-PID products.
+2. Preserve false/null stock for both aliases; persist canonical price only from accepted finite positive quotes.
+3. Remove stale catalog-price fallback after failed/unverified live checks in LiveBudgetRecommendationService.
+4. Enforce exact response identity and an approved catalog model/variant mapping/context; ordinary API cannot verify catalog fields it was not given.
+5. Measure and reconcile the caller/Worker timeout budget before production switching.
 
-**A future URL and credential replacement alone is NOT sufficient for safe acceptance.** Previously identified minimal staging changes remain necessary:
-1. Include product_url in URL selection and projection; resolve real Flipkart PID instead of sending unmapped affiliate links.
-2. Preserve both stock aliases, false and unknown; require a finite positive accepted price for canonical persistence.
-3. Remove stale catalog-price fallback from LiveBudgetRecommendationService after failed/unverified live checks.
-4. Match exact request/response product identity and handle catalog model/variant context. Ordinary item-only calls cannot validate catalog fields they were never given.
-5. Set and verify a safe caller/Worker timeout budget, and securely provide the matching existing credential.
-6. Validate the real quote-driven Mongo/Top-5/min-max integration separately after this Worker test passes.
+**A URL/key replacement alone is still insufficient.** No backend code, credentials, database records, category bounds or watcher were changed here.
 
-The actual saved LivePriceService still has a 6000 ms timeout and original URL alias/stock conversion behavior; LiveBudgetRecommendationService still contains the unsafe catalog fallback in production source. Proposed staging patches and earlier simulation results do not count as production fixes or connected acceptance.
+## Fixes, deployment and next step
 
-Croma remains on the existing VPS direct adapter. No Croma request or configuration change occurred.
+**Confirmed new parser defects: none. Fixes: none. Deployments: none. New secret rotations: none.** Incomplete independent evidence is not treated as a parser defect. Prior successful parser tests were reused, not repeated.
 
-## 7. Fixes, deployment and next gate
+**May staging integration proceed? YES, limited to a controlled disposable canary** using independently verified HP B0GJDLKM5H and Lenovo COMHCYMG83BGNQHH mappings, with the necessary staging-only safety patches. Prepared steps are in `NEXT_REAL_STAGING_STEP.md`; they were not executed. Require a new genuine quote at canary time, actual LivePriceService persistence, real controller/watcher checks and isolated DB guards. Current prices are observations, not permanently fixed expected values.
 
-**Parser fix: none. Worker deployment: none.** No reproducible price-parser defect could be established without a genuine authenticated quote. Correct 401 controls are not a defect to bypass.
+**Full acceptance / production cutover: NO.** Two missing-PID cases, two unconfirmed independent Amazon prices, independent OOS confirmation, generic catalog-context behavior, actual Top-5 and end-to-end Mongo/min-max/watcher performance remain incomplete.
 
-**Remaining immediate blocker:** the existing permanent Worker's matching caller key is not available through the expected GitHub Actions bindings. Make that same existing value securely available as an authorized repository/environment secret (for example TF_PRICE_WORKER_KEY) to the acceptance job. Do not paste the value into reports/chat, commit it, or rotate the permanent Worker secret as a shortcut.
-
-After credential access is supplied, run one valid authentication-only request, then the selected genuine Amazon/Flipkart price tests and bounded cache/concurrency checks. Stop on any renewed platform failure. Existing historical results must remain distinct from fresh quotes.
-
-**Can backend integration safely proceed now? BLOCKED / NO.** Health and missing/wrong authentication pass, but valid auth, ten live products, selling-price correctness and six-second user-experience acceptance have not passed.
-
-Production safeguards upheld: no production Mongo writes/deletes; no developer Worker URL replacement; no server restart; no production secret rotation; no browser/screenshot generation; no Croma or ad/social changes; no full audit or parser-suite rerun.
+No production Mongo updates/deletes, VPS restart, developer Worker URL replacement, Croma Cloudflare request, ad/social workflow change, full audit, screenshots or Browser Rendering occurred.

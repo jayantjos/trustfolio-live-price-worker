@@ -1,0 +1,53 @@
+{
+  "status": "PASS",
+  "auditSequence": 199,
+  "pid": "COMHCYMG83BGNQHH",
+  "url": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+  "purpose": "complete only independent evidence truncated by previous 1.5 MB harness limit",
+  "workerRequests": 0,
+  "retailerRequests": 1,
+  "expectedWorkerQuote": 36502,
+  "verifiedPrimaryPrice": 36502,
+  "httpStatus": 200,
+  "finalUrl": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+  "bytes": 1634763,
+  "sha256": "9381bf1f6044acabe8b2ca7855cd8c3163622b52239c51951645ce2e59052fa9",
+  "canonical": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e",
+  "primaryProductCount": 1,
+  "primaryProduct": {
+    "@type": "Product",
+    "name": "Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromebook 11IJL9 Chromebook",
+    "sku": "COMHCYMG83BGNQHH",
+    "productID": null,
+    "mpn": null,
+    "url": null,
+    "offers": {
+      "price": 36502,
+      "priceCurrency": "INR",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition",
+      "shippingDetails": {
+        "shippingRate": {
+          "value": 0,
+          "currency": "INR",
+          "@type": "MonetaryAmount"
+        },
+        "shippingDestination": {
+          "addressCountry": "IN",
+          "@type": "DefinedRegion"
+        },
+        "@type": "OfferShippingDetails"
+      },
+      "hasMerchantReturnPolicy": {
+        "applicableCountry": "IN",
+        "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
+        "description": "Returns are not permitted. We offer a 7 days replacement-only policy.",
+        "@type": "MerchantReturnPolicy"
+      },
+      "@type": "Offer"
+    }
+  },
+  "identityVerified": true,
+  "latencyMs": 1684,
+  "observedAtUTC": "2026-11-02T17:59:47.929855+00:00"
+}
