@@ -1,0 +1,62 @@
+{
+  "kind": "trustfolio_live_price_audit_checkpoint",
+  "checkedAt": "2026-11-02T06:48:43Z",
+  "target": {
+    "amazon": 150,
+    "flipkart": 150
+  },
+  "inventoryStatus": "fresh MongoDB inventory in progress; prior inventory contains 100 Amazon + 100 Flipkart + 100 Croma and is insufficient for requested split",
+  "summary": {
+    "retailerPagesInspected": 1,
+    "pass": 0,
+    "fail": 0,
+    "unverified": 1,
+    "pendingInventory": 299
+  },
+  "fixes": [
+    {
+      "commit": "d319a5a5aa6a772696a0b96aa10967f8c69d4920",
+      "description": "Primary product selectors replace whole Amazon HTML; bounded stream; exact ASIN and canonical verification",
+      "deployment": "6f2a7231-d107-4871-b083-73c34947b9a9",
+      "liveHealthConfirmed": true
+    },
+    {
+      "commit": "02d38132dd09846c777bc8e406a24cfb3af7466f",
+      "description": "Exact selector HTML text fallback for missing metadata innerText",
+      "deployment": "13e3ab09-4d8b-4744-9277-920195e24fc6",
+      "liveHealthConfirmed": true,
+      "testsPassed": 47,
+      "liveBrowserRetest": "pending per-ASIN cooldown; 755 seconds remaining at 06:45:41Z"
+    }
+  ],
+  "products": [
+    {
+      "sequence": 1,
+      "platform": "amazon",
+      "productId": null,
+      "asin": "B074J9SPYX",
+      "url": "https://www.amazon.in/dp/B074J9SPYX",
+      "storedPriceHistorical": 2765,
+      "storedPriceSource": "qa/real-mongo-100-each.js snapshot 2026-10-30; fresh record not yet read",
+      "retailerPrimaryPrice": null,
+      "retailerOtherSellerMinimum": 2499,
+      "retailerAvailability": "Add to cart enabled; primary seller price hidden",
+      "retailerSeller": "Jagganth Enterprises",
+      "workerPrice": 2499,
+      "workerCheckedAt": "2026-11-02T06:46:49.931Z",
+      "workerSource": "amazon_primary_buybox",
+      "workerMode": "fresh direct HTML; NOT Browser Run v2 retest",
+      "screenshot": "amazon/B074J9SPYX/retailer-page.jpg",
+      "result": "UNVERIFIED",
+      "reason": "Browser primary price hidden; other-seller minimum equals direct Worker response but same-seller selling-price and availability comparison not established. Browser v2 retest cooldown outstanding."
+    }
+  ],
+  "productionDatabaseMutations": 0,
+  "backendCutover": false,
+  "quota": {
+    "actualAccountUsage": "not available",
+    "documentation": "https://developers.cloudflare.com/browser-run/limits/",
+    "browserRequestsThisAudit": 1
+  },
+  "next": "Complete fresh inventory; retest B074J9SPYX after 2026-11-02T06:58:16Z without resetting limiter; continue one product at a time"
+}
