@@ -1,0 +1,71 @@
+name: Inspect original error 200 with corrected telemetry schema
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/qa-error200-resume-20261102.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: audit-error200-resume-20261102
+  cancel-in-progress: false
+jobs:
+  inspect-error:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - name: Read sanitized observability exception data only
+        run: |
+          python3 - <<'PY'
+          import os,json,re,datetime
+          from urllib.request import Request,urlopen
+          from urllib.error import HTTPError
+          base='https://api.cloudflare.com/client/v4/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/observability/telemetry/'
+          token=os.environ.get('CF_TOKEN','')
+          report={'target':'trustfolio-live-price-worker','sequence':200,'read_only':True,'events':[]}
+          def post(path,body):
+              req=Request(base+path,data=json.dumps(body).encode(),headers={'Authorization':'Bearer '+token,'Content-Type':'application/json'},method='POST')
+              try:
+                  with urlopen(req,timeout=25) as r:return r.status,json.load(r)
+              except HTTPError as e:return e.code,{}
+          def rows(value):
+              v=value.get('result',[])
+              if isinstance(v,list):return v
+              if isinstance(v,dict):return v.get('keys',v.get('data',[]))
+              return []
+          if not token:report['blocker']='existing Cloudflare token unavailable'
+          else:
+              status,keys=post('keys',{'datasets':['cloudflare-workers']})
+              report['keys_http_status']=status
+              if status!=200:report['blocker']='observability permission/API unavailable; no permission expansion attempted'
+              else:
+                  names=[x.get('key') for x in rows(keys)]
+                  key=next((k for k in names if k and k.endswith('scriptName')),None) or ('$metadata.service' if '$metadata.service' in names else None)
+                  if not key:report['blocker']='script key not present in discovered schema'
+                  else:
+                      status,vals=post('values',{'datasets':['cloudflare-workers'],'key':key,'type':'string','timeframe':{'from':1793608140000,'to':1793608320000}})
+                      values=rows(vals);present=any(x.get('value')=='trustfolio-live-price-worker' for x in values)
+                      report['values_http_status']=status
+                      if not present:report['blocker']='target Worker not found in telemetry values'
+                      else:
+                          ts=lambda s:int(datetime.datetime.fromisoformat(s).timestamp()*1000)
+                          body={'queryId':'audit-error-200-20261102','timeframe':{'from':ts('2026-11-02T08:29:00+00:00'),'to':ts('2026-11-02T08:32:00+00:00')},'view':'events','limit':100,'dry':True,'parameters':{'datasets':['cloudflare-workers'],'filters':[{'key':key,'operation':'eq','type':'string','value':'trustfolio-live-price-worker'}],'filterCombination':'and'}}
+                          status,data=post('query',body);report['query_http_status']=status
+                          for event in data.get('result',{}).get('events',{}).get('events',[]):
+                              meta=event.get('$metadata',{});worker=event.get('$workers',{})
+                              if not meta.get('error') and worker.get('outcome') not in ['exception','exceededCpu']:continue
+                              message=str(meta.get('error') or meta.get('message') or worker.get('outcome') or '')
+                              message=re.sub(r'https?://[^\s]+','[url]',message)
+                              message=re.sub(r'[A-Za-z0-9_-]{32,}','[redacted]',message)
+                              report['events'].append({'timestamp':event.get('timestamp'),'outcome':worker.get('outcome'),'message':message[:400]})
+          open('error-200-diagnostic.json','w').write(json.dumps(report,indent=2))
+          print('ERROR_200_DIAGNOSTIC='+json.dumps(report,separators=(',',':')))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: error-200-readonly-diagnostic
+          path: error-200-diagnostic.json
+          retention-days: 30
