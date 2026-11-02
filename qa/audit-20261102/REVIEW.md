@@ -49,10 +49,12 @@ MongoDB writes performed: zero. Croma and social/ad workflows were unchanged. Th
 
 ## Completed Worker-only checks for records 201–300
 
-All 100 requests completed with HTTP 200, one request per record and no retries. Semantic results: 81 ok price extractions, 6 out-of-stock, 10 missing/unverified primary Product JSON-LD, 2 rejected capacity conflicts, and 1 parser error. None is an independent browser PASS.
+All 100 requests completed with HTTP 200, one request per record and no retries. Semantic results: 81 ok price extractions, 6 out-of-stock, 10 missing/unverified primary Product JSON-LD, 2 rejected capacity conflicts, and 1 product identity rejection. None is an independent browser PASS.
 
 Worker-only warnings requiring independent review: record 216 catalog 25L versus retailer 10L (PID WGYENHVHHH2TTTZA), and record 236 catalog 25L versus retailer 15L (PID WGYHFYXJZUXB39AK). These remain UNVERIFIED rather than being added to the 7 browser-confirmed FAIL results.
 
 [Complete remote check run and downloadable JSON artifact](https://github.com/jayantjos/trustfolio-live-price-worker/actions/runs/41417687959).
 
 [300-record consolidated JSON](consolidated-results.json) includes the real selected inventory, outcomes, Worker-only raw results, limitations and proposed-only changes. [Review proposals](review-candidates.json) are separate from production data.
+
+Record 239 was rejected as product_identity_unverified; no price was accepted. Its retailer URL mentioned 128GB while the returned title mentioned 64GB. This requires independent browser review and remains UNVERIFIED.
