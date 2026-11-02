@@ -24,6 +24,14 @@ export function catalogVariantConflicts(sample,product) {
   const color=s=>palette.find(c=>new RegExp('\\b'+c+'\\b').test(s))?.replace('gray','grey');
   if(color(expected)&&color(actual)&&color(expected)!==color(actual))
     conflicts.push({field:'color',catalog:color(expected),retailer:color(actual)});
+  // An explicit trailing tablet color can be a named finish (not a basic
+  // palette word). Compare it only with the primary Product's color field.
+  if(category==='tablets'&&product.color) {
+    const finish=/\btablet\s*\(?\s*([a-z]+(?:\s+[a-z]+){0,2})\)?$/.exec(expected)?.[1];
+    const normColor=s=>String(s).replace(/[^a-z]/g,'');
+    if(finish&&!/\b(with|only|wifi|wi|fi|gaming|rom|ram|lte)\b/.test(finish)&&normColor(finish)!==normColor(norm(product.color)))
+      conflicts.push({field:'named_color',catalog:finish,retailer:product.color});
+  }
   return conflicts;
 }
 

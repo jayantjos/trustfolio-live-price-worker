@@ -27,7 +27,7 @@ jobs:
             echo 'DEPLOY_BLOCKED: CLOUDFLARE_API_TOKEN repository secret not configured'
             exit 1
           fi
-      - name: Run parser and integration regression tests including DDR RAM, explicit watts and connectivity
+      - name: Run parser and integration regression tests including named finish, DDR RAM, explicit watts and connectivity
         run: npm test
       - name: Deploy existing Wrangler Worker config
         run: npx --yes wrangler@4.155.0 deploy
