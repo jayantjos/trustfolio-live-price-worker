@@ -39,8 +39,15 @@ jobs:
           from urllib.request import Request,urlopen
           from urllib.error import HTTPError
           base='https://'+os.environ['STAGING_NAME']+'.jayantjoshi-joshi.workers.dev'
+          for attempt in range(12):
+              try:
+                  with urlopen(Request(base+'/health',headers={'User-Agent':'TrustFolio-Staging-Acceptance/1.0'}),timeout=10) as r:ready=json.load(r).get('ready')
+              except Exception:ready=False
+              if ready:break
+              time.sleep(3)
+          assert ready, 'Staging secret propagation did not complete'
           results=[]
-          for label,key,item in [('missing',None,'B0DVH1HDVQ'),('incorrect','intentionally-wrong','B0DVH1HDVQ'),('valid-amazon',os.environ['STAGING_KEY'],'B0DVH1HDVQ'),('valid-flipkart',os.environ['STAGING_KEY'],'https://www.flipkart.com/poco-x7-5g-yellow-256-gb/p/itm1cd5ce9a66fef?pid=MOBH7YZ9NSDFC3EK')]:
+          for label,key,item in [('missing',None,'B0DVH1HDVQ'),('incorrect','intentionally-wrong','B0DVH1HDVQ'),('valid-amazon',os.environ['STAGING_KEY'],'B0DVH1HDVQ'),('valid-flipkart',os.environ['STAGING_KEY'],'https://www.flipkart.com/crompton-100-l-desert-air-cooler/p/itmfdwa95yeshx4x?pid=AICGETHFNCZCX7PA')]:
               headers={'Content-Type':'application/json','User-Agent':'TrustFolio-Staging-Acceptance/1.0'}
               if key:headers['x-api-key']=key
               req=Request(base+'/api/check',headers=headers,data=json.dumps({'items':[item],'useCache':False,'browserProbe':False}).encode())
