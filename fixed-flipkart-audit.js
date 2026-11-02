@@ -4,11 +4,11 @@ import {extractFlipkart} from './price.js';
 // This resolver is never used by the ordinary production /api/check handler.
 const HOSTS=new Set(['fkrt.clnk.in','flipkart.com','www.flipkart.com']);
 export async function resolveFixedFlipkart(sample) {
-  const fail=error=>({error,priceINR:null,status:'unverified'});
+  const fail=(error,evidence={})=>({error,priceINR:null,status:'unverified',...evidence});
   let current=new URL(sample.url);
   for(let hop=0;hop<5;hop++) {
     if(current.protocol!=='https:'||!HOSTS.has(current.hostname)||current.username||current.password||current.port)
-      return fail('fixed_redirect_host_unverified');
+      return fail('fixed_redirect_host_unverified',{redirectHost:current.hostname,redirectProtocol:current.protocol});
     let response;
     try {response=await fetch(current.href,{redirect:'manual',signal:AbortSignal.timeout(6500),headers:{accept:'text/html','accept-language':'en-IN,en;q=0.9'}});}
     catch(_){return fail('fixed_link_fetch_failed');}

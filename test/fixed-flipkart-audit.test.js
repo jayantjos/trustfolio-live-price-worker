@@ -15,7 +15,7 @@ test('fixed affiliate redirect resolves exact primary SKU and standard price, no
 test('unknown redirect host is rejected before contacting it',async()=>{
  const original=global.fetch;let calls=0;
  global.fetch=async()=>{calls++;return new Response(null,{status:302,headers:{location:'https://unknown.example/product'}});};
- try{assert.equal((await resolveFixedFlipkart(sample)).error,'fixed_redirect_host_unverified');assert.equal(calls,1);}
+ try{const r=await resolveFixedFlipkart(sample);assert.equal(r.error,'fixed_redirect_host_unverified');assert.equal(r.redirectHost,'unknown.example');assert.equal(calls,1);}
  finally{global.fetch=original;}
 });
 test('ambiguous Product JSON-LD never supplies an arbitrary PID or price',async()=>{

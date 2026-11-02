@@ -38,7 +38,7 @@ jobs:
           grep -q '"amazonBrowserQALock":"per-asin-v2"' /tmp/tf-worker-health.json || { echo 'DEPLOY_VERIFY_FAILED'; exit 1; }
           grep -q '\"amazonBrowserExtraction\":\"primary-sections-v3\"' /tmp/tf-worker-health.json || { echo 'DEPLOY_VERIFY_FAILED'; exit 1; }
           grep -q '"amazonCanonicalIdentity":"exact-canonical-v1"' /tmp/tf-worker-health.json || exit 1
-          grep -q '"flipkartAuditResolution":"fixed-primary-jsonld-v1"' /tmp/tf-worker-health.json || exit 1
+          grep -q '"flipkartAuditResolution":"fixed-primary-jsonld-v2"' /tmp/tf-worker-health.json || exit 1
           echo 'DEPLOY_VERIFY_PASS'
       - name: One fresh Crompton diagnostic, no retries
         run: |
