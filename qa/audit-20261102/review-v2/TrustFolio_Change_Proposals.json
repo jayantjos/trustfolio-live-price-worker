@@ -1,0 +1,639 @@
+{
+  "production_writes": 0,
+  "identity_quarantine_scope": "Audit/migration review only; no production catalog or website filtering changed.",
+  "identity_review": [
+    {
+      "sequence": 5,
+      "mongo_product_id": "69f89be69a622ea2d7ce0b9c",
+      "issue": "Catalog HP Ryzen 7/16GB/512GB conflicts with retailer Athlon/8GB/256GB.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 14,
+      "mongo_product_id": "69f311421dafb58cccdbc9db",
+      "issue": "Requested ASIN B0FYGGJZV4 conflicts with canonical B0HCBBMV3V.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 43,
+      "mongo_product_id": "69f89be59a622ea2d7ce0b7d",
+      "issue": "Amazon canonical ASIN conflicts with requested product; fresh Worker rejected amazon_canonical_product_mismatch.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 113,
+      "mongo_product_id": "69f89beb9a622ea2d7ce0c91",
+      "issue": "Catalog Godrej 194L conflicts with retailer 185L.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 134,
+      "mongo_product_id": "69f89bec9a622ea2d7ce0ce6",
+      "issue": "Catalog vivo Passion Red/12GB/256GB conflicts with retailer Lemon Yellow/8GB/256GB and canonical identity.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 156,
+      "mongo_product_id": "69f419289a622ea2d7ccb617",
+      "issue": "Catalog BAJAJ 15L conflicts with retailer 25L; same 7299 price does not establish product identity. A separate exact 15L candidate was independently verified: PID WGYGTR6JUWU5ZGNX, standard 6499. It is a proposal only; the original production mapping is unchanged.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 157,
+      "mongo_product_id": "69f419299a622ea2d7ccb62f",
+      "issue": "Catalog TECHFIRE conflicts with primary product PTROX and SEO GEMFLY; retailer price 666 is not validated for catalog product.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 203,
+      "mongo_product_id": "69ff63dafe6fd8dc386ad35d",
+      "issue": "Catalog Tecno Melting Silver/128GB conflicts with primary Storm Titanium/256GB.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 209,
+      "mongo_product_id": "69f4c6849a622ea2d7cd012d",
+      "issue": "Catalog Voltas Beko White conflicts with primary Maroon/Burgundy.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 216,
+      "mongo_product_id": "69f419289a622ea2d7ccb621",
+      "issue": "Catalog Venus 25L conflicts with primary 10L.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 218,
+      "mongo_product_id": "69f4192a9a622ea2d7ccb675",
+      "issue": "Catalog Cadlec 2000W conflicts with primary 1998W.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 227,
+      "mongo_product_id": "69f419329a622ea2d7ccb723",
+      "issue": "Catalog OnePlus Pad Go 4G conflicts with primary Wi-Fi Only.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 236,
+      "mongo_product_id": "69f419289a622ea2d7ccb622",
+      "issue": "Catalog V-Guard 25L conflicts with primary 15L.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 238,
+      "mongo_product_id": "69f48a3e9a622ea2d7ccec78",
+      "issue": "Catalog Cadlec 2000W conflicts with primary 1999W.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 239,
+      "mongo_product_id": "69f48e8e9a622ea2d7ccefa6",
+      "issue": "Catalog Acer 128GB eMMC conflicts with primary 64GB eMMC.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 267,
+      "mongo_product_id": "6a06fc38fe6fd8dc386b949b",
+      "issue": "Catalog OnePlus Pad 4 Dune Glow conflicts with selected/primary Sage Mist finish.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    }
+  ],
+  "price_update_proposals": [
+    {
+      "sequence": 151,
+      "mongo_product_id": "69f4190c9a622ea2d7ccb544",
+      "stored_price": 38990,
+      "observed_price": 37990,
+      "proposed_only": true
+    },
+    {
+      "sequence": 152,
+      "mongo_product_id": "69f4190f9a622ea2d7ccb560",
+      "stored_price": 8699,
+      "observed_price": 8999,
+      "proposed_only": true
+    },
+    {
+      "sequence": 158,
+      "mongo_product_id": "69f4192a9a622ea2d7ccb664",
+      "stored_price": 2450,
+      "observed_price": 2150,
+      "proposed_only": true
+    },
+    {
+      "sequence": 161,
+      "mongo_product_id": "69f49ec19a622ea2d7ccf4e9",
+      "stored_price": 6620,
+      "observed_price": 5799,
+      "proposed_only": true
+    },
+    {
+      "sequence": 164,
+      "mongo_product_id": "69f419309a622ea2d7ccb6d8",
+      "stored_price": 99999,
+      "observed_price": 99049,
+      "proposed_only": true
+    },
+    {
+      "sequence": 168,
+      "mongo_product_id": "69f4c1ac9a622ea2d7cd0009",
+      "stored_price": 5104,
+      "observed_price": 4170,
+      "proposed_only": true
+    },
+    {
+      "sequence": 169,
+      "mongo_product_id": "69f419329a622ea2d7ccb736",
+      "stored_price": 34490,
+      "observed_price": 20340,
+      "proposed_only": true
+    },
+    {
+      "sequence": 170,
+      "mongo_product_id": "69f419339a622ea2d7ccb750",
+      "stored_price": 12999,
+      "observed_price": 9999,
+      "proposed_only": true
+    },
+    {
+      "sequence": 171,
+      "mongo_product_id": "69f4190c9a622ea2d7ccb54b",
+      "stored_price": 40834,
+      "observed_price": 40607,
+      "proposed_only": true
+    },
+    {
+      "sequence": 172,
+      "mongo_product_id": "69f4190f9a622ea2d7ccb562",
+      "stored_price": 6490,
+      "observed_price": 5509,
+      "proposed_only": true
+    },
+    {
+      "sequence": 178,
+      "mongo_product_id": "69f4192a9a622ea2d7ccb66c",
+      "stored_price": 1779,
+      "observed_price": 1441,
+      "proposed_only": true
+    },
+    {
+      "sequence": 179,
+      "mongo_product_id": "69f4192a9a622ea2d7ccb682",
+      "stored_price": 115990,
+      "observed_price": 171900,
+      "proposed_only": true
+    },
+    {
+      "sequence": 180,
+      "mongo_product_id": "69f49a459a622ea2d7ccf397",
+      "stored_price": 6090,
+      "observed_price": 6270,
+      "proposed_only": true
+    },
+    {
+      "sequence": 181,
+      "mongo_product_id": "69f49ec19a622ea2d7ccf4eb",
+      "stored_price": 1261,
+      "observed_price": 1432,
+      "proposed_only": true
+    },
+    {
+      "sequence": 182,
+      "mongo_product_id": "69f4192c9a622ea2d7ccb6ba",
+      "stored_price": 13390,
+      "observed_price": 12790,
+      "proposed_only": true
+    },
+    {
+      "sequence": 187,
+      "mongo_product_id": "69f419329a622ea2d7ccb715",
+      "stored_price": 29999,
+      "observed_price": 22499,
+      "proposed_only": true
+    },
+    {
+      "sequence": 189,
+      "mongo_product_id": "69f419329a622ea2d7ccb741",
+      "stored_price": 13990,
+      "observed_price": 25490,
+      "proposed_only": true
+    },
+    {
+      "sequence": 190,
+      "mongo_product_id": "69f419339a622ea2d7ccb751",
+      "stored_price": 10499,
+      "observed_price": 8999,
+      "proposed_only": true
+    },
+    {
+      "sequence": 191,
+      "mongo_product_id": "69f4190c9a622ea2d7ccb54d",
+      "stored_price": 33490,
+      "observed_price": 30990,
+      "proposed_only": true
+    },
+    {
+      "sequence": 192,
+      "mongo_product_id": "69f419129a622ea2d7ccb57b",
+      "stored_price": 7299,
+      "observed_price": 6199,
+      "proposed_only": true
+    },
+    {
+      "sequence": 196,
+      "mongo_product_id": "69f419289a622ea2d7ccb620",
+      "stored_price": 3533,
+      "observed_price": 2748,
+      "proposed_only": true
+    },
+    {
+      "sequence": 197,
+      "mongo_product_id": "69f483ef9a622ea2d7ccea46",
+      "stored_price": 4725,
+      "observed_price": 4713,
+      "proposed_only": true
+    },
+    {
+      "sequence": 198,
+      "mongo_product_id": "69f4192a9a622ea2d7ccb671",
+      "stored_price": 1699,
+      "observed_price": 1749,
+      "proposed_only": true
+    },
+    {
+      "sequence": 201,
+      "mongo_product_id": "69f49ec19a622ea2d7ccf4ee",
+      "stored_price": 1348,
+      "observed_price": 1498,
+      "proposed_only": true
+    },
+    {
+      "sequence": 202,
+      "mongo_product_id": "69f4192c9a622ea2d7ccb6bc",
+      "stored_price": 16790,
+      "observed_price": 16690,
+      "proposed_only": true
+    },
+    {
+      "sequence": 204,
+      "mongo_product_id": "69f419319a622ea2d7ccb6e0",
+      "stored_price": 10799,
+      "observed_price": 10699,
+      "proposed_only": true
+    },
+    {
+      "sequence": 205,
+      "mongo_product_id": "69f47d1f9a622ea2d7cce6d9",
+      "stored_price": 9999,
+      "observed_price": 25999,
+      "proposed_only": true
+    },
+    {
+      "sequence": 210,
+      "mongo_product_id": "69f419339a622ea2d7ccb752",
+      "stored_price": 8999,
+      "observed_price": 7999,
+      "proposed_only": true
+    },
+    {
+      "sequence": 211,
+      "mongo_product_id": "69f4190c9a622ea2d7ccb550",
+      "stored_price": 78990,
+      "observed_price": 51900,
+      "proposed_only": true
+    },
+    {
+      "sequence": 213,
+      "mongo_product_id": "6a06c4bafe6fd8dc386b739a",
+      "stored_price": 10036,
+      "observed_price": 9439,
+      "proposed_only": true
+    },
+    {
+      "sequence": 217,
+      "mongo_product_id": "6a06f0aafe6fd8dc386b8efa",
+      "stored_price": 699,
+      "observed_price": 499,
+      "proposed_only": true
+    },
+    {
+      "sequence": 219,
+      "mongo_product_id": "69f4192b9a622ea2d7ccb68e",
+      "stored_price": 82990,
+      "observed_price": 74990,
+      "proposed_only": true
+    },
+    {
+      "sequence": 221,
+      "mongo_product_id": "69f49ec39a622ea2d7ccf511",
+      "stored_price": 21990,
+      "observed_price": 12999,
+      "proposed_only": true
+    },
+    {
+      "sequence": 224,
+      "mongo_product_id": "69f419319a622ea2d7ccb6e4",
+      "stored_price": 37499,
+      "observed_price": 34349,
+      "proposed_only": true
+    },
+    {
+      "sequence": 225,
+      "mongo_product_id": "69f4f56a9a622ea2d7cd0dd8",
+      "stored_price": 25990,
+      "observed_price": 24990,
+      "proposed_only": true
+    },
+    {
+      "sequence": 226,
+      "mongo_product_id": "6a1010990f397d1e1344d2e9",
+      "stored_price": 449,
+      "observed_price": 499,
+      "proposed_only": true
+    },
+    {
+      "sequence": 228,
+      "mongo_product_id": "6a06cf62fe6fd8dc386b7e4c",
+      "stored_price": 7199,
+      "observed_price": 5499,
+      "proposed_only": true
+    },
+    {
+      "sequence": 229,
+      "mongo_product_id": "69f4c6859a622ea2d7cd0144",
+      "stored_price": 16490,
+      "observed_price": 15790,
+      "proposed_only": true
+    },
+    {
+      "sequence": 230,
+      "mongo_product_id": "69f419339a622ea2d7ccb757",
+      "stored_price": 8499,
+      "observed_price": 4223,
+      "proposed_only": true
+    },
+    {
+      "sequence": 232,
+      "mongo_product_id": "69f419149a622ea2d7ccb597",
+      "stored_price": 7859,
+      "observed_price": 6679,
+      "proposed_only": true
+    },
+    {
+      "sequence": 241,
+      "mongo_product_id": "69f49ec39a622ea2d7ccf513",
+      "stored_price": 7590,
+      "observed_price": 6991,
+      "proposed_only": true
+    },
+    {
+      "sequence": 242,
+      "mongo_product_id": "69f4192c9a622ea2d7ccb6be",
+      "stored_price": 17590,
+      "observed_price": 17490,
+      "proposed_only": true
+    },
+    {
+      "sequence": 244,
+      "mongo_product_id": "69f419319a622ea2d7ccb6e5",
+      "stored_price": 41499,
+      "observed_price": 37999,
+      "proposed_only": true
+    },
+    {
+      "sequence": 245,
+      "mongo_product_id": "69f4f56a9a622ea2d7cd0ddd",
+      "stored_price": 17690,
+      "observed_price": 15990,
+      "proposed_only": true
+    },
+    {
+      "sequence": 247,
+      "mongo_product_id": "6a06a6f0fe6fd8dc386b705c",
+      "stored_price": 26999,
+      "observed_price": 22999,
+      "proposed_only": true
+    },
+    {
+      "sequence": 248,
+      "mongo_product_id": "6a06cf62fe6fd8dc386b7e4d",
+      "stored_price": 8403,
+      "observed_price": 6899,
+      "proposed_only": true
+    },
+    {
+      "sequence": 250,
+      "mongo_product_id": "69f419339a622ea2d7ccb75a",
+      "stored_price": 7999,
+      "observed_price": 6499,
+      "proposed_only": true
+    },
+    {
+      "sequence": 252,
+      "mongo_product_id": "69f419149a622ea2d7ccb59b",
+      "stored_price": 8999,
+      "observed_price": 7639,
+      "proposed_only": true
+    },
+    {
+      "sequence": 256,
+      "mongo_product_id": "69f419299a622ea2d7ccb623",
+      "stored_price": 3399,
+      "observed_price": 3099,
+      "proposed_only": true
+    },
+    {
+      "sequence": 257,
+      "mongo_product_id": "6a06f0aafe6fd8dc386b8f0c",
+      "stored_price": 899,
+      "observed_price": 699,
+      "proposed_only": true
+    },
+    {
+      "sequence": 259,
+      "mongo_product_id": "69f48e8f9a622ea2d7ccefb8",
+      "stored_price": 56999,
+      "observed_price": 62690,
+      "proposed_only": true
+    },
+    {
+      "sequence": 260,
+      "mongo_product_id": "69f49a479a622ea2d7ccf3d4",
+      "stored_price": 46372,
+      "observed_price": 46362,
+      "proposed_only": true
+    },
+    {
+      "sequence": 261,
+      "mongo_product_id": "69f49ec39a622ea2d7ccf51a",
+      "stored_price": 3368,
+      "observed_price": 3584,
+      "proposed_only": true
+    },
+    {
+      "sequence": 262,
+      "mongo_product_id": "69f4192c9a622ea2d7ccb6bf",
+      "stored_price": 18390,
+      "observed_price": 17490,
+      "proposed_only": true
+    },
+    {
+      "sequence": 265,
+      "mongo_product_id": "69f4f56a9a622ea2d7cd0ddf",
+      "stored_price": 12999,
+      "observed_price": 29999,
+      "proposed_only": true
+    },
+    {
+      "sequence": 270,
+      "mongo_product_id": "69f419339a622ea2d7ccb75c",
+      "stored_price": 3801,
+      "observed_price": 3564,
+      "proposed_only": true
+    },
+    {
+      "sequence": 271,
+      "mongo_product_id": "6a06c5c6fe6fd8dc386b74c5",
+      "stored_price": 44579,
+      "observed_price": 43904,
+      "proposed_only": true
+    },
+    {
+      "sequence": 272,
+      "mongo_product_id": "69f419169a622ea2d7ccb5b5",
+      "stored_price": 10319,
+      "observed_price": 8769,
+      "proposed_only": true
+    },
+    {
+      "sequence": 273,
+      "mongo_product_id": "6a06c4bafe6fd8dc386b73a9",
+      "stored_price": 10079,
+      "observed_price": 9549,
+      "proposed_only": true
+    },
+    {
+      "sequence": 276,
+      "mongo_product_id": "69f419299a622ea2d7ccb624",
+      "stored_price": 6349,
+      "observed_price": 5699,
+      "proposed_only": true
+    },
+    {
+      "sequence": 277,
+      "mongo_product_id": "6a06f0aafe6fd8dc386b8f0d",
+      "stored_price": 649,
+      "observed_price": 599,
+      "proposed_only": true
+    },
+    {
+      "sequence": 279,
+      "mongo_product_id": "69f48e8f9a622ea2d7ccefbc",
+      "stored_price": 36664,
+      "observed_price": 41571,
+      "proposed_only": true
+    },
+    {
+      "sequence": 281,
+      "mongo_product_id": "69f49ec39a622ea2d7ccf51b",
+      "stored_price": 4191,
+      "observed_price": 4599,
+      "proposed_only": true
+    },
+    {
+      "sequence": 282,
+      "mongo_product_id": "69f4192c9a622ea2d7ccb6c0",
+      "stored_price": 19490,
+      "observed_price": 17990,
+      "proposed_only": true
+    },
+    {
+      "sequence": 284,
+      "mongo_product_id": "69f4a8879a622ea2d7ccf90d",
+      "stored_price": 25999,
+      "observed_price": 27599,
+      "proposed_only": true
+    },
+    {
+      "sequence": 287,
+      "mongo_product_id": "6a07704cfe6fd8dc386bb2d3",
+      "stored_price": 23999,
+      "observed_price": 19999,
+      "proposed_only": true
+    },
+    {
+      "sequence": 288,
+      "mongo_product_id": "6a0b8246fe6fd8dc386c47c5",
+      "stored_price": 1540,
+      "observed_price": 1332,
+      "proposed_only": true
+    },
+    {
+      "sequence": 289,
+      "mongo_product_id": "69f4c6879a622ea2d7cd0187",
+      "stored_price": 11989,
+      "observed_price": 12598,
+      "proposed_only": true
+    },
+    {
+      "sequence": 290,
+      "mongo_product_id": "69f419339a622ea2d7ccb75f",
+      "stored_price": 4900,
+      "observed_price": 3969,
+      "proposed_only": true
+    },
+    {
+      "sequence": 291,
+      "mongo_product_id": "6a06c5c6fe6fd8dc386b74d1",
+      "stored_price": 30990,
+      "observed_price": 40990,
+      "proposed_only": true
+    },
+    {
+      "sequence": 294,
+      "mongo_product_id": "69f4026f9a622ea2d7ccb2ed",
+      "stored_price": 17747,
+      "observed_price": 19514,
+      "proposed_only": true
+    },
+    {
+      "sequence": 297,
+      "mongo_product_id": "6a06f0aafe6fd8dc386b8f0f",
+      "stored_price": 899,
+      "observed_price": 799,
+      "proposed_only": true
+    },
+    {
+      "sequence": 298,
+      "mongo_product_id": "69f48a409a622ea2d7cceca2",
+      "stored_price": 2392,
+      "observed_price": 2092,
+      "proposed_only": true
+    },
+    {
+      "sequence": 300,
+      "mongo_product_id": "6a06ca84fe6fd8dc386b7af8",
+      "stored_price": 15000,
+      "observed_price": 14980,
+      "proposed_only": true
+    }
+  ],
+  "replacement_candidates": [
+    {
+      "sequence": 156,
+      "mongo_product_id": "69f419289a622ea2d7ccb617",
+      "observed_url": "https://www.flipkart.com/bajaj-popular-plus-15-l-storage-water-geyser-glasslined-tank/p/itm97c247d004364?pid=WGYGTR6JUWU5ZGNX&marketplace=FLIPKART&lid=LSTWGYGTR6JUWU5ZGNXIYOUAY&pageUID=1793617092261",
+      "primary_pid": "WGYGTR6JUWU5ZGNX",
+      "title": "BAJAJ Popular Plus 15 L Storage Water Geyser Glasslined Tank",
+      "independent_price": 6499,
+      "independent_stock": "https://schema.org/InStock",
+      "screenshot": "replacements/156.jpg",
+      "observed_at_utc": "2026-11-02T11:01:58.818Z",
+      "independently_verified": true,
+      "worker_verified": false,
+      "production_mapping_changed": false,
+      "requires_mapping_review": true
+    }
+  ]
+}

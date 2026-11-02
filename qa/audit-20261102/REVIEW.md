@@ -1,3 +1,9 @@
+# Superseded historical audit snapshot
+
+Latest authoritative audit: **108 PASS / 16 FAIL / 176 UNVERIFIED**. See [final v2 report and deliverables](review-v2/README.md). Production remains BLOCKED; zero Mongo writes and no backend cutover. Older counts and the incomplete archive below are historical only.
+
+---
+
 # TrustFolio price audit — 2 November 2026
 
 The selected inventory contains 300 actual MongoDB records: 150 Amazon and 150 Flipkart. Independent retailer pages were inspected and screenshots captured for records 1–200. Browser and local execution capability became unavailable before record 201. The remaining records receive Worker-only checks and cannot pass independent price verification.

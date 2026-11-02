@@ -1,0 +1,63 @@
+--- a/services/LivePriceService.js
++++ b/services/LivePriceService.js
+@@ -18,7 +18,7 @@
+ /** What the Worker should fetch for a listing; null = no live price (Croma, missing link). */
+ function workerItem(doc) {
+   const platform = String(doc.platform || '').toLowerCase();
+-  const url = String(doc.original_product_url || doc.clean_url || doc.url || doc.productUrl || '');
++  const url = String(doc.original_product_url || doc.clean_url || doc.product_url || doc.url || doc.productUrl || '');
+   const id = String(doc.platform_product_id || doc.asin || '');
+ 
+   if (platform.includes('amazon')) {
+@@ -59,12 +59,14 @@
+ }
+ 
+ function toLive(result, prev = {}) {
++  if (result.status === 'ok' && (result.inStock === false || result.in_stock === false))
++    result = {...result, status:'error', error:'inconsistent_stock_and_price'};
+   const availabilityKind = classify(result);
+   // Do not show a fresh LIVE badge for a product whose listing explicitly says unavailable.
+   const liveStatus = availabilityKind === 'permanent' ? 'out_of_stock'
+     : availabilityKind === 'ambiguous' ? 'not_available'
+     : availabilityKind === 'transient' && result.status === 'ok' ? 'error' : result.status;
+-  const priced = (liveStatus === 'ok' || liveStatus === 'out_of_stock') && result.priceNum > 0;
++  const priced = liveStatus === 'ok' && result.priceNum > 0;
+   const availabilityState = toAvailabilityState(result, prev);
+   return {
+     ...availabilityState,
+@@ -74,7 +76,7 @@
+     price_inr: priced ? result.priceNum : prev.price_inr ?? null,
+     priced_at: priced ? new Date() : prev.priced_at ?? null,
+     in_stock: Object.prototype.hasOwnProperty.call(result, 'in_stock')
+-      ? result.in_stock : liveStatus === 'ok',
++      ? result.in_stock : Object.prototype.hasOwnProperty.call(result, 'inStock') ? result.inStock : null,
+     availability: result.availability ?? null,
+     error: result.error ? String(result.error).slice(0, 180) : null,
+     http_status: Number(result.http_status ?? result.httpStatus ?? result.statusCode) || null,
+@@ -99,7 +101,7 @@
+       { _id: { $in: objectIds } },
+       {
+         projection: {
+-          platform: 1, asin: 1, url: 1, clean_url: 1, productUrl: 1, original_product_url: 1,
++          platform: 1, asin: 1, url: 1, clean_url: 1, product_url: 1, productUrl: 1, original_product_url: 1,
+           platform_product_id: 1, title: 1, brand: 1, category: 1, price_inr: 1, live: 1,
+         },
+       }
+--- a/services/LiveBudgetRecommendationService.js
++++ b/services/LiveBudgetRecommendationService.js
+@@ -63,12 +63,9 @@
+       const live = row.live || null;
+       if (row.deleted || live?.status === 'out_of_stock') continue;
+ 
+-      let displayPrice = candidate.price_inr;
+-      let priceSource = 'website_catalog';
+-      if (live?.status === 'ok') {
+-        displayPrice = Number(live.price_inr);
+-        priceSource = 'website_live_price_api';
+-      }
++      if (live?.status !== 'ok' || live.in_stock === false || live.inStock === false) continue;
++      const displayPrice = Number(live.price_inr);
++      const priceSource = 'website_live_price_api';
+       if (!goodPrice(displayPrice, budgetCap)) continue;
+       qualified.push({
+         ...candidate,

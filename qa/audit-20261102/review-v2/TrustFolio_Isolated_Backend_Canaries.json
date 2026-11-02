@@ -1,0 +1,56 @@
+{
+  "production_files_modified": false,
+  "mongo_connections": 0,
+  "mongo_writes": 0,
+  "network_calls": 0,
+  "scope": "isolated VM tests of retrieved production source with explicit dependencies",
+  "baseline": {
+    "stale_catalog_fallback_reproduced": true,
+    "false_in_stock_reproduced": true,
+    "affiliate_url_unsupported_reproduced": true
+  },
+  "proposed": {
+    "stale_catalog_rejected": true,
+    "over_budget_rejected": true,
+    "out_of_stock_rejected": true,
+    "explicit_false_stock_rejected": true,
+    "unknown_stock_preserved": true,
+    "next_ranker_wave_used": true,
+    "ranker_order_preserved": true
+  },
+  "before": {
+    "ids": [
+      "1",
+      "4",
+      "5",
+      "6",
+      "7"
+    ],
+    "prices": [
+      100,
+      400,
+      500,
+      600,
+      700
+    ],
+    "waves": 2
+  },
+  "after": {
+    "ids": [
+      "5",
+      "6",
+      "7"
+    ],
+    "prices": [
+      500,
+      600,
+      700
+    ],
+    "waves": 2
+  },
+  "remaining": [
+    "Backend Worker key missing; real authenticated backend canary blocked.",
+    "Affiliate mapping requires verified canonical PID proposals.",
+    "Mongo category range refresh and real website Top-5 canaries still required."
+  ]
+}
