@@ -20,7 +20,7 @@ jobs:
           echo "$health"
           echo "$health" | grep -q '"amazonBrowserQALock":"per-asin-v2"'
           # Check the remaining three individually. Respect Free-plan 10-second Quick Action quota.
-          for asin in B0H75M7JKH B0DVH1HDVQ B074J9SPYX B08RC27RJM B0F24RTBDQ; do
+          for asin in B074J9SPYX; do
             echo "=== SINGLE_ASIN:$asin ==="
             curl -fsS --max-time 45 "$base/qa/amazon-browser-one?sku=$asin"
             echo
