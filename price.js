@@ -1,3 +1,4 @@
+import {withVerification,byId,elementAt,plainText,primaryAvailability} from './product-state.js';
 /**
  * Product-scoped Amazon + Flipkart HTML extraction, based on the older
  * TrustFolio Scrape.do pricing logic. Do not read sponsored items, MRP or EMI.
@@ -49,15 +50,17 @@ function productJsonld(html,expected) {
       add(JSON.parse(m[1]));
       for (const p of graph) {
         if (!variantMatch(expected.title,p.name)) continue;
+        if(expected.platform==='amazon'&&!p.sku&&!p.productID)continue;
         const sku=String(p.sku ?? p.productID ?? '').trim().toUpperCase();
         if (sku && expected.id && sku!==expected.id.toUpperCase()) continue;
         const offers=Array.isArray(p.offers)?p.offers:[p.offers];
         for (const offer of offers) {
           if (!offer || typeof offer!=='object') continue;
+          if(expected.platform==='amazon'&&String(offer['@type']||'').toLowerCase()!=='offer')continue;
           const amount=parseMoney(offer.price);
           const availability=String(offer.availability||'').toLowerCase();
           if (/outofstock|soldout|discontinued/.test(availability)) return {
-            status:'out_of_stock',priceNum:null,price:null,inStock:false,source:'jsonld_product_offer',availability:'out_of_stock'
+            status:'out_of_stock',priceNum:null,price:null,inStock:false,source:'jsonld_product_offer',availability:/discontinued/.test(availability)?'discontinued':'out_of_stock',verificationStatus:/discontinued/.test(availability)?'discontinued':'out_of_stock'
           };
           if (amount!=null) return ok(amount,'jsonld_product_offer',/instock/.test(availability)?true:null);
         }
@@ -83,7 +86,7 @@ function isVisibleFlipkartE002(html) {
     .replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
   return (plain.length<1500 && /\bE002\b/i.test(plain) && /something went wrong/i.test(plain)) || /<h2\b[^>]*>\s*something went wrong!?\s*<\/h2>[\s\S]{0,250}?\bE002\b/i.test(body);
 }
-export function extractFlipkart(html, expected) {
+function rawFlipkart(html, expected) {
   if (!html || html.length<500) return failure('empty_product_page');
   if (isVisibleFlipkartE002(html)) return failure('flipkart_e002_store_error_page');
   if (!identityValid(html,expected)) {
@@ -98,6 +101,17 @@ export function extractFlipkart(html, expected) {
     }
     return failure('product_identity_unverified');
   }
+  // A verified URL PID cannot authorize a different primary Product's price.
+  const declared=[];
+  for(const m of html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)){
+    try{const visit=x=>{if(Array.isArray(x)){x.forEach(visit);return;}if(!x||typeof x!=='object')return;if(x['@graph'])visit(x['@graph']);if([x['@type']].flat().some(t=>String(t).toLowerCase()==='product'))declared.push(x);};visit(JSON.parse(m[1]));}catch{}
+  }
+  if(declared.length===1){const sku=String(declared[0].sku??declared[0].productID??'').toUpperCase();if(sku&&expected?.id&&sku!==String(expected.id).toUpperCase())return failure('flipkart_primary_pid_mismatch');}
+  const canonicalTag=/<link\b[^>]*\brel=["']canonical["'][^>]*>/i.exec(html)?.[0];
+  const canonicalHref=canonicalTag&&/\bhref=["']([^"']+)["']/i.exec(canonicalTag)?.[1];
+  if(canonicalHref){try{const u=new URL(canonicalHref,'https://www.flipkart.com');const pid=u.searchParams.get('pid');if(!['flipkart.com','www.flipkart.com'].includes(u.hostname)||(pid&&pid.toUpperCase()!==String(expected.id).toUpperCase()))return failure('flipkart_canonical_pid_mismatch');}catch{return failure('flipkart_canonical_pid_mismatch');}}
+  const stock=primaryAvailability(html,'flipkart');
+  if(stock&&stock.state!=='ok')return {...failure(stock.state),verificationStatus:stock.state,availabilityEvidence:stock.evidence};
   const ld=productJsonld(html,expected);
   if (ld) return ld;
   // Historical Scrape.do parser: fsp is the product selling price, not MRP.
@@ -154,7 +168,7 @@ export function extractFlipkart(html, expected) {
   }
   return failure('product_page_price_not_exposed');
 }
-export function extractAmazon(html, expected) {
+function rawAmazon(html, expected) {
   if (!html || html.length<500) return failure('empty_product_page');
   if (!identityValid(html,expected)) return failure('product_identity_unverified');
   // Amazon soft-blocks may return HTTP 200 with generic Amazon.in pages.
@@ -163,6 +177,9 @@ export function extractAmazon(html, expected) {
   if (/^amazon\.in\s*$/i.test(title) || !expected?.id ||
     !html.toUpperCase().includes(String(expected.id).toUpperCase()))
     return failure('amazon_product_identity_unverified');
+  const primaryInput=/<input\b[^>]*\bid=["']ASIN["'][^>]*>/i.exec(html)?.[0];
+  const primaryAsin=primaryInput&&/\bvalue=["']([^"']+)["']/i.exec(primaryInput)?.[1];
+  if(primaryAsin&&primaryAsin.toUpperCase()!==String(expected.id).toUpperCase())return failure('amazon_canonical_product_mismatch');
   const canonicalTag=/<link\b[^>]*\brel=["']canonical["'][^>]*>/i.exec(html)?.[0];
   const canonicalHref=canonicalTag&&/\bhref=["']([^"']+)["']/i.exec(canonicalTag)?.[1];
   if(canonicalHref) {
@@ -175,6 +192,8 @@ export function extractAmazon(html, expected) {
   // Price-to-pay is the checkout selling price. MRP, struck-through prices,
   // deal banners and recommendation prices must not override it.
   // Use a short DOM scope: the old 3800-byte window could swallow MRP.
+  const stock=primaryAvailability(html,'amazon');
+  if(stock&&stock.state!=='ok')return {...failure(stock.state),verificationStatus:stock.state,availabilityEvidence:stock.evidence};
   const primaryIds=['priceToPay','apex_desktop','corePriceDisplay_desktop_feature_div',
     'corePrice_feature_div','priceblock_dealprice','priceblock_ourprice'];
   const readCandidates=(scope, trustedSellingScope=false) => {
@@ -190,12 +209,15 @@ export function extractAmazon(html, expected) {
     }
     return [...new Set(a)];
   };
-  const priceToPay=/<(?:span|div)\b[^>]*id=["']priceToPay["'][^>]*>/i.exec(html);
+  const priceToPay=/<(?:span|div)\b[^>]*(?:id=["']priceToPay["']|class=["'][^"']*\bpriceToPay\b[^"']*["'])[^>]*>/i.exec(html);
   if(priceToPay) {
-    const scope=html.slice(priceToPay.index,priceToPay.index+950);
+    const scope=elementAt(html,priceToPay.index)||'';
     const amounts=readCandidates(scope,true);
     if(amounts.length===1) return ok(amounts[0],'amazon_price_to_pay');
     if(amounts.length>1) return failure('amazon_conflicting_primary_prices');
+    const whole=/<span\b[^>]*class=["'][^"']*\ba-price-whole\b[^"']*["'][^>]*>/i.exec(scope);
+    if(whole){const text=plainText(elementAt(scope,whole.index)||'').replace(/\s+/g,'').replace(/\.$/,'');const fraction=/<span\b[^>]*class=["'][^"']*\ba-price-fraction\b[^"']*["'][^>]*>(\d{2})<\/span>/i.exec(scope)?.[1];const n=parseMoney(text+(fraction?'.'+fraction:''));if(n!==null)return ok(n,'amazon_price_to_pay_parts');}
+    return failure('amazon_buybox_price_not_exposed');
   }
   // Product-level buybox only; if it contains multiple distinct prices,
   // never silently pick the first (often the crossed-out MRP).
@@ -204,8 +226,11 @@ export function extractAmazon(html, expected) {
     const singleQuoted=html.indexOf("id='"+id+"'");
     const position=doubleQuoted>=0?doubleQuoted:singleQuoted;
     if(position<0) continue;
-    const scope=html.slice(position,Math.min(html.length,position+1700));
-    const amounts=readCandidates(scope);
+    const scope=byId(html,id)||'';
+    let amounts=readCandidates(scope);
+    if(!amounts.length&&/^priceblock_(?:dealprice|ourprice)$/.test(id)){
+      const text=plainText(scope);const m=/^(?:₹|Rs\.?)\s*([\d,]+(?:\.\d{1,2})?)$/.exec(text);const n=parseMoney(m?.[1]);if(n!==null)amounts=[n];
+    }
     if(amounts.length>1) return failure('amazon_conflicting_primary_prices');
     if(amounts.length===1) return ok(amounts[0],'amazon_primary_buybox');
   }
@@ -219,3 +244,6 @@ export function extractPrice(platform, html, expected) {
   return platform==='flipkart' ? extractFlipkart(html, expected) : extractAmazon(html, expected);
 }
 
+
+export function extractAmazon(html,expected){const result=rawAmazon(html,{...expected,platform:'amazon'});const state=result.status==='ok'?primaryAvailability(html,'amazon'):null;return withVerification({...result,...(state?.state==='ok'?{inStock:true}: {})});}
+export function extractFlipkart(html,expected){return withVerification(rawFlipkart(html,expected));}

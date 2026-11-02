@@ -1,4 +1,5 @@
-import {inspectCromaSearch} from './croma-search.js';
+import {withVerification} from './product-state.js';
+import {inspectCromaSearch,boundedText} from './croma-search.js';
 import {CROMA_COMPARISON_PRODUCTS} from './qa/croma-comparison-20261102.js';
 import {catalogVariantConflicts} from './catalog-identity.js';
 import { extractPrice } from './price.js';
@@ -71,7 +72,7 @@ const CORS_ORIGIN = '*';
 const json = (value, status=200) => new Response(JSON.stringify(value), {
   status, headers: {'content-type':'application/json; charset=utf-8', 'cache-control':'no-store', 'access-control-allow-origin':CORS_ORIGIN}
 });
-const errorShape = (platform, error, httpStatus=null) => ({
+const errorShape = (platform, error, httpStatus=null) => withVerification({
   platform:platform==='amazon'?'Amazon':'Flipkart',
   url:null,title:null,price:null,priceNum:null,inStock:null,status:'error',error,httpStatus
 });
@@ -170,7 +171,7 @@ async function retrieve(item, env, browserProbe=false) {
   }
   const type=resp.headers.get('content-type')||'';
   if(type && !/html/i.test(type))return {...errorShape(item.platform,'not_html',resp.status),latencyMs:Date.now()-start};
-  let html='';try {html=await resp.text()} catch(_) {
+  let html='';try {html=await boundedText(resp)} catch(_) {
     return {...errorShape(item.platform,'html_read_failed',resp.status),latencyMs:Date.now()-start};
   }
   if(html.length>2_500_000)return {...errorShape(item.platform,'html_too_large',resp.status),latencyMs:Date.now()-start};
@@ -185,7 +186,7 @@ async function retrieve(item, env, browserProbe=false) {
     const check=await browserRenderedPrice(item,env);
     browserDiagnostic=check.diagnostic;
     browserEvidenceSummary=check.evidence;
-    if(check.parsed?.status==='ok' && check.parsed.priceNum>0) parsed=check.parsed;
+    if(check.parsed && ['ok','out_of_stock','discontinued','not_deliverable'].includes(check.parsed.verificationStatus))parsed=check.parsed;
     // Explicit unavailable evidence is only accepted from the exact verified
     // product page, not arbitrary related-product or category text.
   }
@@ -193,7 +194,8 @@ async function retrieve(item, env, browserProbe=false) {
     platform:item.platform==='flipkart'?'Flipkart':'Amazon',
     url:item.url, title,
     price:parsed.price, priceNum:parsed.priceNum,
-    inStock:parsed.inStock, status:parsed.status,
+    inStock:parsed.inStock, in_stock:parsed.in_stock, status:parsed.status,
+    verificationStatus:parsed.verificationStatus,verificationOutcome:parsed.verificationOutcome,availability:parsed.availability,availabilityEvidence:parsed.availabilityEvidence,
     error:parsed.error??null, httpStatus:resp.status,
     browserDiagnostic:browserProbe?browserDiagnostic:undefined,
     browserEvidence:browserProbe?browserEvidenceSummary:undefined,
@@ -346,6 +348,8 @@ const worker = {
     if (request.method==='GET' && (url.pathname==='/' || url.pathname==='/health'))
       return json({ok:true,worker:'trustfolio-live-price-worker',version:'1.2.2',
         cromaSearchComparison:'fixed-six-v1',
+        priceVerificationContract:'seven-states-v1',
+        amazonPrimaryScope:'balanced-elements-v1',
         amazonBrowserExtraction:'primary-sections-v3',
         amazonCanonicalIdentity:'exact-canonical-v1',
         flipkartAuditResolution:'fixed-primary-jsonld-v4',
@@ -391,7 +395,7 @@ const worker = {
       if(sample.platform==='amazon'&&result.amazon?.title) {
         const variantConflicts=catalogVariantConflicts(sample,{name:result.amazon.title});
         if(variantConflicts.length){
-          result.amazon={...result.amazon,status:'error',priceNum:null,price:null,inStock:null,error:'fixed_catalog_variant_mismatch',variantConflicts};
+          result.amazon=withVerification({...result.amazon,status:'error',verificationStatus:'identity_mismatch',priceNum:null,price:null,inStock:null,error:'fixed_catalog_variant_mismatch',variantConflicts});
           result.bestDeal={winner:null,savings:0,status:'no_price'};
         }
       }
@@ -503,7 +507,8 @@ const worker = {
         const latest=await state.readCromaProbe(sku);
         return json({fresh:false,rateLimited:true,retryAfterSeconds:claim.retryAfterSeconds,report:latest});
       }
-      const result=await probeCromaFixedSku(sample);
+      let result;
+      try{result=await probeCromaFixedSku(sample)}catch(e){result={sku,status:'error',priceNum:null,error:'croma_probe_failed',errorType:String(e?.name||'Error')}}
       const report={kind:'croma_api_cloudflare_readonly_test',checkedAt:new Date().toISOString(),...result};
       try{await state.saveCromaProbe(report)}
       catch(_){return json({error:'croma_probe_storage_failed'},503)}

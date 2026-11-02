@@ -1,3 +1,4 @@
+import {withVerification} from './product-state.js';
 import {extractFlipkart} from './price.js';
 import {catalogVariantConflicts} from './catalog-identity.js';
 
@@ -5,7 +6,7 @@ import {catalogVariantConflicts} from './catalog-identity.js';
 // This resolver is never used by the ordinary production /api/check handler.
 const HOSTS=new Set(['fkrt.clnk.in','linksredirect.com','flipkart.com','www.flipkart.com']);
 export async function resolveFixedFlipkart(sample) {
-  const fail=(error,evidence={})=>({error,priceINR:null,status:'unverified',...evidence});
+  const fail=(error,evidence={})=>({error,priceINR:null,status:'unverified',verificationStatus:withVerification({error,status:'error'}).verificationStatus,...evidence});
   let current=new URL(sample.url);
   for(let hop=0;hop<5;hop++) {
     if(current.protocol!=='https:'||!HOSTS.has(current.hostname)||current.username||current.password||current.port)
@@ -26,6 +27,7 @@ export async function resolveFixedFlipkart(sample) {
     try {html=await response.text();}
     catch(error){return fail('fixed_product_html_read_failed',{errorType:String(error?.name||'Error').slice(0,40)});}
     if(!html||html.length>2_500_000)return fail('fixed_product_html_unusable');
+    if(/<h2\b[^>]*>\s*something went wrong!?\s*<\/h2>[\s\S]{0,250}?\bE002\b/i.test(html))return fail('flipkart_e002_store_error_page');
     // A same-page primary Product JSON-LD SKU is authoritative. Never use the
     // first PID string from recommendations or an unrelated link/offer.
     const products=[];

@@ -27,8 +27,8 @@ jobs:
             echo 'DEPLOY_BLOCKED: CLOUDFLARE_API_TOKEN repository secret not configured'
             exit 1
           fi
-      - name: Run parser and integration regression tests
-        run: node --experimental-loader ./test/cloudflare-node-loader.mjs --test test/croma-search.test.js test/backend-legacy-compatibility.test.js test/sample-v07.test.js
+      - name: Run parser and integration regression tests including named finish, DDR RAM, explicit watts and connectivity
+        run: node --experimental-loader ./test/cloudflare-node-loader.mjs --test test/targeted-state.test.js test/croma-search.test.js test/backend-legacy-compatibility.test.js test/amazon-browser.test.js test/amazon-canonical.test.js test/amazon-strict-price-v12.test.js test/scrapedo-safe-price-parity.test.js test/audit-error-boundary.test.js test/fixed-flipkart-audit.test.js test/primary-product-identity.test.js test/amazon-catalog-audit.test.js test/catalog-identity.test.js
       - name: Deploy existing Wrangler Worker config
         run: npx --yes wrangler@4.155.0 deploy
       - name: Confirm primary-section extraction is live
@@ -42,47 +42,35 @@ jobs:
           grep -q '"productTitleIdentity":"bounded-2048-v1"' /tmp/tf-worker-health.json || exit 1
           grep -q '"flipkartAuditIdentity":"primary-product-v1"' /tmp/tf-worker-health.json || exit 1
           grep -q '"flipkartAuditVariant":"explicit-dimensions-v1"' /tmp/tf-worker-health.json || exit 1
-          grep -q '"cromaSearchComparison":"fixed-six-v1"' /tmp/tf-worker-health.json || exit 1
+          grep -q '"fixedAuditErrors":"structured-v1"' /tmp/tf-worker-health.json || exit 1
+          grep -q '"fixedAuditCatalogIdentity":"shared-variants-v2"' /tmp/tf-worker-health.json || exit 1
+          grep -q '"priceVerificationContract":"seven-states-v1"' /tmp/tf-worker-health.json || exit 1
+          grep -q '"amazonPrimaryScope":"balanced-elements-v1"' /tmp/tf-worker-health.json || exit 1
           echo 'DEPLOY_VERIFY_PASS'
-      - name: One fresh Crompton diagnostic, no retries
-        run: |
-          curl -fsS --max-time 50 'https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/qa/amazon-browser-one?sku=B074J9SPYX' > /tmp/crompton-retest.json
-          cat /tmp/crompton-retest.json
-      - name: Fixed first Flipkart canonical probe, no retries
-        run: |
-          curl -fsS --max-time 50 'https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/qa/audit-300?sequence=151' > /tmp/flipkart-first.json
-          cat /tmp/flipkart-first.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: crompton-primary-section-retest
-          path: |
-            /tmp/tf-worker-health.json
-            /tmp/crompton-retest.json
-            /tmp/flipkart-first.json
-          if-no-files-found: ignore
-
-      - name: Compare six fixed Croma SKUs from Cloudflare once
+          name: worker-health-resume-20261102
+          path: /tmp/tf-worker-health.json
+      - name: Targeted unresolved examples only; no Browser Run or retries
         run: |
-          python3 - <<'PYCF'
-          import json,time
-          from urllib.request import urlopen
-          from pathlib import Path
-          text=Path('qa/croma-comparison-20261102.js').read_text()
-          docs=json.loads(text.split('=',1)[1].strip().rstrip(';'))
-          results=[]
-          for doc in docs:
-              sku=str(doc['platform_product_id']);start=time.monotonic()
+          python3 - <<'PYLIVE'
+          import json
+          from urllib.request import Request,urlopen
+          from urllib.error import HTTPError
+          rows=[]
+          for sequence in [1,155,199,212,220,234,239,267]:
+              req=Request('https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/qa/audit-300?sequence='+str(sequence),headers={'User-Agent':'TrustFolio-Targeted-QA/1.0','Accept':'application/json'})
               try:
-                  with urlopen('https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/qa/croma?sku='+sku,timeout=45) as r:payload=json.load(r)
-                  results.append({'sku':sku,'requestLatencyMs':round((time.monotonic()-start)*1000),'response':payload})
-              except Exception as e:results.append({'sku':sku,'errorType':type(e).__name__})
-          Path('croma-cloudflare-comparison.json').write_text(json.dumps(results,indent=2))
-          print('CROMA_CLOUDFLARE='+json.dumps(results,separators=(',',':')))
-          PYCF
+                  with urlopen(req,timeout=40) as r:payload=json.load(r);status=r.status
+              except HTTPError as e:status=e.code;payload={'errorBody':e.read().decode()[:300]}
+              except Exception as e:status=None;payload={'errorType':type(e).__name__}
+              rows.append({'sequence':sequence,'httpStatus':status,'response':payload})
+          open('targeted-live-results.json','w').write(json.dumps(rows,indent=2))
+          print('TARGETED_LIVE='+json.dumps(rows,separators=(',',':')))
+          PYLIVE
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: croma-cloudflare-comparison
-          path: croma-cloudflare-comparison.json
-          retention-days: 30
+          name: pending-worker-targeted-live-results
+          path: targeted-live-results.json
