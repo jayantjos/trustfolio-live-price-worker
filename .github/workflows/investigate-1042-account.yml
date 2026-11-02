@@ -1,0 +1,92 @@
+name: Read-only 1042 account evidence for saved Ray IDs
+on:
+  push:
+    branches: [investigate-1042-account-20261102]
+    paths: ['.github/workflows/investigate-1042-account.yml']
+permissions:
+  contents: read
+jobs:
+  account-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read metadata and query only saved historical Rays
+        env:
+          CF_READ_CREDENTIAL: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import os,json,datetime
+          from urllib.request import Request,urlopen
+          from urllib.error import HTTPError
+          from pathlib import Path
+          account='354ff26b7db5ae21ded578fbae86c15f'
+          token=os.environ.get('CF_READ_CREDENTIAL','')
+          assert token, 'Configured Cloudflare credential unavailable'
+          base='https://api.cloudflare.com/client/v4'
+          rows=[]
+          def call(label,path,payload=None,project=None):
+              req=Request(base+path,headers={'Authorization':'Bearer '+token,'Content-Type':'application/json'},data=None if payload is None else json.dumps(payload).encode(),method='GET' if payload is None else 'POST')
+              try:
+                  with urlopen(req,timeout=25) as r:status=r.status;body=json.load(r)
+              except HTTPError as e:
+                  status=e.code
+                  try:body=json.loads(e.read())
+                  except Exception:body={'error':'non-JSON HTTP error'}
+              except Exception as e:status=None;body={'errorType':type(e).__name__}
+              if status==200 and project:body=project(body)
+              row={'label':label,'path':path,'httpStatus':status,'response':body}
+              rows.append(row)
+              return row
+          def selected(body):
+              r=body.get('result') or {}
+              keys=['compatibility_date','compatibility_flags','usage_model','logpush','observability','tail_consumers','placement','limits']
+              safe={k:r[k] for k in keys if k in r}
+              safe['bindings']=[{k:v for k,v in b.items() if k in ['type','name','class_name','script_name','service','environment']} for b in r.get('bindings',[])]
+              return {'success':body.get('success'),'result':safe}
+          def deployments(body):
+              result=body.get('result') or {}
+              ds=result.get('deployments',[]) if isinstance(result,dict) else result
+              return {'success':body.get('success'),'result':[{'id':d.get('id'),'created_on':d.get('created_on'),'source':d.get('source'),'strategy':d.get('strategy'),'versions':d.get('versions')} for d in ds]}
+          call('account_workers_subdomain',f'/accounts/{account}/workers/subdomain')
+          call('account_workers_settings',f'/accounts/{account}/workers/account-settings')
+          production='trustfolio-live-price-worker'
+          call('production_workers_dev_exposure',f'/accounts/{account}/workers/scripts/{production}/subdomain')
+          call('production_live_settings',f'/accounts/{account}/workers/scripts/{production}/settings',project=selected)
+          call('production_live_script_settings',f'/accounts/{account}/workers/scripts/{production}/script-settings',project=selected)
+          call('production_live_deployments',f'/accounts/{account}/workers/scripts/{production}/deployments',project=deployments)
+          staging='trustfolio-diag-41481857078'
+          call('deleted_staging_route_current_state',f'/accounts/{account}/workers/scripts/{staging}/subdomain')
+          call('deleted_staging_saved_version_current_state',f'/accounts/{account}/workers/scripts/{staging}/versions/a65e03e9-bfa4-4b29-9e85-b1a3071df70b',project=selected)
+          d=json.loads(Path('qa/final-staging-acceptance/cloudflare-1042-diagnostics.json').read_text())
+          rays=[]
+          for exp in d['experiments']:
+              exp=exp.get('result',exp)
+              for row in exp['responses']:
+                  ray=next((v for k,v in row['headers'].items() if k.lower()=='cf-ray'),None)
+                  if ray:rays.extend([ray,ray.split('-')[0]])
+          fromms=int(datetime.datetime(2026,11,2,16,27,tzinfo=datetime.timezone.utc).timestamp()*1000)
+          toms=int(datetime.datetime(2026,11,2,16,33,tzinfo=datetime.timezone.utc).timestamp()*1000)
+          def telemetry(body):
+              result=body.get('result') or {}
+              events=result.get('events') or {}
+              safe=[]
+              for e in events.get('events',[]):
+                  meta=e.get('$metadata',{})
+                  safe.append({'timestamp':e.get('timestamp'),'dataset':e.get('dataset'),'metadata':{k:v for k,v in meta.items() if k in ['id','rayId','service','origin','trigger','requestId','statusCode','error','region','url','type']},'workers':{k:v for k,v in (e.get('$workers') or {}).items() if k in ['scriptName','outcome','eventType','scriptVersion']}})
+              return {'success':body.get('success'),'result':{'run':{k:v for k,v in (result.get('run') or {}).items() if k in ['id','status','dry']},'statistics':result.get('statistics'),'events':{'count':events.get('count'),'events':safe}}}
+          payload={'queryId':'trustfolio-1042-saved-rays-only','dry':True,'timeframe':{'from':fromms,'to':toms},'view':'events','limit':80,'parameters':{'filterCombination':'or','filters':[{'key':'$metadata.rayId','operation':'in','type':'string','value':','.join(rays)}]}}
+          call('historical_ray_correlation_no_new_requests',f'/accounts/{account}/workers/observability/telemetry/query',payload,telemetry)
+          call('zone_visibility_for_security_events','/zones?account.id='+account+'&per_page=50',project=lambda b:{'success':b.get('success'),'result':[{'id':z.get('id'),'name':z.get('name'),'status':z.get('status')} for z in b.get('result',[])]})
+          report={'status':'UNVERIFIED','purpose':'read-only account metadata and dry historical Ray correlation; no Worker HTTP requests, deployments, mutations or retailer calls','sourceCommit':os.environ['GITHUB_SHA'],'observedAtUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'accountId':account,'rows':rows}
+          safe=json.dumps(report,ensure_ascii=False).replace(token,'[REDACTED]')
+          Path('cloudflare-1042-account-evidence.json').write_text(safe)
+          print('ACCOUNT_1042_EVIDENCE='+safe)
+          
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cloudflare-1042-account-evidence
+          path: cloudflare-1042-account-evidence.json
+          retention-days: 30
