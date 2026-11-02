@@ -1,0 +1,204 @@
+name: Permanent Worker rotated-key bounded live acceptance
+on:
+  push:
+    branches: [retest-rotated-key-live-20261102]
+    paths: ['.github/workflows/rotated-key-live-acceptance.yml']
+permissions:
+  contents: read
+jobs:
+  live-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Authentication gate then exact bounded retailer checks; no deployment
+        env:
+          TF_KEY: ${{ secrets.TF_PRICE_WORKER_KEY }}
+          CF_API_CREDENTIAL: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import os,json,time,uuid,datetime,hashlib,re,concurrent.futures
+          from urllib.request import Request,urlopen
+          from urllib.error import HTTPError
+          from urllib.parse import urlparse,parse_qs
+          from pathlib import Path
+          from html.parser import HTMLParser
+          base='https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev'
+          key=os.getenv('TF_KEY','');cf=os.getenv('CF_API_CREDENTIAL','')
+          cases=json.loads(Path('qa/live-worker-final-check/selected-product-cases.json').read_text())['cases']
+          out={'status':'BLOCKED','sourceCommit':os.environ['GITHUB_SHA'],'observedAtUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'keyConfigured':bool(key),'metadata':[],'auth':[],'products':[],'cache':[],'concurrency':[],'independent':[],'productionChanges':0,'deploymentPerformed':False}
+          def http(label,url,payload=None,credential=None,timeout=15,api=False):
+              rid=str(uuid.uuid4());start=time.monotonic()
+              headers={'User-Agent':'TrustFolio-Rotated-Key-Acceptance/1.0','Accept':'application/json','x-staging-request-id':rid}
+              if credential:headers['x-api-key']=credential
+              if api:headers['Authorization']='Bearer '+cf
+              if payload is not None:headers['Content-Type']='application/json'
+              try:
+                  with urlopen(Request(url,headers=headers,data=None if payload is None else json.dumps(payload).encode()),timeout=timeout) as r:status=r.status;h=dict(r.headers);raw=r.read(500000).decode()
+              except HTTPError as e:status=e.code;h=dict(e.headers);raw=e.read(4000).decode(errors='replace')
+              except Exception as e:status=None;h={};raw=type(e).__name__
+              try:body=json.loads(raw)
+              except Exception:body={'text':raw[:500]}
+              return {'test':label,'requestId':rid,'atUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'url':url,'httpStatus':status,'latencyMs':round((time.monotonic()-start)*1000),'headers':{k:v for k,v in h.items() if k.lower() in ['date','cf-ray','server','content-type','x-trustfolio-version','x-trustfolio-handler']},'body':body}
+          def persist():
+              s=json.dumps(out,ensure_ascii=False)
+              for value in [key,cf]:
+                  if value:s=s.replace(value,'[REDACTED]')
+              Path('rotated-key-live-results.json').write_text(s)
+              print('ROTATED_LIVE_RESULTS='+s)
+          if cf:
+              for label,suffix in [('deployment','deployments'),('route','subdomain')]:
+                  r=http(label,'https://api.cloudflare.com/client/v4/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/scripts/trustfolio-live-price-worker/'+suffix,api=True)
+                  if suffix=='deployments' and r['httpStatus']==200:r['body']={'success':True,'deployments':[{k:d.get(k) for k in ['id','created_on','versions']} for d in r['body'].get('result',{}).get('deployments',[])[:1]]}
+                  out['metadata'].append(r)
+          out['health']=http('health',base+'/health')
+          for label,k in [('missing',None),('wrong','intentionally-wrong-rotated-check')]+([('valid',key)] if key else []):
+              out['auth'].append(http(label,base+'/api/check',{'items':['invalid-staging-product'],'useCache':False,'browserProbe':False},k))
+          valid=next((r for r in out['auth'] if r['test']=='valid'),None)
+          authpass=len(out['auth'])==3 and [r['httpStatus'] for r in out['auth']]==[401,401,200] and valid['body'].get('success') is True and valid['body'].get('results',[{}])[0].get('error')=='unsupported_product_url'
+          out['authentication']='PASS' if authpass else 'BLOCKED'
+          if not authpass or out['health']['httpStatus']!=200:
+              out['blocker']='Credential/authentication/health gate failed; no retailer requests performed'
+              persist();raise SystemExit(0)
+          def quote(c,cache=False):
+              item=c['identifier'] if c['platform']=='amazon' else c['url']
+              r=http(('cached_' if cache else 'fresh_')+str(c['auditSequence']),base+'/api/check',{'items':[item],'useCache':cache,'browserProbe':False},key)
+              r['auditSequence']=c['auditSequence'];r['platform']=c['platform'];r['expectedIdentifier']=c['identifier'];r['catalogTitle']=c['title'];r['freshRequested']=not cache
+              rows=r['body'].get('results',[]) if isinstance(r['body'],dict) else []
+              row=rows[0] if len(rows)==1 else {}
+              store=row.get(c['platform'],{})
+              r['returnedIdentifier']=row.get('asin') if c['platform']=='amazon' else row.get('pid')
+              r['identifierMatch']=r['returnedIdentifier']==c['identifier']
+              r['store']=store;r['cached']=row.get('cached');r['itemLatencyMs']=row.get('itemLatencyMs')
+              r['transportOverheadEstimateMs']=r['latencyMs']-row['itemLatencyMs'] if isinstance(row.get('itemLatencyMs'),(int,float)) else None
+              r['withinBackend6000ms']=r['latencyMs']<6000 if r['httpStatus'] is not None else False
+              r['acceptedPrice']=store.get('priceNum') if r['identifierMatch'] and store.get('status')=='ok' and store.get('verificationStatus')=='ok' and isinstance(store.get('priceNum'),(int,float)) and store['priceNum']>0 and store.get('inStock') is not False and store.get('in_stock') is not False else None
+              r['unacceptedPriceLeak']=store.get('priceNum') is not None and r['acceptedPrice'] is None
+              r['status']='FAIL' if r['unacceptedPriceLeak'] or (rows and not r['identifierMatch']) else 'UNVERIFIED'
+              return r
+          # Two exact Amazon cases form one bounded fresh concurrency sample, not a full load test.
+          started=time.monotonic()
+          with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
+              pair=list(pool.map(quote,cases[:2]))
+          out['products'].extend(pair)
+          out['concurrency'].append({'kind':'two fresh single-product requests','sequences':[c['auditSequence'] for c in cases[:2]],'wallMs':round((time.monotonic()-started)*1000),'memberLatencyMs':[r['latencyMs'] for r in pair]})
+          platformFailure=any(r['httpStatus'] in [401,403,404] and ('1042' in json.dumps(r['body']) or r['httpStatus']==401) for r in pair)
+          for c in cases[2:]:
+              if not c.get('identifier'):
+                  out['products'].append({'auditSequence':c['auditSequence'],'platform':c['platform'],'expectedIdentifier':None,'status':'BLOCKED','reason':'No verified exact PID in saved evidence; no substitute or invented PID','httpStatus':None,'acceptedPrice':None});continue
+              if platformFailure:
+                  out['products'].append({'auditSequence':c['auditSequence'],'platform':c['platform'],'expectedIdentifier':c['identifier'],'status':'BLOCKED','reason':'Stopped after platform-level authenticated failure','httpStatus':None,'acceptedPrice':None});continue
+              r=quote(c);out['products'].append(r)
+              if r['httpStatus'] in [401,404] and (r['httpStatus']==401 or '1042' in json.dumps(r['body'])):platformFailure=True
+          # At most one immediate cache probe for an accepted quote per retailer.
+          for platform in ['amazon','flipkart']:
+              accepted=next((r for r in out['products'] if r.get('platform')==platform and r.get('acceptedPrice') is not None),None)
+              if accepted and not platformFailure:
+                  c=next(c for c in cases if c['auditSequence']==accepted['auditSequence'])
+                  out['cache'].append(quote(c,True))
+          # Independent, bounded standard HTML fetch; no browser, cookies, proxy change or retry.
+          class EvidenceParser(HTMLParser):
+              def __init__(self):
+                  super().__init__();self.depth=0;self.capture=None;self.captures=[];self.canonical=None;self.asins=[];self.jsonld=[];self.script=False;self.scriptparts=[];self.title=False;self.titleparts=[]
+              def handle_starttag(self,tag,attrs):
+                  a=dict(attrs);self.depth+=1
+                  if tag=='link' and a.get('rel')=='canonical':self.canonical=a.get('href')
+                  if tag=='input' and a.get('name','').upper()=='ASIN' and a.get('value'):self.asins.append(a['value'].upper())
+                  if tag=='title':self.title=True
+                  if tag=='script' and a.get('type')=='application/ld+json':self.script=True;self.scriptparts=[]
+                  if a.get('id') in ['priceToPay','priceblock_ourprice','priceblock_dealprice'] or 'priceToPay' in a.get('class','').split():
+                      self.capture={'depth':self.depth,'scope':a.get('id') or 'class:priceToPay','text':[]}
+              def handle_endtag(self,tag):
+                  if tag=='title':self.title=False
+                  if tag=='script' and self.script:self.jsonld.append(''.join(self.scriptparts));self.script=False
+                  if self.capture and self.depth==self.capture['depth']:self.captures.append(self.capture);self.capture=None
+                  self.depth=max(0,self.depth-1)
+              def handle_data(self,data):
+                  if self.title:self.titleparts.append(data)
+                  if self.script:self.scriptparts.append(data)
+                  if self.capture:self.capture['text'].append(data)
+          for r in out['products']:
+              if r.get('acceptedPrice') is None:continue
+              c=next(c for c in cases if c['auditSequence']==r['auditSequence'])
+              e={'auditSequence':c['auditSequence'],'status':'UNVERIFIED','url':c['url'],'verifiedPrimaryPrice':None,'comparison':'UNVERIFIED'}
+              start=time.monotonic()
+              try:
+                  req=Request(c['url'],headers={'User-Agent':'TrustFolio-Independent-Price-Check/1.0','Accept':'text/html','Accept-Language':'en-IN,en;q=0.9'})
+                  with urlopen(req,timeout=10) as response:
+                      raw=response.read(1500001);e['httpStatus']=response.status;e['finalUrl']=response.url
+                  e['bytes']=len(raw);e['sha256']=hashlib.sha256(raw).hexdigest()
+                  if len(raw)>1500000:e['reason']='Bounded evidence exceeded 1.5 MB; not parsed'
+                  else:
+                      text=raw.decode(errors='replace');p=EvidenceParser();p.feed(text);e['pageTitle']=' '.join(p.titleparts)[:500];e['canonicalUrl']=p.canonical;e['asinInputs']=p.asins
+                      if c['platform']=='amazon':
+                          cm=re.search(r'/(?:dp|gp/product)/([A-Z0-9]{10})',p.canonical or '',re.I)
+                          identity=cm is not None and cm[1].upper()==c['identifier'] and (not p.asins or set(p.asins)=={c['identifier']})
+                          e['identityVerified']=identity
+                          scopes=[{'scope':s['scope'],'text':' '.join(s['text']).strip()[:300]} for s in p.captures];e['primaryScopes']=scopes
+                          vals=[]
+                          for s in scopes:
+                              # Only complete rupee amounts, never whole/fraction fragments, MRP or seller minima.
+                              vals.extend(float(x.replace(',','')) for x in re.findall(r'(?:₹|INR|Rs[.]?)\s*([0-9][0-9,]*(?:[.][0-9]{1,2})?)',s['text']))
+                          if identity and len(set(vals))==1 and vals[0]>0:e['verifiedPrimaryPrice']=vals[0]
+                          else:e['reason']='Independent exact identity/unique primary price not established'
+                      else:
+                          products=[]
+                          def walk(x):
+                              if isinstance(x,list):
+                                  for y in x:walk(y)
+                              elif isinstance(x,dict):
+                                  t=x.get('@type')
+                                  if t=='Product' or isinstance(t,list) and 'Product' in t:products.append(x)
+                                  for k,v in x.items():
+                                      if k in ['@graph']:walk(v)
+                          for js in p.jsonld:
+                              try:walk(json.loads(js))
+                              except Exception:pass
+                          e['primaryProductCount']=len(products)
+                          if len(products)==1:
+                              prod=products[0];offers=prod.get('offers');offers=offers if isinstance(offers,list) else [offers] if isinstance(offers,dict) else []
+                              # Independent primary product identifier must explicitly contain the exact PID.
+                              ids=[str(prod.get(k,'')) for k in ['sku','productID','mpn','url']]
+                              e['primaryIdentityFields']=ids
+                              match=any(c['identifier'] in v for v in ids)
+                              vals=[]
+                              for offer in offers:
+                                  if offer.get('@type')=='AggregateOffer':continue
+                                  try:
+                                      n=float(offer.get('price'))
+                                      if n>0 and offer.get('priceCurrency','INR')=='INR' and 'OutOfStock' not in str(offer.get('availability','')):vals.append(n)
+                                  except Exception:pass
+                              e['identityVerified']=match
+                              if match and len(set(vals))==1:e['verifiedPrimaryPrice']=vals[0]
+                              else:e['reason']='Exact primary PID or unambiguous standard offer not established'
+                          else:e['reason']='No unique independent primary Product JSON-LD'
+                      if e['verifiedPrimaryPrice'] is not None:
+                          e['comparison']='MATCH' if e['verifiedPrimaryPrice']==r['acceptedPrice'] else 'MISMATCH'
+                          e['status']='PASS' if e['comparison']=='MATCH' else 'FAIL'
+              except HTTPError as ex:e['httpStatus']=ex.code;e['reason']='Independent retailer HTTP error; no bypass or retry'
+              except Exception as ex:e['reason']=type(ex).__name__
+              e['latencyMs']=round((time.monotonic()-start)*1000);out['independent'].append(e)
+          if cf and any(r.get('httpStatus')==200 for r in out['products']):
+              rays=[v for r in out['products'] for k,v in r.get('headers',{}).items() if k.lower()=='cf-ray']
+              if rays:
+                  now=int(time.time()*1000)
+                  payload={'queryId':'trustfolio-rotated-quote-execution-times','dry':True,'timeframe':{'from':now-600000,'to':now+60000},'view':'events','limit':30,'parameters':{'filters':[{'key':'$workers.event.request.headers.cf-ray','operation':'in','type':'string','value':','.join(rays+[x.split('-')[0] for x in rays])}]}}
+                  logs=http('execution_log_query','https://api.cloudflare.com/client/v4/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/observability/telemetry/query',payload,api=True)
+                  if logs['httpStatus']==200:
+                      result=logs['body'].get('result',{});events=result.get('events',{})
+                      logs['body']={'success':True,'count':events.get('count'),'events':[{'metadata':{k:v for k,v in e.get('$metadata',{}).items() if k in ['rayId','requestId','service','duration','statusCode']},'workers':{k:v for k,v in e.get('$workers',{}).items() if k in ['cpuTimeMs','wallTimeMs','outcome','scriptName','scriptVersion']}} for e in events.get('events',[])]}
+                  out['executionLogs']=logs
+          out['status']='FAIL' if any(r.get('status')=='FAIL' for r in out['products']) or any(e['status']=='FAIL' for e in out['independent']) else 'UNVERIFIED'
+          out['platform1042Observed']=any('1042' in json.dumps(r.get('body',{})) for r in out['products']+out['auth'])
+          out['freshWorkerProductRequests']=sum(r.get('freshRequested') is True for r in out['products'])
+          out['independentRetailerRequests']=len(out['independent'])
+          out['allCasesFinished']=len(out['products'])==10
+          persist()
+          
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rotated-key-live-results
+          path: rotated-key-live-results.json
+          retention-days: 30
