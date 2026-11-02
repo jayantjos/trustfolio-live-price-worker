@@ -66,7 +66,9 @@ function productJsonld(html,expected) {
   }
   return null;
 }
-function productTitle(html) {return (/<title[^>]*>([^<]{0,260})<\/title>/i.exec(html)||[])[1]||'';}
+// Retailer SEO titles can exceed 260 characters (for example exact laptop
+// model/RAM/SSD variants). Keep a bounded title, without changing HTML limits.
+function productTitle(html) {return (/<title[^>]*>([^<]{0,2048})<\/title>/i.exec(html)||[])[1]||'';}
 function identityValid(html, expected) {
   const title=productTitle(html);
   if (!title || /captcha|access denied|something went wrong|robot check/i.test(title)) return false;
