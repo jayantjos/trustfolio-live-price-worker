@@ -391,6 +391,7 @@ const worker = {
     if (request.method==='GET' && (url.pathname==='/' || url.pathname==='/health'))
       return json({ok:true,worker:'trustfolio-live-price-worker',version:'1.2.2',
         amazonBrowserExtraction:'primary-sections-v3',
+        amazonCanonicalIdentity:'exact-canonical-v1',
         amazonBrowserQALock:'per-asin-v2',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
         monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs',

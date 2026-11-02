@@ -150,6 +150,15 @@ export function extractAmazon(html, expected) {
   if (/^amazon\.in\s*$/i.test(title) || !expected?.id ||
     !html.toUpperCase().includes(String(expected.id).toUpperCase()))
     return failure('amazon_product_identity_unverified');
+  const canonicalTag=/<link\b[^>]*\brel=["']canonical["'][^>]*>/i.exec(html)?.[0];
+  const canonicalHref=canonicalTag&&/\bhref=["']([^"']+)["']/i.exec(canonicalTag)?.[1];
+  if(canonicalHref) {
+    let canonical;try {canonical=new URL(canonicalHref,'https://www.amazon.in');}
+    catch(_){return failure('amazon_canonical_product_mismatch');}
+    const canonicalAsin=/\/(?:dp|gp\/product)\/([A-Z0-9]{10})(?:\/|$)/i.exec(canonical.pathname)?.[1]?.toUpperCase();
+    if(!['amazon.in','www.amazon.in'].includes(canonical.hostname)||canonicalAsin!==String(expected.id).toUpperCase())
+      return failure('amazon_canonical_product_mismatch');
+  }
   // Price-to-pay is the checkout selling price. MRP, struck-through prices,
   // deal banners and recommendation prices must not override it.
   // Use a short DOM scope: the old 3800-byte window could swallow MRP.
@@ -196,3 +205,4 @@ export function extractAmazon(html, expected) {
 export function extractPrice(platform, html, expected) {
   return platform==='flipkart' ? extractFlipkart(html, expected) : extractAmazon(html, expected);
 }
+
