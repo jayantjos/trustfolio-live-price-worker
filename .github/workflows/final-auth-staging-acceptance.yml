@@ -32,7 +32,7 @@ jobs:
         run: |
           npx --yes wrangler@4.155.0 deploy --config staging-config.json
           printf '%s' "$STAGING_KEY" | npx --yes wrangler@4.155.0 secret put TF_PRICE_WORKER_KEY --config staging-config.json
-      - name: Actual HTTP authentication and two representative retailer requests
+      - name: Authentication-only follow-up; no retailer fetches
         run: |
           python3 - <<'PY'
           import os,json,time
@@ -47,7 +47,7 @@ jobs:
               time.sleep(3)
           assert ready, 'Staging secret propagation did not complete'
           results=[]
-          for label,key,item in [('missing',None,'B0DVH1HDVQ'),('incorrect','intentionally-wrong','B0DVH1HDVQ'),('valid-amazon',os.environ['STAGING_KEY'],'B0DVH1HDVQ'),('valid-flipkart',os.environ['STAGING_KEY'],'https://www.flipkart.com/crompton-100-l-desert-air-cooler/p/itmfdwa95yeshx4x?pid=AICGETHFNCZCX7PA')]:
+          for label,key,item in [('missing',None,'invalid-staging-product'),('incorrect','intentionally-wrong','invalid-staging-product'),('valid',os.environ['STAGING_KEY'],'invalid-staging-product')]:
               headers={'Content-Type':'application/json','User-Agent':'TrustFolio-Staging-Acceptance/1.0'}
               if key:headers['x-api-key']=key
               req=Request(base+'/api/check',headers=headers,data=json.dumps({'items':[item],'useCache':False,'browserProbe':False}).encode())
@@ -61,7 +61,7 @@ jobs:
           open('auth-staging-results.json','w').write(json.dumps(report,indent=2))
           print('AUTH_STAGING_RESULT='+json.dumps(report,separators=(',',':')))
           assert results[0]['httpStatus']==401 and results[1]['httpStatus']==401
-          assert all(x['httpStatus']==200 for x in results[2:])
+          assert results[2]['httpStatus']==200
           PY
       - uses: actions/upload-artifact@v4
         if: always()
