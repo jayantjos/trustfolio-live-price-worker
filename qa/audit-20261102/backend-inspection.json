@@ -1,0 +1,96 @@
+{
+  "root_found": true,
+  "files": [
+    {
+      "path": "controllers/LivePriceController.js",
+      "sha256": "a21a14886dbd0bbb8f72df4ed6ac30a134a29182cc5e0a5b93aaa73f463e05dc",
+      "database_mutator_call_counts": {
+        "updateOne": 0,
+        "updateMany": 0,
+        "findByIdAndUpdate": 0,
+        "deleteOne": 0,
+        "deleteMany": 0,
+        "findOneAndDelete": 0
+      },
+      "worker_reference": false
+    },
+    {
+      "path": "services/LiveBudgetRecommendationService.js",
+      "sha256": "136ece5770aec60f3f712abc43983d0a5c5d56ce4065e8fcb1dd603474222184",
+      "database_mutator_call_counts": {
+        "updateOne": 0,
+        "updateMany": 0,
+        "findByIdAndUpdate": 0,
+        "deleteOne": 0,
+        "deleteMany": 0,
+        "findOneAndDelete": 0
+      },
+      "worker_reference": false
+    },
+    {
+      "path": "services/ProductRecommendationService.js",
+      "sha256": "cadaae48fe765d2535449508bba75811ffc1df172eb01f3f9b07d30ff527d6e9",
+      "database_mutator_call_counts": {
+        "updateOne": 0,
+        "updateMany": 0,
+        "findByIdAndUpdate": 0,
+        "deleteOne": 0,
+        "deleteMany": 0,
+        "findOneAndDelete": 0
+      },
+      "worker_reference": false
+    },
+    {
+      "path": "services/LivePriceService.js",
+      "sha256": "03d5c3c8ac73f7df281162bdaea467fef4f94859427938db1fbde65fef637f0d",
+      "database_mutator_call_counts": {
+        "updateOne": 0,
+        "updateMany": 0,
+        "findByIdAndUpdate": 0,
+        "deleteOne": 0,
+        "deleteMany": 1,
+        "findOneAndDelete": 0
+      },
+      "worker_reference": true
+    },
+    {
+      "path": "services/CromaLivePriceDirect.js",
+      "sha256": "4be6c32c90c28757f1cb3ad2ea399274387088612f214d579c8de7e154f18c71",
+      "database_mutator_call_counts": {
+        "updateOne": 0,
+        "updateMany": 0,
+        "findByIdAndUpdate": 0,
+        "deleteOne": 0,
+        "deleteMany": 0,
+        "findOneAndDelete": 0
+      },
+      "worker_reference": false
+    }
+  ],
+  "referenced_env_names": [
+    "BUDGET_LOWER_BOUND_PCT",
+    "BUDGET_QUERY_MAX_TIME_MS",
+    "BUDGET_WINDOW_FETCH_LIMIT",
+    "CROMA_MAX_CONCURRENT",
+    "FAST_BUDGET_CANDIDATE_LIMIT",
+    "FAST_TOP_DIRECT_LIMIT",
+    "LIVE_PRICE_FRESH_MS",
+    "MAX_LEGACY_SCAN_CANDIDATES",
+    "MAX_RANKING_CANDIDATES",
+    "MAX_RECOMMENDATION_RESULTS",
+    "PRICE_WORKER_KEY",
+    "PRICE_WORKER_URL"
+  ],
+  "configured_worker_hosts": [
+    "spring-shape-2759.1shailendrasoni1.workers.dev"
+  ],
+  "worker_url_variable_names": [
+    "PRICE_WORKER_URL"
+  ],
+  "worker_key_variable_names": [],
+  "auth_canary": {
+    "attempted": false,
+    "reason": "runtime Worker destination/key not uniquely identified"
+  },
+  "mongo_writes": 0
+}

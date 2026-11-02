@@ -1,0 +1,103 @@
+name: Audit remaining fixed price records and inspect error 200
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/qa-remaining-20261102.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: audit-remaining-201-300-20261102
+  cancel-in-progress: false
+jobs:
+  inspect-error:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - name: Read sanitized observability exception data only
+        run: |
+          python3 - <<'PY'
+          import os,json,re,datetime
+          from urllib.request import Request,urlopen
+          from urllib.error import HTTPError
+          base='https://api.cloudflare.com/client/v4/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/observability/telemetry/'
+          token=os.environ.get('CF_TOKEN','')
+          report={'target':'trustfolio-live-price-worker','sequence':200,'read_only':True,'events':[]}
+          def post(path,body):
+              req=Request(base+path,data=json.dumps(body).encode(),headers={'Authorization':'Bearer '+token,'Content-Type':'application/json'},method='POST')
+              try:
+                  with urlopen(req,timeout=25) as r:return r.status,json.load(r)
+              except HTTPError as e:return e.code,{}
+          def rows(value):
+              v=value.get('result',[])
+              if isinstance(v,list):return v
+              if isinstance(v,dict):return v.get('keys',v.get('data',[]))
+              return []
+          if not token:report['blocker']='existing Cloudflare token unavailable'
+          else:
+              status,keys=post('keys',{'datasets':['cloudflare-workers']})
+              report['keys_http_status']=status
+              if status!=200:report['blocker']='observability permission/API unavailable; no permission expansion attempted'
+              else:
+                  names=[x.get('key') for x in rows(keys)]
+                  key=next((k for k in names if k and k.endswith('scriptName')),None) or ('$metadata.service' if '$metadata.service' in names else None)
+                  if not key:report['blocker']='script key not present in discovered schema'
+                  else:
+                      status,vals=post('values',{'datasets':['cloudflare-workers'],'key':key})
+                      values=rows(vals);present=any(x.get('value')=='trustfolio-live-price-worker' for x in values)
+                      report['values_http_status']=status
+                      if not present:report['blocker']='target Worker not found in telemetry values'
+                      else:
+                          ts=lambda s:int(datetime.datetime.fromisoformat(s).timestamp()*1000)
+                          body={'queryId':'audit-error-200-20261102','timeframe':{'from':ts('2026-11-02T08:29:00+00:00'),'to':ts('2026-11-02T08:32:00+00:00')},'view':'events','limit':100,'dry':True,'parameters':{'datasets':['cloudflare-workers'],'filters':[{'key':key,'operation':'eq','type':'string','value':'trustfolio-live-price-worker'}],'filterCombination':'and'}}
+                          status,data=post('query',body);report['query_http_status']=status
+                          for event in data.get('result',{}).get('events',{}).get('events',[]):
+                              meta=event.get('$metadata',{});worker=event.get('$workers',{})
+                              if not meta.get('error') and worker.get('outcome') not in ['exception','exceededCpu']:continue
+                              message=str(meta.get('error') or meta.get('message') or worker.get('outcome') or '')
+                              message=re.sub(r'https?://[^\s]+','[url]',message)
+                              message=re.sub(r'[A-Za-z0-9_-]{32,}','[redacted]',message)
+                              report['events'].append({'timestamp':event.get('timestamp'),'outcome':worker.get('outcome'),'message':message[:400]})
+          open('error-200-diagnostic.json','w').write(json.dumps(report,indent=2))
+          print('ERROR_200_DIAGNOSTIC='+json.dumps(report,separators=(',',':')))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: error-200-readonly-diagnostic
+          path: error-200-diagnostic.json
+          retention-days: 30
+  remaining:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require deployed structured-error boundary
+        run: |
+          python3 - <<'PY'
+          import json,time
+          from urllib.request import urlopen
+          for i in range(20):
+              try:
+                  with urlopen('https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/health',timeout=10) as r:d=json.load(r)
+                  if d.get('fixedAuditErrors')=='structured-v1':break
+              except Exception:pass
+              time.sleep(3)
+          else:raise SystemExit('Deployment boundary not confirmed; no product checks started')
+          PY
+      - name: Records 201 to 225 sequential, Worker only
+        run: python3 qa/audit-20261102/check-remaining.py 201 225
+      - name: Records 226 to 250 sequential, Worker only
+        run: python3 qa/audit-20261102/check-remaining.py 226 250
+      - name: Records 251 to 275 sequential, Worker only
+        run: python3 qa/audit-20261102/check-remaining.py 251 275
+      - name: Records 276 to 300 sequential, Worker only
+        run: python3 qa/audit-20261102/check-remaining.py 276 300
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: worker-only-records-201-300
+          path: worker-only-201-300.json
+          retention-days: 30

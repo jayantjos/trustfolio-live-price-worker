@@ -34,7 +34,9 @@ export async function resolveFixedFlipkart(sample) {
     if(response.status!==200)return fail('fixed_link_http_'+response.status);
     if(!['flipkart.com','www.flipkart.com'].includes(current.hostname)||!/\/p\/itm[a-z0-9]+/i.test(current.pathname))
       return fail('fixed_link_not_product_page');
-    const html=await response.text();
+    let html;
+    try {html=await response.text();}
+    catch(error){return fail('fixed_product_html_read_failed',{errorType:String(error?.name||'Error').slice(0,40)});}
     if(!html||html.length>2_500_000)return fail('fixed_product_html_unusable');
     // A same-page primary Product JSON-LD SKU is authoritative. Never use the
     // first PID string from recommendations or an unrelated link/offer.

@@ -397,6 +397,7 @@ const worker = {
         productTitleIdentity:'bounded-2048-v1',
         flipkartAuditIdentity:'primary-product-v1',
         flipkartAuditVariant:'explicit-dimensions-v1',
+        fixedAuditErrors:'structured-v1',
         amazonBrowserQALock:'per-asin-v2',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
         monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs',
@@ -419,10 +420,14 @@ const worker = {
       // Exact fixed inventory only. No arbitrary URLs, Browser Run, or writes
       // through the backend's database-mutating live-price endpoint.
       const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
-      const claim=await state.claimOnDemand(Date.now(),'qa300_'+sequence);
+      let claim;
+      try {claim=await state.claimOnDemand(Date.now(),'qa300_'+sequence);}
+      catch(_){return json({sequence,status:'unverified',error:'qa300_storage_unavailable',priceINR:null},503);}
       if(!claim.allowed)return json({sequence,rateLimited:true,retryAfterSeconds:claim.retryAfterSeconds,priceINR:null});
       if(!sample.retailer_id&&sample.platform==='flipkart') {
-        const probe=await resolveFixedFlipkart(sample);
+        let probe;
+        try {probe=await resolveFixedFlipkart(sample);}
+        catch(error){probe={status:'unverified',error:'qa300_probe_failed',errorType:String(error?.name||'Error').slice(0,40),priceINR:null};}
         return json({sequence,productId:sample.product_id,platform:sample.platform,checkedAt:new Date().toISOString(),...probe});
       }
       if(!sample.retailer_id)return json({sequence,status:'unverified',error:'canonical_product_identifier_missing',priceINR:null});
