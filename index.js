@@ -1,3 +1,5 @@
+import {inspectCromaSearch} from './croma-search.js';
+import {CROMA_COMPARISON_PRODUCTS} from './qa/croma-comparison-20261102.js';
 import {catalogVariantConflicts} from './catalog-identity.js';
 import { extractPrice } from './price.js';
 import { amazonBrowserPrice } from './amazon-browser.js';
@@ -18,7 +20,7 @@ export class PriceMonitorState extends DurableObject {
     await previousGate;
     try {
       const isBatch=/^(?:qa100(?:v2|v3)?_(amazon|flipkart)_\d{1,2}|qa300_\d{1,3})$/.test(scope);
-      const storageKey=isBatch?scope+'_last_claim':scope==='budget'?'budget_last_claim':scope==='croma'?'croma_last_claim':/^amazon_browser_one_B0[A-Z0-9]{8}$/.test(scope)?scope+'_last_claim':'manual_last_claim';
+      const storageKey=isBatch?scope+'_last_claim':scope==='budget'?'budget_last_claim':scope==='croma'?'croma_last_claim':/^croma_\d{4,12}$/.test(scope)?scope+'_last_claim':/^amazon_browser_one_B0[A-Z0-9]{8}$/.test(scope)?scope+'_last_claim':'manual_last_claim';
       const previous=Number(await this.ctx.storage.get(storageKey)||0);
       const retryAfterMs=Math.max(0,previous+(isBatch?3*60*60*1000:15*60*1000)-now);
       if(retryAfterMs>0)return {allowed:false,retryAfterSeconds:Math.ceil(retryAfterMs/1000)};
@@ -44,11 +46,11 @@ export class PriceMonitorState extends DurableObject {
     return (await this.ctx.storage.get('latest_budget20k_probe'))||null;
   }
   async saveCromaProbe(report) {
-    if(!report || report.sku!=='300154')throw new Error('INVALID_CROMA_REPORT');
-    await this.ctx.storage.put('latest_croma_probe',report);
+    if(!report || !CROMA_COMPARISON_PRODUCTS.some(x=>String(x.platform_product_id)===report.sku))throw new Error('INVALID_CROMA_REPORT');
+    await this.ctx.storage.put(report.sku==='300154'?'latest_croma_probe':'latest_croma_'+report.sku,report);
   }
-  async readCromaProbe() {
-    return (await this.ctx.storage.get('latest_croma_probe'))||null;
+  async readCromaProbe(sku='300154') {
+    return (await this.ctx.storage.get(sku==='300154'?'latest_croma_probe':'latest_croma_'+sku))||null;
   }
   async saveLatest(report) {
     if (!report || report.kind!=='trustfolio_price_monitor'
@@ -233,58 +235,9 @@ async function one(input, useCache, ctx, env, browserProbe=false) {
 
 // Read-only fixed SKU test of the existing VPS Croma search API via Cloudflare.
 // NEVER treat missing search results, HTTP errors or SKU mismatch as sold-out.
-async function probeCromaFixedSku() {
-  const api=new URL('https://api.croma.com/searchservices/v1/search');
-  const args={currentPage:'0',query:'Crompton Energion Hyperjet :relevance',
-    fields:'FULL',channel:'WEB',channelCode:'400049',spellOpt:'DEFAULT'};
-  for(const [key,value] of Object.entries(args))api.searchParams.set(key,value);
-  let response;
-  try{response=await fetch(api.toString(),{
-    method:'GET',headers:{accept:'application/json'},
-    signal:AbortSignal.timeout(6500),
-    redirect:'manual'
-  });}
-  catch(e){return {sku:'300154',status:'error',error:'croma_fetch_failed',
-    errorKind:String(e?.name||'network_error'),priceINR:null};}
-  if(response.status!==200)return {sku:'300154',status:'error',error:'croma_http_'+response.status,
-    httpStatus:response.status,priceINR:null};
-  let body;
-  try{body=await response.json()}catch(_){return {sku:'300154',status:'error',
-    error:'croma_invalid_json',httpStatus:200,priceINR:null}}
-  if(!Array.isArray(body?.products))return {sku:'300154',status:'error',
-    error:'croma_products_missing',httpStatus:200,priceINR:null};
-  const row=body.products.find(x=>x&&['code','skuId','productCode','id'].some(k=>String(x[k]??'')==='300154'));
-  if(!row)return {sku:'300154',status:'no_price',error:'exact_croma_sku_not_in_search',
-    httpStatus:200,priceINR:null,returnedProducts:body.products.length};
-  const money=(v)=>{
-    if(v&&typeof v==='object')return money(v.value??v.formattedValue);
-    const n=Number(String(v??'').replace(/[^0-9.]/g,''));
-    return Number.isFinite(n)&&n>=100&&n<100000000?n:null;
-  };
-  let price=null,source=null;
-  for(const key of ['price','pincodePrice']){
-    const p=row[key];
-    if(String(p?.priceType||'').toUpperCase()==='BUY'){
-      const candidate=money(p);
-      if(candidate!=null){price=candidate;source='croma_'+key+'_BUY';break;}
-    }
-  }
-  if(price===null){
-    for(const key of ['sellingPrice','offerPrice','finalPrice']){
-      const candidate=money(row[key]);
-      if(candidate!=null){price=candidate;source='croma_'+key;break;}
-    }
-  }
-  const result={sku:'300154',status:price===null?'no_price':'ok',
-    httpStatus:200,priceINR:price,source,
-    title:String(row.name||row.title||'').slice(0,140),
-    brand:String(row.brandName||row.brand||'').slice(0,70),
-    hasSpecifications:Boolean(row.specifications||row.attributes||row.classifications),
-    productFieldNames:Object.keys(row).filter(k=>/brand|spec|attr|model|code|price|categor/i.test(k)).slice(0,24),
-    error:price===null?'croma_buy_price_not_present':null};
-  return result;
+async function probeCromaFixedSku(doc) {
+ return inspectCromaSearch(doc);
 }
-
 
 // Four exact first-wave Amazon/Flipkart candidates from the real MongoDB
 // TrustFolio smart-phones INR 20,000 ranker. No arbitrary user-supplied URLs.
@@ -392,6 +345,7 @@ const worker = {
     const url=new URL(request.url);
     if (request.method==='GET' && (url.pathname==='/' || url.pathname==='/health'))
       return json({ok:true,worker:'trustfolio-live-price-worker',version:'1.2.2',
+        cromaSearchComparison:'fixed-six-v1',
         amazonBrowserExtraction:'primary-sections-v3',
         amazonCanonicalIdentity:'exact-canonical-v1',
         flipkartAuditResolution:'fixed-primary-jsonld-v4',
@@ -537,16 +491,19 @@ const worker = {
       }catch(e){return json({error:'budget_test_failed',reason:String(e?.name||'error')},503)}
     }
     if(request.method==='GET' && url.pathname==='/qa/croma') {
+      const sku=url.searchParams.get('sku')||'300154';
+      const sample=CROMA_COMPARISON_PRODUCTS.find(x=>String(x.platform_product_id)===sku);
+      if(!sample)return json({error:'not_in_fixed_croma_allowlist'},400);
       if(!env?.MONITOR_STATE)return json({error:'croma_probe_storage_not_configured'},503);
       const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
       let claim;
-      try{claim=await state.claimOnDemand(Date.now(),'croma')}
+      try{claim=await state.claimOnDemand(Date.now(),sku==='300154'?'croma':'croma_'+sku)}
       catch(_){return json({error:'croma_probe_rate_limit_unavailable'},503)}
       if(!claim.allowed){
-        const latest=await state.readCromaProbe();
+        const latest=await state.readCromaProbe(sku);
         return json({fresh:false,rateLimited:true,retryAfterSeconds:claim.retryAfterSeconds,report:latest});
       }
-      const result=await probeCromaFixedSku();
+      const result=await probeCromaFixedSku(sample);
       const report={kind:'croma_api_cloudflare_readonly_test',checkedAt:new Date().toISOString(),...result};
       try{await state.saveCromaProbe(report)}
       catch(_){return json({error:'croma_probe_storage_failed'},503)}
