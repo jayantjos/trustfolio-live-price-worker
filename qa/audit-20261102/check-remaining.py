@@ -1,5 +1,5 @@
 """One request per fixed record. Browser evidence unavailable: never PASS."""
-import sys,json,datetime,re
+import sys,json,datetime,re,subprocess
 from pathlib import Path
 from urllib.request import Request,urlopen
 from urllib.error import HTTPError
@@ -15,13 +15,13 @@ for seq in range(int(sys.argv[1]),int(sys.argv[2])+1):
         req=Request('https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/qa/audit-300?sequence='+str(seq),headers={'Accept':'application/json'})
         row['worker_attempted']=True
         try:
-            try:res=urlopen(req,timeout=45)
-            except HTTPError as e:res=e
-            row['http_status']=res.status
-            raw=res.read(200000).decode('utf-8',errors='replace')
+            proc=subprocess.run(['curl','-sS','--max-time','45','-w','\n%{http_code}',req.full_url],capture_output=True,text=True,timeout=50)
+            if proc.returncode:raise RuntimeError('curl_transport_failed')
+            raw,status=proc.stdout.rsplit('\n',1)
+            row['http_status']=int(status)
             try:row['worker']=json.loads(raw)
             except ValueError:row['worker']={'error':'non_json_worker_response','title':(re.search(r'<title[^>]*>([^<]+)</title>',raw,re.I).group(1) if re.search(r'<title[^>]*>([^<]+)</title>',raw,re.I) else None)}
-            if res.status==429 or str(row['worker'].get('error','')).endswith('429'):
+            if row['http_status']==429 or str(row['worker'].get('error','')).endswith('429'):
                 report['stop_reason']='Upstream/Worker rate limit observed; no additional product calls attempted.'
         except Exception as e:row['worker']={'error_type':type(e).__name__}
         row['checked_at']=datetime.datetime.now(datetime.timezone.utc).isoformat()
