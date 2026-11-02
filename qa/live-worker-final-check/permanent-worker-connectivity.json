@@ -1,0 +1,212 @@
+{
+  "status": "BLOCKED",
+  "observedAtUTC": "2026-11-02T17:18:49.887816+00:00",
+  "sourceCommit": "334830fe1057ce1fe2c8e9242ce5bad04d1ac047",
+  "worker": "https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev",
+  "metadata": [
+    {
+      "test": "active_deployment",
+      "requestedAtUTC": "2026-11-02T17:18:48.691603+00:00",
+      "requestId": "02442f82-71f0-4546-9cc8-a42a796e6fae",
+      "url": "https://api.cloudflare.com/client/v4/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/scripts/trustfolio-live-price-worker/deployments",
+      "httpStatus": 200,
+      "latencyMs": 251,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:18:48 GMT",
+        "Content-Type": "application/json; charset=UTF-8",
+        "CF-Ray": "a544ccf11f80f6b1-LAX",
+        "Server": "cloudflare"
+      },
+      "body": {
+        "success": true,
+        "deployments": [
+          {
+            "id": "b5647cfe-fed7-4165-9941-0d4b7d91d473",
+            "created_on": "2026-11-02T16:43:47.935062Z",
+            "versions": [
+              {
+                "version_id": "d993efa1-adcd-46b0-bb56-452781c8f12a",
+                "percentage": 100
+              }
+            ],
+            "source": "wrangler"
+          },
+          {
+            "id": "3c0a03fa-7600-4220-87fa-c69dd9d1e65a",
+            "created_on": "2026-11-02T16:34:04.018692Z",
+            "versions": [
+              {
+                "version_id": "f6168ad1-255a-42db-a43d-0b0694f23bf4",
+                "percentage": 100
+              }
+            ],
+            "source": "wrangler"
+          }
+        ]
+      }
+    },
+    {
+      "test": "workers_dev_exposure",
+      "requestedAtUTC": "2026-11-02T17:18:48.925617+00:00",
+      "requestId": "fbf8acb4-c292-4ee2-b57a-67865ade044d",
+      "url": "https://api.cloudflare.com/client/v4/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/scripts/trustfolio-live-price-worker/subdomain",
+      "httpStatus": 200,
+      "latencyMs": 234,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:18:48 GMT",
+        "Content-Type": "application/json; charset=UTF-8",
+        "CF-Ray": "a544ccf27992090a-LAX",
+        "Server": "cloudflare"
+      },
+      "body": {
+        "result": {
+          "enabled": true,
+          "previews_enabled": true
+        },
+        "success": true,
+        "errors": [],
+        "messages": []
+      }
+    },
+    {
+      "test": "live_settings",
+      "requestedAtUTC": "2026-11-02T17:18:49.460113+00:00",
+      "requestId": "f1e5081f-a531-4158-aa5b-6cb3485c4a66",
+      "url": "https://api.cloudflare.com/client/v4/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/scripts/trustfolio-live-price-worker/settings",
+      "httpStatus": 200,
+      "latencyMs": 534,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:18:49 GMT",
+        "Content-Type": "application/json; charset=UTF-8",
+        "CF-Ray": "a544ccf3fe7d2365-LAX",
+        "Server": "cloudflare"
+      },
+      "body": {
+        "success": true,
+        "result": {
+          "compatibility_date": "2026-10-29",
+          "compatibility_flags": [],
+          "observability": {
+            "enabled": true,
+            "head_sampling_rate": 1,
+            "redact_query_string": false,
+            "logs": {
+              "enabled": true,
+              "head_sampling_rate": 1,
+              "persist": true,
+              "invocation_logs": true
+            },
+            "traces": {
+              "enabled": false,
+              "persist": true,
+              "head_sampling_rate": 1
+            }
+          },
+          "usage_model": "standard"
+        },
+        "bindingTypes": [
+          {
+            "name": "BROWSER",
+            "type": "browser"
+          },
+          {
+            "name": "MONITOR_STATE",
+            "type": "durable_object_namespace"
+          },
+          {
+            "name": "TF_PRICE_WORKER_KEY",
+            "type": "secret_text"
+          }
+        ]
+      }
+    }
+  ],
+  "health": {
+    "test": "permanent_health",
+    "requestedAtUTC": "2026-11-02T17:18:49.593639+00:00",
+    "requestId": "b0a46993-2489-4b09-9425-a62940ca2190",
+    "url": "https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/health",
+    "httpStatus": 200,
+    "latencyMs": 133,
+    "headers": {
+      "Date": "Mon, 02 Nov 2026 17:18:49 GMT",
+      "Content-Type": "application/json; charset=utf-8",
+      "Server": "cloudflare",
+      "CF-RAY": "a544ccf7a898a2e0-LAX"
+    },
+    "body": {
+      "ok": true,
+      "worker": "trustfolio-live-price-worker",
+      "version": "1.2.2",
+      "cromaSearchComparison": "fixed-six-v1",
+      "priceVerificationContract": "seven-states-v1",
+      "amazonPrimaryScope": "balanced-elements-v1",
+      "flipkartFspIdentity": "json-owner-v1",
+      "amazonBrowserExtraction": "primary-sections-v3",
+      "amazonCanonicalIdentity": "exact-canonical-v1",
+      "flipkartAuditResolution": "fixed-primary-jsonld-v4",
+      "productTitleIdentity": "bounded-2048-v1",
+      "flipkartAuditIdentity": "primary-product-v1",
+      "flipkartAuditVariant": "explicit-dimensions-v1",
+      "fixedAuditErrors": "structured-v1",
+      "fixedAuditCatalogIdentity": "shared-variants-v2",
+      "amazonBrowserQALock": "per-asin-v2",
+      "ready": true,
+      "monitoring": {
+        "cronUTC": "5 */6 * * *",
+        "items": 3,
+        "logs": "Workers Logs",
+        "statusUrl": "/monitor/latest",
+        "testUrl": "/qa/sample",
+        "cromaTestUrl": "/qa/croma",
+        "budgetTestUrl": "/qa/budget20k",
+        "batch100Url": "/qa/check-100",
+        "storageConfigured": true
+      },
+      "note": "Actual-price checks require configured secret and verifiable source content."
+    }
+  },
+  "authentication": [
+    {
+      "test": "missing_key",
+      "requestedAtUTC": "2026-11-02T17:18:49.712218+00:00",
+      "requestId": "e3f0ffd4-aeb6-4923-8225-0e656fbb8b3b",
+      "url": "https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/api/check",
+      "httpStatus": 401,
+      "latencyMs": 119,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:18:49 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Server": "cloudflare",
+        "CF-RAY": "a544ccf84cdedbc6-LAX"
+      },
+      "body": {
+        "error": "unauthorized"
+      }
+    },
+    {
+      "test": "wrong_key",
+      "requestedAtUTC": "2026-11-02T17:18:49.887757+00:00",
+      "requestId": "f8b9dea8-3454-4500-b062-0be59e92ab59",
+      "url": "https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/api/check",
+      "httpStatus": 401,
+      "latencyMs": 176,
+      "headers": {
+        "Date": "Mon, 02 Nov 2026 17:18:49 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Server": "cloudflare",
+        "CF-RAY": "a544ccf95d0e2e7e-DFW"
+      },
+      "body": {
+        "error": "unauthorized"
+      }
+    }
+  ],
+  "configuredCredentialCount": 0,
+  "authenticatedHandlerReached": false,
+  "authenticationPass": false,
+  "platform1042Observed": false,
+  "retailerRequests": 0,
+  "productionChanges": 0,
+  "blocker": "Existing matching credential unavailable or authentication unsuccessful"
+}
