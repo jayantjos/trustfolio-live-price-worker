@@ -38,6 +38,11 @@ export async function resolveFixedFlipkart(sample) {
     if(products.length!==1)return fail('fixed_primary_product_jsonld_unverified');
     const pid=String(products[0].sku||'').toUpperCase();
     if(!/^[A-Z0-9]{12,24}$/.test(pid))return fail('fixed_primary_pid_missing');
+    const brandText=typeof products[0].brand==='string'?products[0].brand:products[0].brand?.name||'';
+    const norm=value=>String(value||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    const expectedBrand=norm(sample.brand),retailerBrand=norm(brandText);
+    if(expectedBrand.length>=3&&retailerBrand.length>=3&&!expectedBrand.includes(retailerBrand)&&!retailerBrand.includes(expectedBrand))
+      return fail('fixed_catalog_brand_mismatch',{resolvedPid:pid,expectedBrand:sample.brand,retailerBrand:brandText});
     const canonicalTag=/<link\b[^>]*\brel=["']canonical["'][^>]*>/i.exec(html)?.[0];
     const href=canonicalTag&&/\bhref=["']([^"']+)["']/i.exec(canonicalTag)?.[1];
     if(href){
