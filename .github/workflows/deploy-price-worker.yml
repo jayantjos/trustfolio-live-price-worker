@@ -27,11 +27,27 @@ jobs:
             echo 'DEPLOY_BLOCKED: CLOUDFLARE_API_TOKEN repository secret not configured'
             exit 1
           fi
+      - name: Run parser and integration regression tests
+        run: npm test
       - name: Deploy existing Wrangler Worker config
         run: npx --yes wrangler@4.155.0 deploy
-      - name: Confirm per-ASIN fix is live
+      - name: Confirm primary-section extraction is live
         run: |
           curl -fsS --retry 4 --retry-delay 3 --max-time 15 https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/health > /tmp/tf-worker-health.json
           cat /tmp/tf-worker-health.json
           grep -q '"amazonBrowserQALock":"per-asin-v2"' /tmp/tf-worker-health.json || { echo 'DEPLOY_VERIFY_FAILED'; exit 1; }
+          grep -q '\"amazonBrowserExtraction\":\"primary-sections-v1\"' /tmp/tf-worker-health.json || { echo 'DEPLOY_VERIFY_FAILED'; exit 1; }
           echo 'DEPLOY_VERIFY_PASS'
+      - name: One fresh Crompton diagnostic, no retries
+        run: |
+          curl -fsS --max-time 50 'https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/qa/amazon-browser-one?sku=B074J9SPYX' > /tmp/crompton-retest.json
+          cat /tmp/crompton-retest.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: crompton-primary-section-retest
+          path: |
+            /tmp/tf-worker-health.json
+            /tmp/crompton-retest.json
+          if-no-files-found: ignore
+

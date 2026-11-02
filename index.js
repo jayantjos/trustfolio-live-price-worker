@@ -1,4 +1,5 @@
 import { extractPrice } from './price.js';
+import { amazonBrowserPrice } from './amazon-browser.js';
 import { QA_100_PRODUCTS } from './qa/real-mongo-100-each.js';
 import { DurableObject } from 'cloudflare:workers';
 
@@ -117,6 +118,7 @@ async function browserRenderedPrice(item, env) {
   if(!env?.BROWSER || typeof env.BROWSER.quickAction!=='function')
     return {parsed:null,diagnostic:'browser_binding_missing',evidence:null};
   try {
+    if(item.platform==='amazon')return await amazonBrowserPrice(item,env);
     const r=await env.BROWSER.quickAction('content',{url:item.url,gotoOptions:{waitUntil:'networkidle2',timeout:30000}});
     if(!r?.ok)return {parsed:null,diagnostic:'browser_http_'+(r?.status??'unknown'),evidence:null};
     const raw=await r.text();
@@ -387,6 +389,7 @@ const worker = {
     const url=new URL(request.url);
     if (request.method==='GET' && (url.pathname==='/' || url.pathname==='/health'))
       return json({ok:true,worker:'trustfolio-live-price-worker',version:'1.2.2',
+        amazonBrowserExtraction:'primary-sections-v1',
         amazonBrowserQALock:'per-asin-v2',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
         monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs',
@@ -560,3 +563,4 @@ const worker = {
 };
 export default worker;
 export {identify,runScheduledPriceQA};
+
