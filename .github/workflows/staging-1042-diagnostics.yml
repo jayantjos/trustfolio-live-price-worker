@@ -37,7 +37,7 @@ jobs:
             if(id)out.headers.set('x-staging-request-id',id);
             return out;
           }};""")
-          Path('staging-config.json').write_text(json.dumps({'name':name,'main':'staging-wrapper.js','compatibility_date':'2026-10-29','workers_dev':True,'observability':{'enabled':True},'version_metadata':{'binding':'CF_VERSION_METADATA'},'vars':{'STAGING_SOURCE':os.environ['GITHUB_SHA']}}))
+          Path('staging-config.json').write_text(json.dumps({'name':name,'main':'staging-wrapper.js','compatibility_date':'2026-10-29','workers_dev':True,'compatibility_flags':['global_fetch_strictly_public'],'observability':{'enabled':True},'version_metadata':{'binding':'CF_VERSION_METADATA'},'vars':{'STAGING_SOURCE':os.environ['GITHUB_SHA']}}))
           Path('staging-secrets.json').write_text(json.dumps({'TF_PRICE_WORKER_KEY':key}))
           PY
       - name: Deploy one immutable staging version with secret
@@ -71,7 +71,11 @@ jobs:
           from urllib.error import HTTPError
           base='https://'+os.environ['STAGING_NAME']+'.jayantjoshi-joshi.workers.dev'
           rows=[]
-          for round in range(7):
+          for path in ['/health','/does-not-exist']:
+            try:
+              with urlopen(Request(base+path),timeout=15) as r:print('CONTROL='+json.dumps({'path':path,'status':r.status,'headers':dict(r.headers),'body':r.read().decode()[:2000]}))
+            except HTTPError as e:print('CONTROL='+json.dumps({'path':path,'status':e.code,'headers':dict(e.headers),'body':e.read().decode()[:2000]}))
+          for round in range(2):
             for label,key in [('missing',None),('incorrect','intentionally-wrong'),('valid',os.environ['STAGING_KEY'])]:
               rid=str(uuid.uuid4())
               headers={'Content-Type':'application/json','User-Agent':'TrustFolio-Staging-Diagnostic/2.0','x-staging-request-id':rid}
@@ -90,6 +94,11 @@ jobs:
           print('DIAGNOSTIC='+json.dumps(report))
           assert all(x['httpStatus']==(200 if x['test']=='valid' else 401) and any(k.lower()=='x-trustfolio-handler' for k in x['headers']) for x in rows)
           PY
+      - name: Compare curl client with existing Python harness
+        if: always()
+        run: |
+          curl -sS --max-time 15 -D curl-health-headers.txt "https://$STAGING_NAME.jayantjoshi-joshi.workers.dev/health" -o curl-health-body.txt
+          cat curl-health-headers.txt curl-health-body.txt
       - name: Preserve handler log observations
         if: always()
         run: |
