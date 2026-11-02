@@ -13,7 +13,7 @@ export function catalogVariantConflicts(sample,product) {
   const a=storage(expected),b=storage(actual);
   if(a.length&&b.length&&Math.max(...a)!==Math.max(...b))
     conflicts.push({field:'storage_gb',catalog:Math.max(...a),retailer:Math.max(...b)});
-  check('ram_gb',/\b(\d+)\s*gb\s*(?:ram|ddr)\b/);
+  check('ram_gb',/\b(\d+)\s*gb\s*(?:ram\b|ddr\d*\b)/);
   const cpu=s=>/\b(ryzen|ath[oa]lon|celeron|pentium)\b/.exec(s)?.[1];
   if(cpu(expected)&&cpu(actual)&&cpu(expected)!==cpu(actual))
     conflicts.push({field:'processor_family',catalog:cpu(expected),retailer:cpu(actual)});

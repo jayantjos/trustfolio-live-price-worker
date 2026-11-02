@@ -16,3 +16,4 @@ for (const [label,category,catalog,retailer,field] of [
 ]) test(label+' is rejected',()=>assert.ok(catalogVariantConflicts({category,title:catalog},{name:retailer}).some(x=>x.field===field)));
 test('same laptop capacity with an extra GPU size is not a storage conflict',()=>assert.deepEqual(catalogVariantConflicts({category:'laptops',title:'Core i5 16 GB RAM 512 GB SSD'},{name:'Core i5 16 GB RAM 512 GB SSD 4 GB graphics'}),[]));
 test('missing dimensions remain unknown rather than fabricated conflicts',()=>assert.deepEqual(catalogVariantConflicts({category:'geysers',title:'Brand 25 L'},{name:'Brand storage water heater'}),[]));
+test('DDR4 RAM mismatch is rejected even with the same SSD size',()=>assert.ok(catalogVariantConflicts({category:'desktop-computers',title:'HP 16GB DDR4, 512GB SSD'},{name:'HP 8GB DDR4, 512GB SSD'}).some(x=>x.field==='ram_gb')));
