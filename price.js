@@ -86,7 +86,18 @@ function isVisibleFlipkartE002(html) {
 export function extractFlipkart(html, expected) {
   if (!html || html.length<500) return failure('empty_product_page');
   if (isVisibleFlipkartE002(html)) return failure('flipkart_e002_store_error_page');
-  if (!identityValid(html,expected)) return failure('product_identity_unverified');
+  if (!identityValid(html,expected)) {
+    // The fixed audit resolver has already verified a single primary Product,
+    // its exact SKU, brand and canonical PDP. Its full Product name can be more
+    // specific than an abbreviated SEO title (for example carrier-lock terms).
+    const title=productTitle(html);
+    if(expected?.primaryProductValidated===true&&title&&
+       !/captcha|access denied|something went wrong|robot check/i.test(title)) {
+      const exactProduct=productJsonld(html,expected);
+      if(exactProduct)return exactProduct;
+    }
+    return failure('product_identity_unverified');
+  }
   const ld=productJsonld(html,expected);
   if (ld) return ld;
   // Historical Scrape.do parser: fsp is the product selling price, not MRP.

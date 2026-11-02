@@ -51,7 +51,7 @@ export async function resolveFixedFlipkart(sample) {
         return fail('fixed_canonical_product_mismatch');
     }
     const title=/<title[^>]*>([^<]*)<\/title>/i.exec(html)?.[1]||null;
-    const parsed=extractFlipkart(html,{id:pid,title:sample.title});
+    const parsed=extractFlipkart(html,{id:pid,title:sample.title,primaryProductValidated:true});
     current.search='';current.searchParams.set('pid',pid);
     return {resolved:{pid,url:current.href,title},result:{pid,flipkart:{...parsed,title,url:current.href,httpStatus:200}},fresh:true};
   }
