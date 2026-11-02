@@ -1,6 +1,7 @@
 import { extractPrice } from './price.js';
 import { amazonBrowserPrice } from './amazon-browser.js';
 import { AUDIT_PRODUCTS } from './qa/audit-20261102/inventory.js';
+import { resolveFixedFlipkart } from './fixed-flipkart-audit.js';
 import { QA_100_PRODUCTS } from './qa/real-mongo-100-each.js';
 import { DurableObject } from 'cloudflare:workers';
 
@@ -392,6 +393,7 @@ const worker = {
       return json({ok:true,worker:'trustfolio-live-price-worker',version:'1.2.2',
         amazonBrowserExtraction:'primary-sections-v3',
         amazonCanonicalIdentity:'exact-canonical-v1',
+        flipkartAuditResolution:'fixed-primary-jsonld-v1',
         amazonBrowserQALock:'per-asin-v2',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
         monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs',
@@ -411,12 +413,16 @@ const worker = {
       if(!env?.MONITOR_STATE)return json({error:'monitor_state_missing'},503);
       const sample=AUDIT_PRODUCTS[sequence-1];
       if(!sample||sample.sequence!==sequence)return json({error:'audit_sample_missing'},404);
-      // Exact fixed inventory only. Never follow arbitrary affiliate URLs,
-      // invoke Browser Run, or call the database-mutating backend endpoint.
-      if(!sample.retailer_id)return json({sequence,productId:sample.product_id,status:'unverified',error:'canonical_product_identifier_missing',priceINR:null});
+      // Exact fixed inventory only. No arbitrary URLs, Browser Run, or writes
+      // through the backend's database-mutating live-price endpoint.
       const state=env.MONITOR_STATE.getByName('trustfolio-monitor-singleton');
       const claim=await state.claimOnDemand(Date.now(),'qa300_'+sequence);
       if(!claim.allowed)return json({sequence,rateLimited:true,retryAfterSeconds:claim.retryAfterSeconds,priceINR:null});
+      if(!sample.retailer_id&&sample.platform==='flipkart') {
+        const probe=await resolveFixedFlipkart(sample);
+        return json({sequence,productId:sample.product_id,platform:sample.platform,checkedAt:new Date().toISOString(),...probe});
+      }
+      if(!sample.retailer_id)return json({sequence,status:'unverified',error:'canonical_product_identifier_missing',priceINR:null});
       const result=await one(sample.platform==='amazon'?sample.retailer_id:sample.url,false,ctx,env,false);
       return json({sequence,productId:sample.product_id,platform:sample.platform,sku:sample.retailer_id,checkedAt:new Date().toISOString(),fresh:true,result});
     }

@@ -7,13 +7,13 @@ test('fixed audit rejects arbitrary sequences without fetching',async()=>{
   assert.equal((await worker.fetch(request(301),env,{})).status,400);
   assert.equal((await worker.fetch(request('https://evil.example'),env,{})).status,400);
 });
-test('missing Flipkart canonical identity never triggers a fetch or out-of-stock result',async()=>{
+test('unresolvable fixed Flipkart link remains unverified, never out of stock',async()=>{
   const original=global.fetch;
   global.fetch=()=>{throw new Error('must not fetch affiliate URL');};
   try{
     const r=await (await worker.fetch(request(151),env,{})).json();
     assert.equal(r.status,'unverified');
-    assert.equal(r.error,'canonical_product_identifier_missing');
+    assert.equal(r.error,'fixed_link_fetch_failed');
     assert.equal(r.priceINR,null);
   }finally{global.fetch=original;}
 });

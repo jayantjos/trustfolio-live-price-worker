@@ -38,11 +38,16 @@ jobs:
           grep -q '"amazonBrowserQALock":"per-asin-v2"' /tmp/tf-worker-health.json || { echo 'DEPLOY_VERIFY_FAILED'; exit 1; }
           grep -q '\"amazonBrowserExtraction\":\"primary-sections-v3\"' /tmp/tf-worker-health.json || { echo 'DEPLOY_VERIFY_FAILED'; exit 1; }
           grep -q '"amazonCanonicalIdentity":"exact-canonical-v1"' /tmp/tf-worker-health.json || exit 1
+          grep -q '"flipkartAuditResolution":"fixed-primary-jsonld-v1"' /tmp/tf-worker-health.json || exit 1
           echo 'DEPLOY_VERIFY_PASS'
       - name: One fresh Crompton diagnostic, no retries
         run: |
           curl -fsS --max-time 50 'https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/qa/amazon-browser-one?sku=B074J9SPYX' > /tmp/crompton-retest.json
           cat /tmp/crompton-retest.json
+      - name: Fixed first Flipkart canonical probe, no retries
+        run: |
+          curl -fsS --max-time 50 'https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/qa/audit-300?sequence=151' > /tmp/flipkart-first.json
+          cat /tmp/flipkart-first.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -50,5 +55,6 @@ jobs:
           path: |
             /tmp/tf-worker-health.json
             /tmp/crompton-retest.json
+            /tmp/flipkart-first.json
           if-no-files-found: ignore
 
