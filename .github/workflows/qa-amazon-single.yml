@@ -9,7 +9,7 @@ permissions:
 jobs:
   one-product:
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 9
     steps:
       - name: Single ASIN browser check, no retries
         shell: bash
@@ -19,7 +19,9 @@ jobs:
           health=$(curl -fsS --max-time 15 "$base/health")
           echo "$health"
           echo "$health" | grep -q '"amazonBrowserQALock":"per-asin-v2"'
-          # Check the remaining three individually. Respect Free-plan 10-second Quick Action quota.
+          # Allow the existing per-ASIN cooldown to expire; one browser request only.
+          sleep 330
+          # Single Crompton fan diagnostic.
           for asin in B074J9SPYX; do
             echo "=== SINGLE_ASIN:$asin ==="
             curl -fsS --max-time 45 "$base/qa/amazon-browser-one?sku=$asin"
