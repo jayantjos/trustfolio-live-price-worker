@@ -1,0 +1,76 @@
+name: Complete truncated independent Flipkart evidence only
+on:
+  push:
+    branches: [retest-rotated-key-live-20261102]
+    paths: ['.github/workflows/rotated-key-independent-confirmation.yml']
+permissions:
+  contents: read
+jobs:
+  independent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: One independent complete-body check; no Worker or browser calls
+        run: |
+          python3 - <<'PY'
+          import json,re,time,hashlib,datetime
+          from urllib.request import Request,urlopen
+          from urllib.error import HTTPError
+          from html.parser import HTMLParser
+          from pathlib import Path
+          url='https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH'
+          out={'status':'UNVERIFIED','auditSequence':199,'pid':'COMHCYMG83BGNQHH','url':url,'purpose':'complete only independent evidence truncated by previous 1.5 MB harness limit','workerRequests':0,'retailerRequests':1,'expectedWorkerQuote':36502,'verifiedPrimaryPrice':None}
+          class P(HTMLParser):
+              def __init__(self):super().__init__();self.inscript=False;self.parts=[];self.scripts=[];self.canonical=None
+              def handle_starttag(self,tag,attrs):
+                  a=dict(attrs)
+                  if tag=='script' and a.get('type')=='application/ld+json':self.inscript=True;self.parts=[]
+                  if tag=='link' and a.get('rel')=='canonical':self.canonical=a.get('href')
+              def handle_data(self,s):
+                  if self.inscript:self.parts.append(s)
+              def handle_endtag(self,tag):
+                  if tag=='script' and self.inscript:self.scripts.append(''.join(self.parts));self.inscript=False
+          start=time.monotonic()
+          try:
+              request=Request(url,headers={'User-Agent':'TrustFolio-Independent-Price-Check/1.0','Accept':'text/html','Accept-Language':'en-IN,en;q=0.9'})
+              with urlopen(request,timeout=10) as r:raw=r.read(2500001);out['httpStatus']=r.status;out['finalUrl']=r.url
+              out['bytes']=len(raw);out['sha256']=hashlib.sha256(raw).hexdigest()
+              if len(raw)>2500000:out['reason']='2.5 MB bounded limit exceeded; no further retry'
+              else:
+                  parser=P();parser.feed(raw.decode(errors='replace'));products=[]
+                  def walk(x):
+                      if isinstance(x,list):
+                          for v in x:walk(v)
+                      if isinstance(x,dict):
+                          t=x.get('@type')
+                          if t=='Product' or isinstance(t,list) and 'Product' in t:products.append(x)
+                          if '@graph' in x:walk(x['@graph'])
+                  for s in parser.scripts:
+                      try:walk(json.loads(s))
+                      except Exception:pass
+                  out['canonical']=parser.canonical;out['primaryProductCount']=len(products)
+                  if len(products)==1:
+                      p=products[0];out['primaryProduct']={k:p.get(k) for k in ['@type','name','sku','productID','mpn','url','offers']}
+                      ids=[str(p.get(k,'')) for k in ['sku','productID','mpn','url']]
+                      offers=p.get('offers',[]);offers=offers if isinstance(offers,list) else [offers] if isinstance(offers,dict) else []
+                      exact=any(out['pid'] in x for x in ids)
+                      out['identityVerified']=exact
+                      # Reject multiple offers, AggregateOffer, unknown currency or OOS.
+                      if exact and len(offers)==1 and offers[0].get('@type')=='Offer' and offers[0].get('priceCurrency')=='INR' and 'OutOfStock' not in str(offers[0].get('availability','')):
+                          price=float(offers[0].get('price'))
+                          if price>0:
+                              out['verifiedPrimaryPrice']=price;out['status']='PASS' if price==out['expectedWorkerQuote'] else 'FAIL'
+                      if out['verifiedPrimaryPrice'] is None:out['reason']='No exact PID/unambiguous primary INR Offer; no price inferred'
+                  else:out['reason']='No unique primary Product'
+          except HTTPError as e:out['httpStatus']=e.code;out['reason']='Retailer HTTP failure; no bypass or retry'
+          except Exception as e:out['reason']=type(e).__name__
+          out['latencyMs']=round((time.monotonic()-start)*1000);out['observedAtUTC']=datetime.datetime.now(datetime.timezone.utc).isoformat()
+          Path('independent-flipkart-199.json').write_text(json.dumps(out,ensure_ascii=False,indent=2))
+          print('INDEPENDENT_199='+json.dumps(out,ensure_ascii=False))
+          
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: independent-flipkart-199
+          path: independent-flipkart-199.json
+          retention-days: 30
