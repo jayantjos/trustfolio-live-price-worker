@@ -31,3 +31,15 @@ test('catalog brand conflict blocks price even when PID and amount exist',async(
  try{const r=await resolveFixedFlipkart({...sample,brand:'TECHFIRE'});assert.equal(r.error,'fixed_catalog_brand_mismatch');assert.equal(r.priceINR,null);assert.equal(r.retailerBrand,'PTROX');}
  finally{global.fetch=original;}
 });
+test('different litre capacity is not accepted as the catalog variant',async()=>{
+ const original=global.fetch;let calls=0;
+ global.fetch=async()=>++calls===1?new Response(null,{status:302,headers:{location:canonical}}):new Response(html([{...product,name:'BAJAJ Popular Plus 25 L Storage Water Geyser',brand:{name:'Bajaj'}}]));
+ try{const r=await resolveFixedFlipkart({...sample,title:'BAJAJ Popular Plus 15L 15 L Storage Water Geyser',brand:'Bajaj',category:'geysers'});assert.equal(r.error,'fixed_catalog_variant_mismatch');assert.equal(r.variantConflicts[0].field,'litre_capacity');assert.equal(r.priceINR,null);}
+ finally{global.fetch=original;}
+});
+test('legacy decimal spacing preserves the same air-conditioner variant',async()=>{
+ const original=global.fetch;let calls=0;
+ global.fetch=async()=>++calls===1?new Response(null,{status:302,headers:{location:canonical}}):new Response(html([product]));
+ try{const r=await resolveFixedFlipkart({...sample,title:name.replace('1.5 Ton','1 5 Ton'),category:'air-conditioners'});assert.equal(r.result.flipkart.priceNum,37990);}
+ finally{global.fetch=original;}
+});

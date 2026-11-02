@@ -3,6 +3,19 @@ import {extractFlipkart} from './price.js';
 // Diagnostic only: fixed Mongo inventory and observed affiliate redirect host.
 // This resolver is never used by the ordinary production /api/check handler.
 const HOSTS=new Set(['fkrt.clnk.in','linksredirect.com','flipkart.com','www.flipkart.com']);
+function explicitVariantConflicts(sample,product) {
+  const norm=s=>String(s||'').toLowerCase().replace(/\b(\d{1,2})\s+(\d)\s+(ton|kg|inch)\b/g,(_,a,b,u)=>a+'.'+b+' '+u);
+  const expected=norm(sample.title),actual=norm(product.name),conflicts=[];
+  const check=(field,re)=>{const a=re.exec(expected)?.[1],b=re.exec(actual)?.[1];if(a&&b&&Number(a)!==Number(b))conflicts.push({field,catalog:a,retailer:b});};
+  const category=sample.category;
+  if(['air-conditioners','refrigerators','washing-machines'].includes(category))check('star_rating',/\b(\d)\s*star\b/);
+  if(category==='air-conditioners')check('ton_capacity',/\b(\d+(?:\.\d+)?)\s*tons?\b/);
+  if(['air-coolers','geysers','refrigerators','microwave-ovens','water-purifiers'].includes(category))check('litre_capacity',/\b(\d+(?:\.\d+)?)\s*(?:l|litres?|liters?)\b/);
+  if(category==='washing-machines')check('kg_capacity',/\b(\d+(?:\.\d+)?)\s*kg\b/);
+  if(category==='ceiling-fans')check('blade_sweep_mm',/\b(\d{3,4})\s*mm\b/);
+  if(['smart-tvs','tablets','laptops','desktop-computers'].includes(category))check('display_inches',/\b(\d+(?:\.\d+)?)\s*(?:inches|inch|")/);
+  return conflicts;
+}
 export async function resolveFixedFlipkart(sample) {
   const fail=(error,evidence={})=>({error,priceINR:null,status:'unverified',...evidence});
   let current=new URL(sample.url);
@@ -43,6 +56,8 @@ export async function resolveFixedFlipkart(sample) {
     const expectedBrand=norm(sample.brand),retailerBrand=norm(brandText);
     if(expectedBrand.length>=3&&retailerBrand.length>=3&&!expectedBrand.includes(retailerBrand)&&!retailerBrand.includes(expectedBrand))
       return fail('fixed_catalog_brand_mismatch',{resolvedPid:pid,expectedBrand:sample.brand,retailerBrand:brandText});
+    const variantConflicts=explicitVariantConflicts(sample,products[0]);
+    if(variantConflicts.length)return fail('fixed_catalog_variant_mismatch',{resolvedPid:pid,variantConflicts});
     const canonicalTag=/<link\b[^>]*\brel=["']canonical["'][^>]*>/i.exec(html)?.[0];
     const href=canonicalTag&&/\bhref=["']([^"']+)["']/i.exec(canonicalTag)?.[1];
     if(href){

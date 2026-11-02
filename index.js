@@ -396,6 +396,7 @@ const worker = {
         flipkartAuditResolution:'fixed-primary-jsonld-v4',
         productTitleIdentity:'bounded-2048-v1',
         flipkartAuditIdentity:'primary-product-v1',
+        flipkartAuditVariant:'explicit-dimensions-v1',
         amazonBrowserQALock:'per-asin-v2',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
         monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs',

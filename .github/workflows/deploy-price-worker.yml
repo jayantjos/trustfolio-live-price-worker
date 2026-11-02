@@ -41,6 +41,7 @@ jobs:
           grep -q '"flipkartAuditResolution":"fixed-primary-jsonld-v4"' /tmp/tf-worker-health.json || exit 1
           grep -q '"productTitleIdentity":"bounded-2048-v1"' /tmp/tf-worker-health.json || exit 1
           grep -q '"flipkartAuditIdentity":"primary-product-v1"' /tmp/tf-worker-health.json || exit 1
+          grep -q '"flipkartAuditVariant":"explicit-dimensions-v1"' /tmp/tf-worker-health.json || exit 1
           echo 'DEPLOY_VERIFY_PASS'
       - name: One fresh Crompton diagnostic, no retries
         run: |
