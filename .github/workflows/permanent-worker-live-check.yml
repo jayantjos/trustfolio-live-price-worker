@@ -1,0 +1,80 @@
+name: Existing permanent Worker connectivity only
+on:
+  push:
+    branches: [permanent-worker-live-check-20261102]
+    paths: ['.github/workflows/permanent-worker-live-check.yml']
+permissions:
+  contents: read
+jobs:
+  connectivity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read active deployment and test permanent endpoint without retailer requests
+        env:
+          CF_API_CREDENTIAL: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          TF_KEY: ${{ secrets.TF_PRICE_WORKER_KEY }}
+          PRICE_KEY: ${{ secrets.PRICE_WORKER_KEY }}
+        run: |
+          python3 - <<'PY'
+          import os,json,time,uuid,datetime
+          from urllib.request import Request,urlopen
+          from urllib.error import HTTPError
+          from pathlib import Path
+          base='https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev'
+          account='354ff26b7db5ae21ded578fbae86c15f'
+          cf=os.getenv('CF_API_CREDENTIAL','')
+          keys=list(dict.fromkeys(k for k in [os.getenv('TF_KEY',''),os.getenv('PRICE_KEY','')] if k))
+          rows=[]
+          def request(label,url,key=None,payload=None,api=False):
+              rid=str(uuid.uuid4())
+              headers={'User-Agent':'TrustFolio-Permanent-Live-Acceptance/1.0','Accept':'application/json','x-staging-request-id':rid}
+              if key:headers['x-api-key']=key
+              if api:headers['Authorization']='Bearer '+cf
+              if payload is not None:headers['Content-Type']='application/json'
+              start=time.monotonic()
+              try:
+                  req=Request(url,headers=headers,data=None if payload is None else json.dumps(payload).encode())
+                  with urlopen(req,timeout=15) as r:status=r.status;h=dict(r.headers);raw=r.read().decode()
+              except HTTPError as e:status=e.code;h=dict(e.headers);raw=e.read().decode()
+              except Exception as e:status=None;h={};raw=type(e).__name__
+              try:body=json.loads(raw)
+              except Exception:body={'text':raw[:500]}
+              safeheaders={k:v for k,v in h.items() if k.lower() in ['cf-ray','date','server','content-type','x-trustfolio-handler','x-trustfolio-version']}
+              row={'test':label,'requestedAtUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'requestId':rid,'url':url,'httpStatus':status,'latencyMs':round((time.monotonic()-start)*1000),'headers':safeheaders,'body':body}
+              rows.append(row);return row
+          metadata=[]
+          if cf:
+              for label,path in [('active_deployment','deployments'),('workers_dev_exposure','subdomain'),('live_settings','settings')]:
+                  r=request(label,'https://api.cloudflare.com/client/v4/accounts/'+account+'/workers/scripts/trustfolio-live-price-worker/'+path,api=True)
+                  if r['httpStatus']==200:
+                      result=r['body'].get('result',{})
+                      if label=='active_deployment':r['body']={'success':True,'deployments':[{k:d.get(k) for k in ['id','created_on','versions','source']} for d in result.get('deployments',[])[:2]]}
+                      elif label=='live_settings':r['body']={'success':True,'result':{k:result.get(k) for k in ['compatibility_date','compatibility_flags','observability','usage_model']},'bindingTypes':[{'name':b.get('name'),'type':b.get('type')} for b in result.get('bindings',[])]}
+                  metadata.append(rows.pop())
+          health=request('permanent_health',base+'/health')
+          auth=[]
+          auth.append(request('missing_key',base+'/api/check',payload={'items':['invalid-staging-product'],'useCache':False,'browserProbe':False}))
+          auth.append(request('wrong_key',base+'/api/check',key='intentionally-wrong-permanent-acceptance',payload={'items':['invalid-staging-product'],'useCache':False,'browserProbe':False}))
+          validated=False
+          for i,key in enumerate(keys):
+              r=request('configured_key_candidate_'+str(i+1),base+'/api/check',key=key,payload={'items':['invalid-staging-product'],'useCache':False,'browserProbe':False})
+              auth.append(r)
+              if r['httpStatus']==200 and r['body'].get('success') is True:validated=True;break
+              if '1042' in json.dumps(r['body']):break
+          platform1042=any('1042' in json.dumps(r['body']) for r in rows)
+          authpass=validated and auth[0]['httpStatus']==401 and auth[1]['httpStatus']==401
+          report={'status':'PASS' if authpass and health['httpStatus']==200 else 'BLOCKED','observedAtUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'sourceCommit':os.environ['GITHUB_SHA'],'worker':base,'metadata':metadata,'health':health,'authentication':auth,'configuredCredentialCount':len(keys),'authenticatedHandlerReached':validated,'authenticationPass':authpass,'platform1042Observed':platform1042,'retailerRequests':0,'productionChanges':0,'blocker':None if authpass else ('Permanent Worker also returned 1042' if platform1042 else 'Existing matching credential unavailable or authentication unsuccessful')}
+          safe=json.dumps(report,ensure_ascii=False)
+          for secret in [cf]+keys:
+              if secret:safe=safe.replace(secret,'[REDACTED]')
+          Path('permanent-worker-connectivity.json').write_text(safe)
+          print('PERMANENT_CONNECTIVITY='+safe)
+          
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: permanent-worker-connectivity
+          path: permanent-worker-connectivity.json
+          retention-days: 30
