@@ -1,0 +1,218 @@
+{
+  "database_writes_authorized": false,
+  "database_writes_performed": 0,
+  "catalog_identity_review": [
+    {
+      "sequence": 5,
+      "product_id": "69f89be69a622ea2d7ce0b9c",
+      "title": "HP All-in-One, AMD Ryzen 7 7730U (16GB DDR4, 512GB SSD) IPS, Three-Sided, Micro-Edge, Anti-Glare, FHD, 23.8''(60.5 cm), Win 11 Home, Office 24, 5.27kg, FHD IR Camera, 24-cr0023in",
+      "url": "https://www.amazon.in/dp/B0GJDLKM5H",
+      "issue": "Catalog HP Ryzen 7/16GB/512GB conflicts with retailer Athlon/8GB/256GB.",
+      "proposed_action": "Review correct catalog variant and retailer mapping; do not automatically rewrite identity or delete."
+    },
+    {
+      "sequence": 14,
+      "product_id": "69f311421dafb58cccdbc9db",
+      "title": "iQOO 15 (Alpha, 12GB RAM, 256GB Storage) | Fastest Snapdragon 8 Elite Gen 5 Processor* | Origin OS 6 - Out of The Box* | Samsung 2K M14 Lead OLED Display",
+      "url": "https://www.amazon.in/dp/B0FYGGJZV4",
+      "issue": "Requested ASIN B0FYGGJZV4 conflicts with canonical B0HCBBMV3V.",
+      "proposed_action": "Review correct catalog variant and retailer mapping; do not automatically rewrite identity or delete."
+    },
+    {
+      "sequence": 43,
+      "product_id": "69f89be59a622ea2d7ce0b7d",
+      "title": "Kenstar Farrata HC 100 Desert Air Cooler for Home - Inverter Compatible, Wood Wool Cooling Pads, Large Wheels (100L, 170 Watts)",
+      "url": "https://www.amazon.in/dp/B0C3GKWJ9L",
+      "issue": "Amazon canonical ASIN conflicts with requested product; fresh Worker rejected amazon_canonical_product_mismatch.",
+      "proposed_action": "Review correct catalog variant and retailer mapping; do not automatically rewrite identity or delete."
+    },
+    {
+      "sequence": 113,
+      "product_id": "69f89beb9a622ea2d7ce0c91",
+      "title": "Godrej 194 L 5 Star 5 Years Comprehensive Warranty | Turbo Cooling Technology | Moisture Control, Hygiene+ Inverter Technology | Single Door Refrigerator (RD EMARVEL 215EN THI FS ST)",
+      "url": "https://www.amazon.in/dp/B0GK7VR8ZH",
+      "issue": "Catalog Godrej 194L conflicts with retailer 185L.",
+      "proposed_action": "Review correct catalog variant and retailer mapping; do not automatically rewrite identity or delete."
+    },
+    {
+      "sequence": 134,
+      "product_id": "69f89bec9a622ea2d7ce0ce6",
+      "title": "vivo V70 5G (Passion Red, 12GB RAM, 256GB Storage) with No Cost EMI/Additional Exchange Offers",
+      "url": "https://www.amazon.in/dp/B0GMP813M4",
+      "issue": "Catalog vivo Passion Red/12GB/256GB conflicts with retailer Lemon Yellow/8GB/256GB and canonical identity.",
+      "proposed_action": "Review correct catalog variant and retailer mapping; do not automatically rewrite identity or delete."
+    },
+    {
+      "sequence": 156,
+      "product_id": "69f419289a622ea2d7ccb617",
+      "title": "BAJAJ Shield Series Popular Plus 15L 15 L Storage Water Geyser Suitable for large wall spaces",
+      "url": "https://fkrt.clnk.in/Cfvb",
+      "issue": "Catalog BAJAJ 15L conflicts with retailer 25L; same 7299 price does not establish product identity.",
+      "proposed_action": "Review correct catalog variant and retailer mapping; do not automatically rewrite identity or delete."
+    },
+    {
+      "sequence": 157,
+      "product_id": "69f419299a622ea2d7ccb62f",
+      "title": "TECHFIRE 161 Earbuds with 100 HRS Playtime,(50ms Low Latency), Bluetooth v5.3 Bluetooth",
+      "url": "https://fkrt.clnk.in/Cfvm",
+      "issue": "Catalog TECHFIRE conflicts with primary product PTROX and SEO GEMFLY; retailer price 666 is not validated for catalog product.",
+      "proposed_action": "Review correct catalog variant and retailer mapping; do not automatically rewrite identity or delete."
+    }
+  ],
+  "price_update_proposals": [
+    {
+      "sequence": 158,
+      "product_id": "69f4192a9a622ea2d7ccb664",
+      "stored_price": 2450,
+      "verified_price": 2150,
+      "proposed_only": true
+    },
+    {
+      "sequence": 161,
+      "product_id": "69f49ec19a622ea2d7ccf4e9",
+      "stored_price": 6620,
+      "verified_price": 5799,
+      "proposed_only": true
+    },
+    {
+      "sequence": 164,
+      "product_id": "69f419309a622ea2d7ccb6d8",
+      "stored_price": 99999,
+      "verified_price": 99049,
+      "proposed_only": true
+    },
+    {
+      "sequence": 166,
+      "product_id": "6a06f7d1fe6fd8dc386b92ea",
+      "stored_price": 699,
+      "verified_price": 399,
+      "proposed_only": true
+    },
+    {
+      "sequence": 168,
+      "product_id": "69f4c1ac9a622ea2d7cd0009",
+      "stored_price": 5104,
+      "verified_price": 4170,
+      "proposed_only": true
+    },
+    {
+      "sequence": 170,
+      "product_id": "69f419339a622ea2d7ccb750",
+      "stored_price": 12999,
+      "verified_price": 9999,
+      "proposed_only": true
+    },
+    {
+      "sequence": 171,
+      "product_id": "69f4190c9a622ea2d7ccb54b",
+      "stored_price": 40834,
+      "verified_price": 40607,
+      "proposed_only": true
+    },
+    {
+      "sequence": 172,
+      "product_id": "69f4190f9a622ea2d7ccb562",
+      "stored_price": 6490,
+      "verified_price": 5509,
+      "proposed_only": true
+    },
+    {
+      "sequence": 176,
+      "product_id": "69f419289a622ea2d7ccb61b",
+      "stored_price": 2699,
+      "verified_price": 2748,
+      "proposed_only": true
+    },
+    {
+      "sequence": 178,
+      "product_id": "69f4192a9a622ea2d7ccb66c",
+      "stored_price": 1779,
+      "verified_price": 1441,
+      "proposed_only": true
+    },
+    {
+      "sequence": 179,
+      "product_id": "69f4192a9a622ea2d7ccb682",
+      "stored_price": 115990,
+      "verified_price": 171900,
+      "proposed_only": true
+    },
+    {
+      "sequence": 180,
+      "product_id": "69f49a459a622ea2d7ccf397",
+      "stored_price": 6090,
+      "verified_price": 6270,
+      "proposed_only": true
+    },
+    {
+      "sequence": 181,
+      "product_id": "69f49ec19a622ea2d7ccf4eb",
+      "stored_price": 1261,
+      "verified_price": 1432,
+      "proposed_only": true
+    },
+    {
+      "sequence": 182,
+      "product_id": "69f4192c9a622ea2d7ccb6ba",
+      "stored_price": 13390,
+      "verified_price": 12790,
+      "proposed_only": true
+    },
+    {
+      "sequence": 187,
+      "product_id": "69f419329a622ea2d7ccb715",
+      "stored_price": 29999,
+      "verified_price": 22499,
+      "proposed_only": true
+    },
+    {
+      "sequence": 189,
+      "product_id": "69f419329a622ea2d7ccb741",
+      "stored_price": 13990,
+      "verified_price": 14090,
+      "proposed_only": true
+    },
+    {
+      "sequence": 190,
+      "product_id": "69f419339a622ea2d7ccb751",
+      "stored_price": 10499,
+      "verified_price": 8999,
+      "proposed_only": true
+    },
+    {
+      "sequence": 192,
+      "product_id": "69f419129a622ea2d7ccb57b",
+      "stored_price": 7299,
+      "verified_price": 6199,
+      "proposed_only": true
+    },
+    {
+      "sequence": 196,
+      "product_id": "69f419289a622ea2d7ccb620",
+      "stored_price": 3533,
+      "verified_price": 2748,
+      "proposed_only": true
+    },
+    {
+      "sequence": 197,
+      "product_id": "69f483ef9a622ea2d7ccea46",
+      "stored_price": 4725,
+      "verified_price": 4713,
+      "proposed_only": true
+    },
+    {
+      "sequence": 198,
+      "product_id": "69f4192a9a622ea2d7ccb671",
+      "stored_price": 1699,
+      "verified_price": 1749,
+      "proposed_only": true
+    },
+    {
+      "sequence": 199,
+      "product_id": "69f4192b9a622ea2d7ccb68b",
+      "stored_price": 16990,
+      "verified_price": 22911,
+      "proposed_only": true
+    }
+  ]
+}
