@@ -1,0 +1,67 @@
+name: Ephemeral authenticated Worker staging HTTP acceptance
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/final-auth-staging-acceptance.yml']
+permissions:
+  contents: read
+jobs:
+  staging:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      CLOUDFLARE_ACCOUNT_ID: 354ff26b7db5ae21ded578fbae86c15f
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Create staging-only Worker config and ephemeral credential
+        run: |
+          python3 - <<'PY'
+          import os,json,secrets
+          from pathlib import Path
+          name='trustfolio-acceptance-'+os.environ['GITHUB_RUN_ID']
+          Path('staging-config.json').write_text(json.dumps({'name':name,'main':str(Path('index.js').resolve()),'compatibility_date':'2026-10-29','workers_dev':True}))
+          key=secrets.token_urlsafe(32)
+          print('::add-mask::'+key)
+          with open(os.environ['GITHUB_ENV'],'a') as f:f.write('STAGING_NAME='+name+'\nSTAGING_KEY='+key+'\n')
+          PY
+      - name: Deploy isolated code without Browser, cron or Durable Object bindings
+        run: |
+          npx --yes wrangler@4.155.0 deploy --config staging-config.json
+          printf '%s' "$STAGING_KEY" | npx --yes wrangler@4.155.0 secret put TF_PRICE_WORKER_KEY --config staging-config.json
+      - name: Actual HTTP authentication and two representative retailer requests
+        run: |
+          python3 - <<'PY'
+          import os,json,time
+          from urllib.request import Request,urlopen
+          from urllib.error import HTTPError
+          base='https://'+os.environ['STAGING_NAME']+'.jayantjoshi-joshi.workers.dev'
+          results=[]
+          for label,key,item in [('missing',None,'B0DVH1HDVQ'),('incorrect','intentionally-wrong','B0DVH1HDVQ'),('valid-amazon',os.environ['STAGING_KEY'],'B0DVH1HDVQ'),('valid-flipkart',os.environ['STAGING_KEY'],'https://www.flipkart.com/poco-x7-5g-yellow-256-gb/p/itm1cd5ce9a66fef?pid=MOBH7YZ9NSDFC3EK')]:
+              headers={'Content-Type':'application/json','User-Agent':'TrustFolio-Staging-Acceptance/1.0'}
+              if key:headers['x-api-key']=key
+              req=Request(base+'/api/check',headers=headers,data=json.dumps({'items':[item],'useCache':False,'browserProbe':False}).encode())
+              start=time.monotonic()
+              try:
+                  with urlopen(req,timeout=12) as r:status,payload=r.status,json.load(r)
+              except HTTPError as e:status=e.code;payload={'body':e.read().decode()[:500]}
+              except Exception as e:status=None;payload={'errorType':type(e).__name__}
+              results.append({'test':label,'type':'REAL HTTP staging Worker; live retailer response for valid requests','product':item,'httpStatus':status,'latencyMs':round((time.monotonic()-start)*1000),'response':payload})
+          report={'productionChanges':0,'stagingName':os.environ['STAGING_NAME'],'sourceCommit':os.environ['GITHUB_SHA'],'browserBinding':False,'cron':False,'results':results}
+          open('auth-staging-results.json','w').write(json.dumps(report,indent=2))
+          print('AUTH_STAGING_RESULT='+json.dumps(report,separators=(',',':')))
+          assert results[0]['httpStatus']==401 and results[1]['httpStatus']==401
+          assert all(x['httpStatus']==200 for x in results[2:])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ephemeral-auth-staging-results
+          path: auth-staging-results.json
+      - name: Remove only this run's disposable Worker
+        if: always()
+        run: |
+          if [ -n "$STAGING_NAME" ]; then npx --yes wrangler@4.155.0 delete --name "$STAGING_NAME" --config staging-config.json --force; fi
