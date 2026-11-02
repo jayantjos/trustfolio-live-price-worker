@@ -38,35 +38,6 @@ jobs:
               row={'label':label,'path':path,'httpStatus':status,'response':body}
               rows.append(row)
               return row
-          def selected(body):
-              r=body.get('result') or {}
-              keys=['compatibility_date','compatibility_flags','usage_model','logpush','observability','tail_consumers','placement','limits']
-              safe={k:r[k] for k in keys if k in r}
-              safe['bindings']=[{k:v for k,v in b.items() if k in ['type','name','class_name','script_name','service','environment']} for b in r.get('bindings',[])]
-              return {'success':body.get('success'),'result':safe}
-          def deployments(body):
-              result=body.get('result') or {}
-              ds=result.get('deployments',[]) if isinstance(result,dict) else result
-              return {'success':body.get('success'),'result':[{'id':d.get('id'),'created_on':d.get('created_on'),'source':d.get('source'),'strategy':d.get('strategy'),'versions':d.get('versions')} for d in ds]}
-          call('account_workers_subdomain',f'/accounts/{account}/workers/subdomain')
-          call('account_workers_settings',f'/accounts/{account}/workers/account-settings')
-          production='trustfolio-live-price-worker'
-          call('production_workers_dev_exposure',f'/accounts/{account}/workers/scripts/{production}/subdomain')
-          call('production_live_settings',f'/accounts/{account}/workers/scripts/{production}/settings',project=selected)
-          call('production_live_script_settings',f'/accounts/{account}/workers/scripts/{production}/script-settings',project=selected)
-          call('production_live_deployments',f'/accounts/{account}/workers/scripts/{production}/deployments',project=deployments)
-          staging='trustfolio-diag-41481857078'
-          call('deleted_staging_route_current_state',f'/accounts/{account}/workers/scripts/{staging}/subdomain')
-          call('deleted_staging_saved_version_current_state',f'/accounts/{account}/workers/scripts/{staging}/versions/a65e03e9-bfa4-4b29-9e85-b1a3071df70b',project=selected)
-          d=json.loads(Path('qa/final-staging-acceptance/cloudflare-1042-diagnostics.json').read_text())
-          rays=[]
-          for exp in d['experiments']:
-              exp=exp.get('result',exp)
-              for row in exp['responses']:
-                  ray=next((v for k,v in row['headers'].items() if k.lower()=='cf-ray'),None)
-                  if ray:rays.extend([ray,ray.split('-')[0]])
-          fromms=int(datetime.datetime(2026,11,2,16,27,tzinfo=datetime.timezone.utc).timestamp()*1000)
-          toms=int(datetime.datetime(2026,11,2,16,33,tzinfo=datetime.timezone.utc).timestamp()*1000)
           def telemetry(body):
               result=body.get('result') or {}
               events=result.get('events') or {}
@@ -75,10 +46,32 @@ jobs:
                   meta=e.get('$metadata',{})
                   safe.append({'timestamp':e.get('timestamp'),'dataset':e.get('dataset'),'metadata':{k:v for k,v in meta.items() if k in ['id','rayId','service','origin','trigger','requestId','statusCode','error','region','url','type']},'workers':{k:v for k,v in (e.get('$workers') or {}).items() if k in ['scriptName','outcome','eventType','scriptVersion']}})
               return {'success':body.get('success'),'result':{'run':{k:v for k,v in (result.get('run') or {}).items() if k in ['id','status','dry']},'statistics':result.get('statistics'),'events':{'count':events.get('count'),'events':safe}}}
-          payload={'queryId':'trustfolio-1042-saved-rays-only','dry':True,'timeframe':{'from':fromms,'to':toms},'view':'events','limit':80,'parameters':{'filterCombination':'or','filters':[{'key':'$metadata.rayId','operation':'in','type':'string','value':','.join(rays)}]}}
-          call('historical_ray_correlation_no_new_requests',f'/accounts/{account}/workers/observability/telemetry/query',payload,telemetry)
-          call('zone_visibility_for_security_events','/zones?account.id='+account+'&per_page=50',project=lambda b:{'success':b.get('success'),'result':[{'id':z.get('id'),'name':z.get('name'),'status':z.get('status')} for z in b.get('result',[])]})
-          report={'status':'UNVERIFIED','purpose':'read-only account metadata and dry historical Ray correlation; no Worker HTTP requests, deployments, mutations or retailer calls','sourceCommit':os.environ['GITHUB_SHA'],'observedAtUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'accountId':account,'rows':rows}
+          
+          d=json.loads(Path('qa/final-staging-acceptance/cloudflare-1042-diagnostics.json').read_text())
+          rays=[];scripts=[]
+          for exp in d['experiments']:
+              exp=exp.get('result',exp);scripts.append(exp['stagingName'])
+              for row in exp['responses']:
+                  for k,v in row['headers'].items():
+                      if k.lower()=='cf-ray':rays.extend([v,v.split('-')[0]])
+          timeframe={'from':int(datetime.datetime(2026,11,2,16,27,tzinfo=datetime.timezone.utc).timestamp()*1000),'to':int(datetime.datetime(2026,11,2,16,33,tzinfo=datetime.timezone.utc).timestamp()*1000)}
+          discovered=[]
+          def key_projection(body):
+              result=body.get('result',[])
+              if isinstance(result,dict):result=result.get('keys',[])
+              discovered.extend([x['key'] for x in result if isinstance(x,dict) and isinstance(x.get('key'),str)])
+              return {'success':body.get('success'),'keyCount':len(discovered),'relevantKeys':[k for k in discovered if any(t in k.lower() for t in ['ray','service','scriptname','security','action'])]}
+          call('discover_historical_telemetry_field_names',f'/accounts/{account}/workers/observability/telemetry/keys',{'timeframe':timeframe},key_projection)
+          raykeys=[k for k in discovered if 'ray' in k.lower()][:4]
+          if raykeys:
+              payload={'queryId':'trustfolio-1042-discovered-ray-fields','dry':True,'timeframe':timeframe,'view':'events','limit':80,'parameters':{'filterCombination':'or','filters':[{'key':k,'operation':'in','type':'string','value':','.join(rays)} for k in raykeys]}}
+              call('correlate_saved_rays_on_discovered_fields',f'/accounts/{account}/workers/observability/telemetry/query',payload,telemetry)
+          service=next((k for k in ['$metadata.service','$workers.scriptName'] if k in discovered),None)
+          if service:
+              for label,values,limit in [('historical_staging_invocation_lookup',scripts,10),('historical_production_invocation_positive_control',['trustfolio-live-price-worker'],3)]:
+                  payload={'queryId':'trustfolio-1042-'+label,'dry':True,'timeframe':timeframe,'view':'events','limit':limit,'parameters':{'filters':[{'key':service,'operation':'in','type':'string','value':','.join(values)}]}}
+                  call(label,f'/accounts/{account}/workers/observability/telemetry/query',payload,telemetry)
+          report={'status':'UNVERIFIED','purpose':'historical schema discovery and saved-Ray correlation only; no Worker requests or mutations','sourceCommit':os.environ['GITHUB_SHA'],'observedAtUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'rows':rows}
           safe=json.dumps(report,ensure_ascii=False).replace(token,'[REDACTED]')
           Path('cloudflare-1042-account-evidence.json').write_text(safe)
           print('ACCOUNT_1042_EVIDENCE='+safe)
