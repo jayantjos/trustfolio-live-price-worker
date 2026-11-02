@@ -1,8 +1,8 @@
 import {extractFlipkart} from './price.js';
 
-// Diagnostic only: fixed Mongo inventory, known first-party redirect hosts.
+// Diagnostic only: fixed Mongo inventory and observed affiliate redirect host.
 // This resolver is never used by the ordinary production /api/check handler.
-const HOSTS=new Set(['fkrt.clnk.in','flipkart.com','www.flipkart.com']);
+const HOSTS=new Set(['fkrt.clnk.in','linksredirect.com','flipkart.com','www.flipkart.com']);
 export async function resolveFixedFlipkart(sample) {
   const fail=(error,evidence={})=>({error,priceINR:null,status:'unverified',...evidence});
   let current=new URL(sample.url);

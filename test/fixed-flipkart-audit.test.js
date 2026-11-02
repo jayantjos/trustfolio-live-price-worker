@@ -8,8 +8,9 @@ const product={ '@type':'Product',name,sku:'ACNHJZN5MZNMBWZS',offers:{price:3799
 function html(products){return '<html><title>'+name+' - Flipkart.com</title><link href="'+canonical+'" rel="canonical"><body><h1>'+name+'</h1><script type="application/ld+json">'+JSON.stringify(products)+'</script><div>Buy at ₹34,490 with bank offer</div>'+('<p>Product specifications and warranty</p>'.repeat(30))+'</body></html>';}
 test('fixed affiliate redirect resolves exact primary SKU and standard price, not bank offer',async()=>{
  const original=global.fetch;const urls=[];
- global.fetch=async url=>{urls.push(String(url));return urls.length===1?new Response(null,{status:302,headers:{location:canonical}}):new Response(html([product]));};
- try{const r=await resolveFixedFlipkart(sample);assert.equal(r.resolved.pid,product.sku);assert.equal(r.result.flipkart.priceNum,37990);assert.equal(r.result.flipkart.inStock,true);assert.deepEqual(urls,[sample.url,canonical]);}
+ const intermediate='https://linksredirect.com/fixed-fixture';
+ global.fetch=async url=>{urls.push(String(url));return urls.length<3?new Response(null,{status:302,headers:{location:urls.length===1?intermediate:canonical}}):new Response(html([product]));};
+ try{const r=await resolveFixedFlipkart(sample);assert.equal(r.resolved.pid,product.sku);assert.equal(r.result.flipkart.priceNum,37990);assert.equal(r.result.flipkart.inStock,true);assert.deepEqual(urls,[sample.url,intermediate,canonical]);}
  finally{global.fetch=original;}
 });
 test('unknown redirect host is rejected before contacting it',async()=>{
