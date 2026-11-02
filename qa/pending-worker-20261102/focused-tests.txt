@@ -1,0 +1,115 @@
+(node:13) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./")); register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ primary-section response replaces full-page content without raising size limit (31.948103ms)
+✔ supports bare array binding responses (2.097029ms)
+✔ reads selector HTML when metadata innerText is empty (1.23521ms)
+✔ rejects different ASIN even when title matches (3.921807ms)
+✔ rejects different canonical product (0.710631ms)
+✔ hidden main price never substitutes other sellers or EMI (1.568803ms)
+✔ rejects unsuccessful JSON envelopes (0.481645ms)
+✔ response size protection remains and cancels oversized stream (2.693708ms)
+(node:14) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./")); register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ different canonical ASIN cannot supply price for requested listing (1.818549ms)
+✔ same canonical ASIN preserves verified primary price extraction (18.94723ms)
+(node:25) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./")); register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ same-ASIN HP catalog conflict cannot escape through price or bestDeal (45.717834ms)
+(node:26) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./")); register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ valid Indian grouping and decimal fractions are parsed as INR (23.585145ms)
+✔ malformed Amazon currency grouping never yields a 100x INR price (1.331496ms)
+✔ HTTP200 generic Amazon.in soft-block is not verified product price (0.415436ms)
+✔ wrong ASIN price rejected even if product title looks correct (0.263026ms)
+(node:27) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./")); register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ AbortError retailer body becomes structured unverified response, not uncaught exception (5.570932ms)
+✔ TimeoutError retailer body becomes structured unverified response, not uncaught exception (1.639099ms)
+✔ audit storage failure is JSON unverified and never out of stock (3.531669ms)
+(node:28) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./")); register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ legacy Amazon bare ASIN identifies exact /dp URL (2.341036ms)
+✔ legacy backend receives r.asin truthy and r.amazon selling price for bare ASIN (39.907591ms)
+✔ Flipkart matching continues using r.flipkart when no Amazon ASIN (9.832701ms)
+✔ old Worker fetch contract chooses Amazon vs Flipkart correctly (0.2261ms)
+(node:37) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./")); register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ HP actual catalog mismatch is rejected (2.465514ms)
+✔ Godrej actual capacity mismatch is rejected (0.513894ms)
+✔ BAJAJ record 156 is rejected (0.199291ms)
+✔ Venus record 216 is rejected (0.143967ms)
+✔ V-Guard record 236 is rejected (0.17221ms)
+✔ Acer record 239 is rejected (0.115854ms)
+✔ Tecno record 203 is rejected (0.156055ms)
+✔ Voltas record 209 is rejected (0.244479ms)
+✔ Cadlec record 218 is rejected (0.28547ms)
+✔ Cadlec record 238 is rejected (0.196536ms)
+✔ OnePlus record 227 is rejected (0.249335ms)
+✔ same laptop capacity with an extra GPU size is not a storage conflict (0.871162ms)
+✔ missing dimensions remain unknown rather than fabricated conflicts (1.494851ms)
+✔ DDR4 RAM mismatch is rejected even with the same SSD size (0.383748ms)
+✔ named tablet finish uses the primary Product color, not just palette words (0.538521ms)
+✔ same named tablet finish with parentheses remains valid (0.448656ms)
+(node:76) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./")); register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ Croma exact SKU BUY price only; stock remains unknown (19.172049ms)
+✔ Croma absence, MRP-only and conflicting channel prices never substitute a price (0.395706ms)
+✔ Croma duplicate IDs, wrong schema and malformed numeric strings fail closed (0.226321ms)
+✔ Croma HTTP 429/502, JSON and body timeout failures never become OOS (7.827971ms)
+✔ Croma bounded stream is cancelled on size limit (1.317674ms)
+(node:77) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./")); register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ fixed affiliate redirect resolves exact primary SKU and standard price, not bank offer (27.473863ms)
+✔ unknown redirect host is rejected before contacting it (0.814857ms)
+✔ ambiguous Product JSON-LD never supplies an arbitrary PID or price (1.080007ms)
+✔ catalog brand conflict blocks price even when PID and amount exist (0.9498ms)
+✔ different litre capacity is not accepted as the catalog variant (1.184154ms)
+✔ legacy decimal spacing preserves the same air-conditioner variant (2.51658ms)
+(node:83) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./")); register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ verified primary exact SKU/full variant can disambiguate abbreviated SEO title (21.24429ms)
+✔ primary identity path still rejects wrong capacity (0.908208ms)
+✔ primary identity opt-in never accepts a blocked page title (0.393503ms)
+(node:89) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./")); register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ ported Scrape.do Flipkart Buy-at matches single price within exact PID (22.347201ms)
+✔ unmatched PID cannot capture another variant price (1.036421ms)
+✔ conflicting Buy-at prices must fail closed (0.814648ms)
+✔ Notify Me is not a live price (2.106263ms)
+✔ E002 storefront error is transient, not deletion instruction (0.678292ms)
+(node:95) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./")); register("./worker/test/cloudflare-node-loader.mjs", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ empty primary price node cannot swallow neighboring other-seller minimum (3.703448ms)
+✔ balanced price-to-pay excludes adjacent MRP and supports class-based actual selling scope (14.322464ms)
+✔ historical priceblock text extracts only exact currency text (1.213929ms)
+✔ aggregate/other-seller JSON-LD is not primary Amazon price (0.607445ms)
+✔ explicit primary stock states override a leftover price; unrelated recommendation does not (0.650129ms)
+✔ in-stock is explicit evidence and unknown stock is never invented (1.319838ms)
+✔ legacy adapter distinguishes all seven rich states without fabricated positive prices (0.635988ms)
+✔ E002 is temporary and explicit discontinued JSON-LD remains distinct (1.433049ms)
+✔ empty priceToPay cannot fall back to other sellers inside apex (0.593734ms)
+✔ whole and fraction are combined only in exact price-to-pay scope (0.707967ms)
+✔ primary ASIN input mismatch cannot be rescued by requested ASIN in recommendations (0.162455ms)
+✔ Flipkart primary PID conflict cannot fall through to unrelated fsp price (0.347073ms)
+✔ multiple seller offers cannot turn first seller stock or minimum into primary acceptance (0.401145ms)
+✔ historical fsp belongs to exact PID JSON owner; recommendations and unscoped ppd rejected (1.46039ms)
+ℹ tests 71
+ℹ suites 0
+ℹ pass 71
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 527.526556

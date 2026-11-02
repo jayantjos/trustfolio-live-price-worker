@@ -1,0 +1,120 @@
+{
+  "production_writes": 0,
+  "identity_quarantine_scope": "Audit/migration review only; no production catalog or website filtering changed.",
+  "identity_review": [
+    {
+      "sequence": 5,
+      "mongo_product_id": "69f89be69a622ea2d7ce0b9c",
+      "issue": "Catalog HP Ryzen 7/16GB/512GB conflicts with retailer Athlon/8GB/256GB.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 14,
+      "mongo_product_id": "69f311421dafb58cccdbc9db",
+      "issue": "Requested ASIN B0FYGGJZV4 conflicts with canonical B0HCBBMV3V.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 43,
+      "mongo_product_id": "69f89be59a622ea2d7ce0b7d",
+      "issue": "Amazon canonical ASIN conflicts with requested product; fresh Worker rejected amazon_canonical_product_mismatch.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 113,
+      "mongo_product_id": "69f89beb9a622ea2d7ce0c91",
+      "issue": "Catalog Godrej 194L conflicts with retailer 185L.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 134,
+      "mongo_product_id": "69f89bec9a622ea2d7ce0ce6",
+      "issue": "Catalog vivo Passion Red/12GB/256GB conflicts with retailer Lemon Yellow/8GB/256GB and canonical identity.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 156,
+      "mongo_product_id": "69f419289a622ea2d7ccb617",
+      "issue": "Catalog BAJAJ 15L conflicts with retailer 25L; same 7299 price does not establish product identity. A separate exact 15L candidate was independently verified: PID WGYGTR6JUWU5ZGNX, standard 6499. It is a proposal only; the original production mapping is unchanged.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 157,
+      "mongo_product_id": "69f419299a622ea2d7ccb62f",
+      "issue": "Catalog TECHFIRE conflicts with primary product PTROX and SEO GEMFLY; retailer price 666 is not validated for catalog product.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 203,
+      "mongo_product_id": "69ff63dafe6fd8dc386ad35d",
+      "issue": "Catalog Tecno Melting Silver/128GB conflicts with primary Storm Titanium/256GB.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 209,
+      "mongo_product_id": "69f4c6849a622ea2d7cd012d",
+      "issue": "Catalog Voltas Beko White conflicts with primary Maroon/Burgundy.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 216,
+      "mongo_product_id": "69f419289a622ea2d7ccb621",
+      "issue": "Catalog Venus 25L conflicts with primary 10L.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 218,
+      "mongo_product_id": "69f4192a9a622ea2d7ccb675",
+      "issue": "Catalog Cadlec 2000W conflicts with primary 1998W.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 227,
+      "mongo_product_id": "69f419329a622ea2d7ccb723",
+      "issue": "Catalog OnePlus Pad Go 4G conflicts with primary Wi-Fi Only.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 236,
+      "mongo_product_id": "69f419289a622ea2d7ccb622",
+      "issue": "Catalog V-Guard 25L conflicts with primary 15L.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 238,
+      "mongo_product_id": "69f48a3e9a622ea2d7ccec78",
+      "issue": "Catalog Cadlec 2000W conflicts with primary 1999W.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 239,
+      "mongo_product_id": "69f48e8e9a622ea2d7ccefa6",
+      "issue": "Catalog Acer 128GB eMMC conflicts with primary 64GB eMMC.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    },
+    {
+      "sequence": 267,
+      "mongo_product_id": "6a06fc38fe6fd8dc386b949b",
+      "issue": "Catalog OnePlus Pad 4 Dune Glow conflicts with selected/primary Sage Mist finish.",
+      "action": "Quarantine from proposed migration; verify a correct replacement ASIN/PID before remapping."
+    }
+  ],
+  "replacement_candidates": [
+    {
+      "sequence": 156,
+      "mongo_product_id": "69f419289a622ea2d7ccb617",
+      "observed_url": "https://www.flipkart.com/bajaj-popular-plus-15-l-storage-water-geyser-glasslined-tank/p/itm97c247d004364?pid=WGYGTR6JUWU5ZGNX&marketplace=FLIPKART&lid=LSTWGYGTR6JUWU5ZGNXIYOUAY&pageUID=1793617092261",
+      "primary_pid": "WGYGTR6JUWU5ZGNX",
+      "title": "BAJAJ Popular Plus 15 L Storage Water Geyser Glasslined Tank",
+      "independent_price": 6499,
+      "independent_stock": "https://schema.org/InStock",
+      "screenshot": "replacements/156.jpg",
+      "observed_at_utc": "2026-11-02T11:01:58.818Z",
+      "independently_verified": true,
+      "worker_verified": false,
+      "production_mapping_changed": false,
+      "requires_mapping_review": true
+    }
+  ],
+  "note": "Previously verified mapping proposals preserved. No catalog edits. Replacement candidate is not Worker verified or applied."
+}

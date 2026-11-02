@@ -1,0 +1,56 @@
+{
+  "productionWrites": 0,
+  "filesScanned": 197,
+  "matches": [
+    {
+      "path": "extractors/marketplace.py",
+      "sha256": "4238ac4af131a8452a1ce1732bd216d19cb0b49d023e23afa982f73e4e7e37f4",
+      "selector_lines": [
+        {
+          "line": 459,
+          "text": "\".a-price .a-offscreen\","
+        },
+        {
+          "line": 460,
+          "text": "\"span.a-price-whole\","
+        },
+        {
+          "line": 2954,
+          "text": "<span class=\"a-offscreen\">₹49,999</span>"
+        }
+      ]
+    },
+    {
+      "path": "legacy_price/scripts/price_update_worker.py",
+      "sha256": "efae7922625e84a8ea29db3a659ab40bd61bac023546663632756520ce0d8c68",
+      "selector_lines": [
+        {
+          "line": 316,
+          "text": "# 3) Buy button text: Buy at ₹x"
+        },
+        {
+          "line": 340,
+          "text": "if \"buy at\" in low:"
+        }
+      ]
+    },
+    {
+      "path": "archive/source_patch_backups/listing_enrichment_v1_20260822_172238/extractors/marketplace.py",
+      "sha256": "cdc06e1bd62a4b2770dd05ecd6606f650113bd12cba02c87ed0a3b6d6314bf7c",
+      "selector_lines": [
+        {
+          "line": 459,
+          "text": "\".a-price .a-offscreen\","
+        },
+        {
+          "line": 460,
+          "text": "\"span.a-price-whole\","
+        },
+        {
+          "line": 2871,
+          "text": "<span class=\"a-offscreen\">₹49,999</span>"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "networkCalls": 0,
+  "mongoConnections": 0,
+  "mongoWrites": 0,
+  "productionChanges": 0,
+  "checks": [
+    {
+      "state": "ok",
+      "legacyStatus": "ok",
+      "liveStatus": "ok",
+      "in_stock": null,
+      "unavailableChecks": 0,
+      "wouldQualifyForRemoval": false,
+      "retainedOldDisplayPrice": false
+    },
+    {
+      "state": "out_of_stock",
+      "legacyStatus": "out_of_stock",
+      "liveStatus": "out_of_stock",
+      "in_stock": false,
+      "unavailableChecks": 1,
+      "wouldQualifyForRemoval": true,
+      "retainedOldDisplayPrice": true
+    },
+    {
+      "state": "discontinued",
+      "legacyStatus": "out_of_stock",
+      "liveStatus": "out_of_stock",
+      "in_stock": false,
+      "unavailableChecks": 1,
+      "wouldQualifyForRemoval": true,
+      "retainedOldDisplayPrice": true
+    },
+    {
+      "state": "not_deliverable",
+      "legacyStatus": "error",
+      "liveStatus": "error",
+      "in_stock": null,
+      "unavailableChecks": 0,
+      "wouldQualifyForRemoval": false,
+      "retainedOldDisplayPrice": true
+    },
+    {
+      "state": "price_unverified",
+      "legacyStatus": "error",
+      "liveStatus": "error",
+      "in_stock": null,
+      "unavailableChecks": 0,
+      "wouldQualifyForRemoval": false,
+      "retainedOldDisplayPrice": true
+    },
+    {
+      "state": "temporary_error",
+      "legacyStatus": "error",
+      "liveStatus": "error",
+      "in_stock": null,
+      "unavailableChecks": 0,
+      "wouldQualifyForRemoval": false,
+      "retainedOldDisplayPrice": true
+    },
+    {
+      "state": "identity_mismatch",
+      "legacyStatus": "error",
+      "liveStatus": "error",
+      "in_stock": null,
+      "unavailableChecks": 0,
+      "wouldQualifyForRemoval": false,
+      "retainedOldDisplayPrice": true
+    }
+  ],
+  "transportFailuresNeverUnavailable": true,
+  "important": "Actual current backend immediately classifies explicit permanent OOS/discontinued as removable; ambiguous unavailable requires two checks. This is source-policy evidence, not a performed deletion."
+}

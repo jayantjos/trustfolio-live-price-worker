@@ -1,0 +1,188 @@
+[
+  {
+    "sku": "317463",
+    "httpStatus": 200,
+    "response": {
+      "fresh": true,
+      "rateLimited": false,
+      "report": {
+        "kind": "croma_api_cloudflare_readonly_test",
+        "checkedAt": "2026-11-02T15:24:52.507Z",
+        "status": "error",
+        "priceNum": null,
+        "price": null,
+        "inStock": null,
+        "in_stock": null,
+        "availability": null,
+        "error": "croma_http_403",
+        "source": "croma_search_web",
+        "sku": "317463",
+        "traces": [
+          {
+            "at": "2026-11-02T15:24:52.421Z",
+            "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=Apple+Watch+SE+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+            "httpStatus": 403,
+            "latencyMs": 86
+          }
+        ],
+        "latencyMs": 86,
+        "httpStatus": 403
+      }
+    }
+  },
+  {
+    "sku": "300154",
+    "httpStatus": 200,
+    "response": {
+      "fresh": true,
+      "rateLimited": false,
+      "report": {
+        "kind": "croma_api_cloudflare_readonly_test",
+        "checkedAt": "2026-11-02T15:24:52.871Z",
+        "status": "error",
+        "priceNum": null,
+        "price": null,
+        "inStock": null,
+        "in_stock": null,
+        "availability": null,
+        "error": "croma_http_403",
+        "source": "croma_search_web",
+        "sku": "300154",
+        "traces": [
+          {
+            "at": "2026-11-02T15:24:52.775Z",
+            "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=Crompton+Energion+Hyperjet+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+            "httpStatus": 403,
+            "latencyMs": 96
+          }
+        ],
+        "latencyMs": 96,
+        "httpStatus": 403
+      }
+    }
+  },
+  {
+    "sku": "316459",
+    "httpStatus": 200,
+    "response": {
+      "fresh": true,
+      "rateLimited": false,
+      "report": {
+        "kind": "croma_api_cloudflare_readonly_test",
+        "checkedAt": "2026-11-02T15:24:53.394Z",
+        "status": "error",
+        "priceNum": null,
+        "price": null,
+        "inStock": null,
+        "in_stock": null,
+        "availability": null,
+        "error": "croma_http_403",
+        "source": "croma_search_web",
+        "sku": "316459",
+        "traces": [
+          {
+            "at": "2026-11-02T15:24:53.294Z",
+            "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=Croma+5+Star+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+            "httpStatus": 403,
+            "latencyMs": 100
+          }
+        ],
+        "latencyMs": 100,
+        "httpStatus": 403
+      }
+    }
+  },
+  {
+    "sku": "311096",
+    "httpStatus": 200,
+    "response": {
+      "fresh": true,
+      "rateLimited": false,
+      "report": {
+        "kind": "croma_api_cloudflare_readonly_test",
+        "checkedAt": "2026-11-02T15:24:53.704Z",
+        "status": "error",
+        "priceNum": null,
+        "price": null,
+        "inStock": null,
+        "in_stock": null,
+        "availability": null,
+        "error": "croma_http_403",
+        "source": "croma_search_web",
+        "sku": "311096",
+        "traces": [
+          {
+            "at": "2026-11-02T15:24:53.662Z",
+            "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=Croma+AV4315+3+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+            "httpStatus": 403,
+            "latencyMs": 42
+          }
+        ],
+        "latencyMs": 42,
+        "httpStatus": 403
+      }
+    }
+  },
+  {
+    "sku": "317201",
+    "httpStatus": 200,
+    "response": {
+      "fresh": true,
+      "rateLimited": false,
+      "report": {
+        "kind": "croma_api_cloudflare_readonly_test",
+        "checkedAt": "2026-11-02T15:24:54.039Z",
+        "status": "error",
+        "priceNum": null,
+        "price": null,
+        "inStock": null,
+        "in_stock": null,
+        "availability": null,
+        "error": "croma_http_403",
+        "source": "croma_search_web",
+        "sku": "317201",
+        "traces": [
+          {
+            "at": "2026-11-02T15:24:53.983Z",
+            "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=ASUS+Vivobook+15+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+            "httpStatus": 403,
+            "latencyMs": 56
+          }
+        ],
+        "latencyMs": 56,
+        "httpStatus": 403
+      }
+    }
+  },
+  {
+    "sku": "312748",
+    "httpStatus": 200,
+    "response": {
+      "fresh": true,
+      "rateLimited": false,
+      "report": {
+        "kind": "croma_api_cloudflare_readonly_test",
+        "checkedAt": "2026-11-02T15:24:54.424Z",
+        "status": "error",
+        "priceNum": null,
+        "price": null,
+        "inStock": null,
+        "in_stock": null,
+        "availability": null,
+        "error": "croma_http_403",
+        "source": "croma_search_web",
+        "sku": "312748",
+        "traces": [
+          {
+            "at": "2026-11-02T15:24:54.314Z",
+            "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=LG+7.5+kg+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+            "httpStatus": 403,
+            "latencyMs": 110
+          }
+        ],
+        "latencyMs": 110,
+        "httpStatus": 403
+      }
+    }
+  }
+]

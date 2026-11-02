@@ -1,0 +1,236 @@
+[
+  {
+    "sequence": 1,
+    "httpStatus": 200,
+    "response": {
+      "sequence": 1,
+      "productId": "69f2e6991dafb58cccdbbad0",
+      "platform": "amazon",
+      "sku": "B074J9SPYX",
+      "checkedAt": "2026-11-02T15:31:55.975Z",
+      "fresh": true,
+      "result": {
+        "asin": "B074J9SPYX",
+        "pid": "B074J9SPYX",
+        "input": "B074J9SPYX",
+        "amazon": {
+          "platform": "Amazon",
+          "url": "https://www.amazon.in/dp/B074J9SPYX",
+          "title": "Buy Crompton Super Briz Deco 1200 mm (48 Inch) High Speed Decorative Ceiling Fan (Smoked Brown), Pack Of 1, 4 stars Online at Low Prices in India - Amazon.in",
+          "price": "₹2,499",
+          "priceNum": 2499,
+          "inStock": true,
+          "in_stock": true,
+          "status": "ok",
+          "verificationStatus": "ok",
+          "verificationOutcome": "selling_price_verified",
+          "availability": null,
+          "error": null,
+          "httpStatus": 200,
+          "extractionSource": "amazon_price_to_pay",
+          "bytesRead": "2062 KB",
+          "latencyMs": 2370
+        },
+        "flipkart": {
+          "platform": "Flipkart",
+          "url": null,
+          "title": null,
+          "price": null,
+          "priceNum": null,
+          "inStock": null,
+          "status": "skipped"
+        },
+        "croma": {
+          "platform": "Croma",
+          "url": null,
+          "title": null,
+          "price": null,
+          "priceNum": null,
+          "inStock": null,
+          "status": "not_supported"
+        },
+        "bestDeal": {
+          "winner": "amazon",
+          "savings": 0,
+          "status": "ok"
+        },
+        "cached": false,
+        "itemLatencyMs": 2370
+      }
+    }
+  },
+  {
+    "sequence": 155,
+    "httpStatus": 200,
+    "response": {
+      "sequence": 155,
+      "productId": "69f419289a622ea2d7ccb608",
+      "platform": "flipkart",
+      "checkedAt": "2026-11-02T15:31:57.893Z",
+      "error": "fixed_primary_product_jsonld_unverified",
+      "priceINR": null,
+      "status": "unverified",
+      "verificationStatus": "price_unverified"
+    }
+  },
+  {
+    "sequence": 199,
+    "httpStatus": 200,
+    "response": {
+      "sequence": 199,
+      "productId": "69f4192b9a622ea2d7ccb68b",
+      "platform": "flipkart",
+      "checkedAt": "2026-11-02T15:32:00.179Z",
+      "resolved": {
+        "pid": "COMHCYMG83BGNQHH",
+        "url": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+        "title": "Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromebook 11IJL9 Chromebook Rs.36502  Price in India - Buy Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromebook 11IJL9 Chromebook Maca Blue Online - Lenovo : Flipkart.com"
+      },
+      "result": {
+        "pid": "COMHCYMG83BGNQHH",
+        "flipkart": {
+          "status": "ok",
+          "priceNum": 36502,
+          "price": "₹36,502",
+          "inStock": true,
+          "source": "jsonld_product_offer",
+          "verificationStatus": "ok",
+          "in_stock": true,
+          "availability": null,
+          "verificationOutcome": "selling_price_verified",
+          "error": null,
+          "title": "Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromebook 11IJL9 Chromebook Rs.36502  Price in India - Buy Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromebook 11IJL9 Chromebook Maca Blue Online - Lenovo : Flipkart.com",
+          "url": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+          "httpStatus": 200
+        }
+      },
+      "fresh": true
+    }
+  },
+  {
+    "sequence": 212,
+    "httpStatus": 200,
+    "response": {
+      "sequence": 212,
+      "productId": "69f419139a622ea2d7ccb585",
+      "platform": "flipkart",
+      "checkedAt": "2026-11-02T15:32:02.058Z",
+      "resolved": {
+        "pid": "AICGETHFNCZCX7PA",
+        "url": "https://www.flipkart.com/crompton-100-l-desert-air-cooler/p/itmfdwa95yeshx4x?pid=AICGETHFNCZCX7PA",
+        "title": "Crompton 100 L Desert Air Cooler Price in India - Buy Crompton 100 L Desert Air Cooler online at Flipkart.com"
+      },
+      "result": {
+        "pid": "AICGETHFNCZCX7PA",
+        "flipkart": {
+          "status": "out_of_stock",
+          "priceNum": null,
+          "price": null,
+          "inStock": false,
+          "source": "jsonld_product_offer",
+          "availability": "out_of_stock",
+          "verificationStatus": "out_of_stock",
+          "in_stock": false,
+          "verificationOutcome": "out_of_stock",
+          "error": "out_of_stock",
+          "title": "Crompton 100 L Desert Air Cooler Price in India - Buy Crompton 100 L Desert Air Cooler online at Flipkart.com",
+          "url": "https://www.flipkart.com/crompton-100-l-desert-air-cooler/p/itmfdwa95yeshx4x?pid=AICGETHFNCZCX7PA",
+          "httpStatus": 200
+        }
+      },
+      "fresh": true
+    }
+  },
+  {
+    "sequence": 220,
+    "httpStatus": 200,
+    "response": {
+      "sequence": 220,
+      "productId": "69f49a459a622ea2d7ccf39c",
+      "platform": "flipkart",
+      "checkedAt": "2026-11-02T15:32:04.210Z",
+      "resolved": {
+        "pid": "MRCHGH5Z2YCBFYZN",
+        "url": "https://www.flipkart.com/ifb-20-l-solo-microwave-oven/p/itm44436cbe2eb7c?pid=MRCHGH5Z2YCBFYZN",
+        "title": "Flipkart.com | IFB 20 L Mechanical Knob Control, 5 Power Levels, Weight Defrost, Child Safety Lock, Solo Microwave Oven -  Solo"
+      },
+      "result": {
+        "pid": "MRCHGH5Z2YCBFYZN",
+        "flipkart": {
+          "status": "ok",
+          "priceNum": 6940,
+          "price": "₹6,940",
+          "inStock": true,
+          "source": "jsonld_product_offer",
+          "verificationStatus": "ok",
+          "in_stock": true,
+          "availability": null,
+          "verificationOutcome": "selling_price_verified",
+          "error": null,
+          "title": "Flipkart.com | IFB 20 L Mechanical Knob Control, 5 Power Levels, Weight Defrost, Child Safety Lock, Solo Microwave Oven -  Solo",
+          "url": "https://www.flipkart.com/ifb-20-l-solo-microwave-oven/p/itm44436cbe2eb7c?pid=MRCHGH5Z2YCBFYZN",
+          "httpStatus": 200
+        }
+      },
+      "fresh": true
+    }
+  },
+  {
+    "sequence": 234,
+    "httpStatus": 200,
+    "response": {
+      "sequence": 234,
+      "productId": "69f4026f9a622ea2d7ccb2e6",
+      "platform": "flipkart",
+      "checkedAt": "2026-11-02T15:32:06.297Z",
+      "error": "fixed_primary_product_jsonld_unverified",
+      "priceINR": null,
+      "status": "unverified",
+      "verificationStatus": "price_unverified"
+    }
+  },
+  {
+    "sequence": 239,
+    "httpStatus": 200,
+    "response": {
+      "sequence": 239,
+      "productId": "69f48e8e9a622ea2d7ccefa6",
+      "platform": "flipkart",
+      "checkedAt": "2026-11-02T15:32:08.420Z",
+      "error": "fixed_catalog_variant_mismatch",
+      "priceINR": null,
+      "status": "unverified",
+      "verificationStatus": "identity_mismatch",
+      "resolvedPid": "COMGSV3GZYUDG6NP",
+      "variantConflicts": [
+        {
+          "field": "storage_gb",
+          "catalog": 128,
+          "retailer": 64
+        }
+      ]
+    }
+  },
+  {
+    "sequence": 267,
+    "httpStatus": 200,
+    "response": {
+      "sequence": 267,
+      "productId": "6a06fc38fe6fd8dc386b949b",
+      "platform": "flipkart",
+      "checkedAt": "2026-11-02T15:32:10.241Z",
+      "error": "fixed_catalog_variant_mismatch",
+      "priceINR": null,
+      "status": "unverified",
+      "verificationStatus": "identity_mismatch",
+      "resolvedPid": "TABHMKTT5RPG7AD9",
+      "variantConflicts": [
+        {
+          "field": "named_color",
+          "catalog": "dune glow",
+          "retailer": "Sage Mist"
+        }
+      ]
+    }
+  }
+]
