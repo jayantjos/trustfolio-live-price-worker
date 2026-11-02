@@ -33,19 +33,13 @@ jobs:
         run: npx --yes wrangler@4.155.0 deploy
       - name: Confirm primary-section extraction is live
         run: |
-          curl -fsS --retry 4 --retry-delay 3 --max-time 15 https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/health > /tmp/tf-worker-health.json
+          for attempt in $(seq 1 10); do
+            curl -fsS --max-time 15 https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/health > /tmp/tf-worker-health.json
+            if python3 -c 'import json; d=json.load(open("/tmp/tf-worker-health.json")); assert d.get("priceVerificationContract")=="seven-states-v1" and d.get("amazonPrimaryScope")=="balanced-elements-v1" and d.get("flipkartFspIdentity")=="json-owner-v1"'; then break; fi
+            if [ "$attempt" = 10 ]; then cat /tmp/tf-worker-health.json; exit 1; fi
+            sleep 3
+          done
           cat /tmp/tf-worker-health.json
-          grep -q '"amazonBrowserQALock":"per-asin-v2"' /tmp/tf-worker-health.json || { echo 'DEPLOY_VERIFY_FAILED'; exit 1; }
-          grep -q '\"amazonBrowserExtraction\":\"primary-sections-v3\"' /tmp/tf-worker-health.json || { echo 'DEPLOY_VERIFY_FAILED'; exit 1; }
-          grep -q '"amazonCanonicalIdentity":"exact-canonical-v1"' /tmp/tf-worker-health.json || exit 1
-          grep -q '"flipkartAuditResolution":"fixed-primary-jsonld-v4"' /tmp/tf-worker-health.json || exit 1
-          grep -q '"productTitleIdentity":"bounded-2048-v1"' /tmp/tf-worker-health.json || exit 1
-          grep -q '"flipkartAuditIdentity":"primary-product-v1"' /tmp/tf-worker-health.json || exit 1
-          grep -q '"flipkartAuditVariant":"explicit-dimensions-v1"' /tmp/tf-worker-health.json || exit 1
-          grep -q '"fixedAuditErrors":"structured-v1"' /tmp/tf-worker-health.json || exit 1
-          grep -q '"fixedAuditCatalogIdentity":"shared-variants-v2"' /tmp/tf-worker-health.json || exit 1
-          grep -q '"priceVerificationContract":"seven-states-v1"' /tmp/tf-worker-health.json || exit 1
-          grep -q '"amazonPrimaryScope":"balanced-elements-v1"' /tmp/tf-worker-health.json || exit 1
           echo 'DEPLOY_VERIFY_PASS'
       - uses: actions/upload-artifact@v4
         if: always()

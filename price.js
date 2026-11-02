@@ -54,6 +54,7 @@ function productJsonld(html,expected) {
         const sku=String(p.sku ?? p.productID ?? '').trim().toUpperCase();
         if (sku && expected.id && sku!==expected.id.toUpperCase()) continue;
         const offers=Array.isArray(p.offers)?p.offers:[p.offers];
+        if(offers.length!==1)return failure('primary_offer_ambiguous');
         for (const offer of offers) {
           if (!offer || typeof offer!=='object') continue;
           if(expected.platform==='amazon'&&String(offer['@type']||'').toLowerCase()!=='offer')continue;
@@ -114,16 +115,24 @@ function rawFlipkart(html, expected) {
   if(stock&&stock.state!=='ok')return {...failure(stock.state),verificationStatus:stock.state,availabilityEvidence:stock.evidence};
   const ld=productJsonld(html,expected);
   if (ld) return ld;
-  // Historical Scrape.do parser: fsp is the product selling price, not MRP.
-  const p= /"ppd"\s*:\s*\{([\s\S]{0,2000}?)\}/gi;
-  let m;
-  while ((m=p.exec(html))) {
-    const amount=parseMoney((/"fsp"\s*:\s*"?(\d{3,8})"?/i.exec(m[1])||[])[1]);
-    if (amount==null) continue;
-    const near=html.slice(Math.max(0,m.index-300),Math.min(html.length,m.index+2400));
-    if (/"NOTIFY_ME"\s*:\s*true/i.test(near)) continue;
-    return ok(amount,'flipkart_ppd_fsp');
+  // Historical fsp selector, limited to a JSON object that owns this PID.
+  // A page-wide first ppd/fsp may belong to a recommendation or another variant.
+  const scopedPrices=[];
+  for(const script of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)){
+    try{
+      const scan=(node,owner=null)=>{
+        if(Array.isArray(node)){node.forEach(x=>scan(x,owner));return;}
+        if(!node||typeof node!=='object')return;
+        const ownId=node.productId??node.pid??node.productID;
+        const id=ownId!=null?String(ownId).toUpperCase():owner;
+        if(id===String(expected.id).toUpperCase()&&node.ppd&&node.NOTIFY_ME!==true){const n=parseMoney(node.ppd.fsp);if(n!==null)scopedPrices.push(n);}
+        for(const [key,value] of Object.entries(node))if(key!=='ppd')scan(value,id);
+      };scan(JSON.parse(script[1]));
+    }catch{}
   }
+  const uniqueFsp=[...new Set(scopedPrices)];
+  if(uniqueFsp.length>1)return failure('flipkart_conflicting_primary_prices');
+  if(uniqueFsp.length===1)return ok(uniqueFsp[0],'flipkart_ppd_fsp');
   // This field is only accepted when a primary-product identity was verified.
   const meta=/<meta\b[^>]*itemprop=["']price["'][^>]*content=["']([\d,.]+)["'][^>]*>/i.exec(html)
        || /<meta\b[^>]*content=["']([\d,.]+)["'][^>]*itemprop=["']price["'][^>]*>/i.exec(html);

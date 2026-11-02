@@ -350,6 +350,7 @@ const worker = {
         cromaSearchComparison:'fixed-six-v1',
         priceVerificationContract:'seven-states-v1',
         amazonPrimaryScope:'balanced-elements-v1',
+        flipkartFspIdentity:'json-owner-v1',
         amazonBrowserExtraction:'primary-sections-v3',
         amazonCanonicalIdentity:'exact-canonical-v1',
         flipkartAuditResolution:'fixed-primary-jsonld-v4',
