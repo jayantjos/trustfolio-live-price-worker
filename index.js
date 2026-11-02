@@ -1,3 +1,4 @@
+import {catalogVariantConflicts} from './catalog-identity.js';
 import { extractPrice } from './price.js';
 import { amazonBrowserPrice } from './amazon-browser.js';
 import { AUDIT_PRODUCTS } from './qa/audit-20261102/inventory.js';
@@ -398,6 +399,7 @@ const worker = {
         flipkartAuditIdentity:'primary-product-v1',
         flipkartAuditVariant:'explicit-dimensions-v1',
         fixedAuditErrors:'structured-v1',
+        fixedAuditCatalogIdentity:'shared-variants-v2',
         amazonBrowserQALock:'per-asin-v2',
         ready:Boolean(env.TF_PRICE_WORKER_KEY),
         monitoring:{cronUTC:MONITOR_CRON,items:MONITORED_PRODUCTS.length,logs:'Workers Logs',
@@ -432,6 +434,13 @@ const worker = {
       }
       if(!sample.retailer_id)return json({sequence,status:'unverified',error:'canonical_product_identifier_missing',priceINR:null});
       const result=await one(sample.platform==='amazon'?sample.retailer_id:sample.url,false,ctx,env,false);
+      if(sample.platform==='amazon'&&result.amazon?.title) {
+        const variantConflicts=catalogVariantConflicts(sample,{name:result.amazon.title});
+        if(variantConflicts.length){
+          result.amazon={...result.amazon,status:'error',priceNum:null,price:null,inStock:null,error:'fixed_catalog_variant_mismatch',variantConflicts};
+          result.bestDeal={winner:null,savings:0,status:'no_price'};
+        }
+      }
       return json({sequence,productId:sample.product_id,platform:sample.platform,sku:sample.retailer_id,checkedAt:new Date().toISOString(),fresh:true,result});
     }
     if(request.method==='GET' && url.pathname==='/qa/amazon-browser-one') {
