@@ -30,6 +30,12 @@ test('primary-section response replaces full-page content without raising size l
 test('supports bare array binding responses',async()=>{
   const r=await run(fixture());assert.equal(r.parsed.priceNum,2499);
 });
+test('reads selector HTML when metadata innerText is empty',async()=>{
+  const f=fixture();
+  f[0].results[0]={text:'',html:title+' - Amazon.in'};
+  f[1].results[0]={html:'<span>'+title+'</span>'};
+  const r=await run(f);assert.equal(r.parsed.priceNum,2499);
+});
 test('rejects different ASIN even when title matches',async()=>{
   const f=fixture();f[2].results[0].attributes[0].value='B000000000';
   assert.equal((await run(f)).diagnostic,'amazon_product_identity_unverified');

@@ -11,6 +11,10 @@ export const AMAZON_SELECTORS = Object.freeze([
 const LIMIT = 2_500_000;
 const escape = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const attr = (row,key) => row?.attributes?.find(x=>x.name===key)?.value;
+// Quick Actions may return empty innerText for metadata/hidden title nodes.
+// Use only that exact selector's HTML text, never other page sections.
+const nodeText = row => typeof row?.text==='string'&&row.text.trim()?row.text.trim():
+  typeof row?.html==='string'?row.html.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim():'';
 
 // Bound the response while reading, before allocating/parsing an entire body.
 async function readBounded(response) {
@@ -51,11 +55,12 @@ export async function amazonBrowserPrice(item,env) {
   }
   const one=selector=>{const rs=groups.get(selector)||[];return rs.length===1?rs[0]:null;};
   const asin=String(attr(one('input#ASIN'),'value')||'').toUpperCase();
-  const title=one('title')?.text;
-  const heading=one('#productTitle')?.text;
+  const title=nodeText(one('title'));
+  const heading=nodeText(one('#productTitle'));
   const evidence={responseBytes:new TextEncoder().encode(raw).length,
     browserTitle:String(title||'').slice(0,130),mainHeading:String(heading||'').slice(0,130),
-    primaryAsin:asin||null,identityVerified:asin===item.id,mode:'amazon-primary-sections-v1'};
+    primaryAsin:asin||null,identityVerified:asin===item.id,mode:'amazon-primary-sections-v2',
+    selectorCounts:Object.fromEntries([...groups].map(([key,value])=>[key,value.length]))};
   if(asin!==item.id||!title||!heading)return fail('amazon_product_identity_unverified',evidence);
   const canonical=attr(one('link[rel="canonical"]'),'href');
   if(canonical) {
