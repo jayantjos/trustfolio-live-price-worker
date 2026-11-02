@@ -1,0 +1,752 @@
+{
+  "status": "FAIL",
+  "rootCause": "UNVERIFIED",
+  "realHttp": true,
+  "retailerRequests": 0,
+  "dbUsed": false,
+  "experiments": [
+    {
+      "status": "UNVERIFIED",
+      "kind": "genuine HTTP; zero retailer fetches; no MongoDB",
+      "sourceCommit": "87fbc038457a8fa8738b29fb82929afd2a4519b8",
+      "stagingName": "trustfolio-diag-41481560380",
+      "responses": [
+        {
+          "round": 0,
+          "test": "missing",
+          "requestId": "6ad83222-b798-428e-b2fc-2cb667ce5535",
+          "httpStatus": 404,
+          "latencyMs": 130,
+          "headers": {
+            "Date": "Mon, 02 Nov 2026 16:27:17 GMT",
+            "Content-Type": "text/plain; charset=UTF-8",
+            "Server": "cloudflare",
+            "CF-RAY": "a544817bfed49b3e-DFW"
+          },
+          "body": "error code: 1042\n"
+        },
+        {
+          "round": 0,
+          "test": "incorrect",
+          "requestId": "018da3ef-f90d-4e22-8c2b-9e396bc7988c",
+          "httpStatus": 404,
+          "latencyMs": 64,
+          "headers": {
+            "Date": "Mon, 02 Nov 2026 16:27:17 GMT",
+            "Content-Type": "text/plain; charset=UTF-8",
+            "Server": "cloudflare",
+            "CF-RAY": "a544817c69e9d932-DFW"
+          },
+          "body": "error code: 1042\n"
+        },
+        {
+          "round": 0,
+          "test": "valid",
+          "requestId": "5b47a294-7a9f-4fc3-b583-f15f983c54f4",
+          "httpStatus": 404,
+          "latencyMs": 64,
+          "headers": {
+            "Date": "Mon, 02 Nov 2026 16:27:17 GMT",
+            "Content-Type": "text/plain; charset=UTF-8",
+            "Server": "cloudflare",
+            "CF-RAY": "a544817ccebc2ff4-DFW"
+          },
+          "body": "error code: 1042\n"
+        },
+        {
+          "round": 1,
+          "test": "missing",
+          "requestId": "bce65718-0660-49f6-9671-d23b6debc387",
+          "httpStatus": 404,
+          "latencyMs": 46,
+          "headers": {
+            "Date": "Mon, 02 Nov 2026 16:27:20 GMT",
+            "Content-Type": "text/plain; charset=UTF-8",
+            "Server": "cloudflare",
+            "CF-RAY": "a544818febb4e5bb-DFW"
+          },
+          "body": "error code: 1042\n"
+        },
+        {
+          "round": 1,
+          "test": "incorrect",
+          "requestId": "9040055d-b2be-4262-b77f-d6526021e8a8",
+          "httpStatus": 404,
+          "latencyMs": 84,
+          "headers": {
+            "Date": "Mon, 02 Nov 2026 16:27:21 GMT",
+            "Content-Type": "text/plain; charset=UTF-8",
+            "Server": "cloudflare",
+            "CF-RAY": "a54481904ce1a8a1-DFW"
+          },
+          "body": "error code: 1042\n"
+        },
+        {
+          "round": 1,
+          "test": "valid",
+          "requestId": "3fa0c311-9c1c-45cf-a5e0-b39442e465c9",
+          "httpStatus": 404,
+          "latencyMs": 68,
+          "headers": {
+            "Date": "Mon, 02 Nov 2026 16:27:21 GMT",
+            "Content-Type": "text/plain; charset=UTF-8",
+            "Server": "cloudflare",
+            "CF-RAY": "a5448190cda77330-DFW"
+          },
+          "body": "error code: 1042\n"
+        },
+        {
+          "round": 2,
+          "test": "missing",
+          "requestId": "7822accd-fa86-4aba-8171-b89335132c82",
+          "httpStatus": 404,
+          "latencyMs": 75,
+          "headers": {
+            "Date": "Mon, 02 Nov 2026 16:27:24 GMT",
+            "Content-Type": "text/plain; charset=UTF-8",
+            "Server": "cloudflare",
+            "CF-RAY": "a54481a3f91b9b3e-DFW"
+          },
+          "body": "error code: 1042\n"
+        },
+        {
+          "round": 2,
+          "test": "incorrect",
+          "requestId": "8989c685-5120-45a1-a665-3c21416e52e4",
+          "httpStatus": 404,
+          "latencyMs": 53,
+          "headers": {
+            "Date": "Mon, 02 Nov 2026 16:27:24 GMT",
+            "Content-Type": "text/plain; charset=UTF-8",
+            "Server": "cloudflare",
+            "CF-RAY": "a54481a45a19c15a-DFW"
+          },
+          "body": "error code: 1042\n"
+        },
+        {
+          "round": 2,
+          "test": "valid",
+          "requestId": "b0a21c09-0392-4a7a-b1ca-b4ebeea67bcc",
+          "httpStatus": 404,
+          "latencyMs": 57,
+          "headers": {
+            "Date": "Mon, 02 Nov 2026 16:27:24 GMT",
+            "Content-Type": "text/plain; charset=UTF-8",
+            "Server": "cloudflare",
+            "CF-RAY": "a54481a4b970d932-DFW"
+          },
+          "body": "error code: 1042\n"
+        },
+        {
+          "round": 3,
+          "test": "missing",
+          "requestId": "1fd03131-229a-43e9-994f-91d0bbaa0957",
+          "httpStatus": 404,
+          "latencyMs": 81,
+          "headers": {
+            "Date": "Mon, 02 Nov 2026 16:27:27 GMT",
+            "Content-Type": "text/plain; charset=UTF-8",
+            "Server": "cloudflare",
+            "CF-RAY": "a54481b7fbf0ded6-DFW"
+          },
+          "body": "error code: 1042\n"
+        },
+        {
+          "round": 3,
+          "test": "incorrect",
+          "requestId": "c4738f48-178c-46ee-babb-8f94704e93cc",
+          "httpStatus": 404,
+          "latencyMs": 66,
+          "headers": {
+            "Date": "Mon, 02 Nov 2026 16:27:27 GMT",
+            "Content-Type": "text/plain; charset=UTF-8",
+            "Server": "cloudflare",
+            "CF-RAY": "a54481b869bf44bc-DFW"
+          },
+          "body": "error code: 1042\n"
+        },
+        {
+          "round": 3,
+          "test": "valid",
+          "requestId": "ad968c7d-e745-41fc-b306-e7aebf4c08fd",
+          "httpStatus": 404,
+          "latencyMs": 79,
+          "headers": {
+            "Date": "Mon, 02 Nov 2026 16:27:27 GMT",
+            "Content-Type": "text/plain; charset=UTF-8",
+            "Server": "cloudflare",
+            "CF-RAY": "a54481b8dc5269d9-DFW"
+          },
+          "body": "error code: 1042\n"
+        }
+      ]
+    },
+    {
+      "result": {
+        "status": "UNVERIFIED",
+        "kind": "genuine HTTP; zero retailer fetches; no MongoDB",
+        "sourceCommit": "c65fa2ded056a38a3002b6c767bfc37a6e9638bd",
+        "stagingName": "trustfolio-diag-41481857078",
+        "responses": [
+          {
+            "round": 0,
+            "test": "missing",
+            "requestId": "2c16286c-7d58-4441-9850-1c57a606a4af",
+            "httpStatus": 404,
+            "latencyMs": 130,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:29:03 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a54484131dad8638-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 0,
+            "test": "incorrect",
+            "requestId": "802afcdb-1484-4146-af01-8c0142ff5b5b",
+            "httpStatus": 404,
+            "latencyMs": 85,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:29:03 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a5448413996653e5-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 0,
+            "test": "valid",
+            "requestId": "032728e6-3a44-4ddf-950b-8e2cb6af8d00",
+            "httpStatus": 404,
+            "latencyMs": 75,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:29:04 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a54484141a2a53e5-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 1,
+            "test": "missing",
+            "requestId": "de032831-d69c-4713-b92b-d76b90deaede",
+            "httpStatus": 404,
+            "latencyMs": 67,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:29:19 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a54484724e9e8638-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 1,
+            "test": "incorrect",
+            "requestId": "4a104060-71b1-431d-bd0e-bddcd6a3365a",
+            "httpStatus": 404,
+            "latencyMs": 77,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:29:19 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a5448472cfae8638-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 1,
+            "test": "valid",
+            "requestId": "87121b5f-5bd6-436f-bf55-a0349746a70c",
+            "httpStatus": 404,
+            "latencyMs": 71,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:29:19 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a54484734f47b0f4-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 2,
+            "test": "missing",
+            "requestId": "c5510965-f35c-4712-8d39-51af2b3c584c",
+            "httpStatus": 404,
+            "latencyMs": 67,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:29:34 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a54484d15b068638-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 2,
+            "test": "incorrect",
+            "requestId": "9cc6ef3b-0c22-48b8-a2d4-5860885585ca",
+            "httpStatus": 404,
+            "latencyMs": 78,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:29:34 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a54484d1dd33b0f4-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 2,
+            "test": "valid",
+            "requestId": "7010725a-baa1-4b19-965f-2cae457ae3b4",
+            "httpStatus": 404,
+            "latencyMs": 85,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:29:34 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a54484d26d008638-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 3,
+            "test": "missing",
+            "requestId": "52f80964-39c7-4b3e-9c01-28b3b6d59385",
+            "httpStatus": 404,
+            "latencyMs": 59,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:29:49 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a54485309ab78638-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 3,
+            "test": "incorrect",
+            "requestId": "ac7eea13-aa1e-46b1-acdb-eb010b3f3ae6",
+            "httpStatus": 404,
+            "latencyMs": 81,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:29:49 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a544853109bcb0f4-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 3,
+            "test": "valid",
+            "requestId": "93d5966c-0c3f-46d9-b535-70b8e52defb7",
+            "httpStatus": 404,
+            "latencyMs": 90,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:29:49 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a54485319ce58638-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 4,
+            "test": "missing",
+            "requestId": "9e8b9fc9-7f4b-4f59-aab6-e1209ec4d569",
+            "httpStatus": 404,
+            "latencyMs": 83,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:30:04 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a544858feac28638-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 4,
+            "test": "incorrect",
+            "requestId": "deeb257e-ea99-4b2b-9ee1-24a89879fb6f",
+            "httpStatus": 404,
+            "latencyMs": 65,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:30:04 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a54485904ba48638-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 4,
+            "test": "valid",
+            "requestId": "94ef06c8-54c6-457e-8d47-83a00405e12b",
+            "httpStatus": 404,
+            "latencyMs": 81,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:30:04 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a5448590ce4db0f4-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 5,
+            "test": "missing",
+            "requestId": "8d9c2028-dc6f-4e98-bcbb-cc52d0e8a24a",
+            "httpStatus": 404,
+            "latencyMs": 73,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:30:20 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a54485eef8948638-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 5,
+            "test": "incorrect",
+            "requestId": "8e6f3668-533c-4282-b2df-ea00b4322780",
+            "httpStatus": 404,
+            "latencyMs": 87,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:30:20 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a54485ef8fc1b0f4-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 5,
+            "test": "valid",
+            "requestId": "e1e8e5f8-ae9d-43b2-a4af-7292877211b3",
+            "httpStatus": 404,
+            "latencyMs": 76,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:30:20 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a54485f01aed8638-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 6,
+            "test": "missing",
+            "requestId": "e0fed02d-a612-4220-a909-8fdc1c8a3af1",
+            "httpStatus": 404,
+            "latencyMs": 82,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:30:35 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a544864e58778638-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 6,
+            "test": "incorrect",
+            "requestId": "39802fc2-acaf-4630-aa84-54d5dc22d97c",
+            "httpStatus": 404,
+            "latencyMs": 72,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:30:35 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a544864ec93853e5-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 6,
+            "test": "valid",
+            "requestId": "bc17d595-ef9c-4597-ba08-b302134aaa58",
+            "httpStatus": 404,
+            "latencyMs": 75,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:30:35 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a544864f3a4053e5-STL"
+            },
+            "body": "error code: 1042\n"
+          }
+        ]
+      },
+      "states": [
+        {
+          "kind": "route",
+          "payload": {
+            "result": {
+              "enabled": true,
+              "previews_enabled": true
+            },
+            "success": true,
+            "errors": [],
+            "messages": []
+          }
+        },
+        {
+          "kind": "deployments",
+          "payload": {
+            "result": {
+              "deployments": [
+                {
+                  "id": "a7d6b08e-e3b9-4e41-bdfd-c1b0c223e649",
+                  "source": "wrangler",
+                  "strategy": "percentage",
+                  "author_email": "jayantjoshi.joshi@gmail.com",
+                  "annotations": {
+                    "workers/message": "Automatic deployment on upload.",
+                    "workers/triggered_by": "upload"
+                  },
+                  "versions": [
+                    {
+                      "version_id": "a65e03e9-bfa4-4b29-9e85-b1a3071df70b",
+                      "percentage": 100
+                    }
+                  ],
+                  "created_on": "2026-11-02T16:28:58.398524Z"
+                }
+              ]
+            },
+            "success": true,
+            "errors": [],
+            "messages": [],
+            "result_info": {
+              "page": 1,
+              "per_page": 10,
+              "count": 1,
+              "total_count": 1,
+              "total_pages": 1
+            }
+          }
+        },
+        {
+          "kind": "subdomain",
+          "payload": {
+            "result": {
+              "subdomain": "jayantjoshi-joshi"
+            },
+            "success": true,
+            "errors": [],
+            "messages": []
+          }
+        }
+      ],
+      "version": "a65e03e9-bfa4-4b29-9e85-b1a3071df70b",
+      "cleanup": true,
+      "control": []
+    },
+    {
+      "result": {
+        "status": "UNVERIFIED",
+        "kind": "genuine HTTP; zero retailer fetches; no MongoDB",
+        "sourceCommit": "6162a72270426948241565dc3d14380308af81db",
+        "stagingName": "trustfolio-diag-41482339039",
+        "responses": [
+          {
+            "round": 0,
+            "test": "missing",
+            "requestId": "12222766-bf5b-4c96-8bdd-a72ce7fcb708",
+            "httpStatus": 404,
+            "latencyMs": 69,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:32:00 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a5448865e91d7a57-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 0,
+            "test": "incorrect",
+            "requestId": "5ad26e3b-38a5-4e62-ba28-7879d4d96333",
+            "httpStatus": 404,
+            "latencyMs": 88,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:32:01 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a5448866682145a4-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 0,
+            "test": "valid",
+            "requestId": "ce7bd776-ff5e-422b-be5c-7f47e554901d",
+            "httpStatus": 404,
+            "latencyMs": 63,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:32:01 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a5448866da59a8ce-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 1,
+            "test": "missing",
+            "requestId": "0b1011b4-3167-4065-8b3c-84a99a356fc1",
+            "httpStatus": 404,
+            "latencyMs": 61,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:32:16 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a54488c4f8b95086-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 1,
+            "test": "incorrect",
+            "requestId": "d154a3c9-1bd1-495d-80ba-a2ea5d2a246e",
+            "httpStatus": 404,
+            "latencyMs": 75,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:32:16 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a54488c56b44b15b-STL"
+            },
+            "body": "error code: 1042\n"
+          },
+          {
+            "round": 1,
+            "test": "valid",
+            "requestId": "ee19aaa7-d6d8-4aca-904e-0dade28723ce",
+            "httpStatus": 404,
+            "latencyMs": 77,
+            "headers": {
+              "Date": "Mon, 02 Nov 2026 16:32:16 GMT",
+              "Content-Type": "text/plain; charset=UTF-8",
+              "Server": "cloudflare",
+              "CF-RAY": "a54488c5ef3445a4-STL"
+            },
+            "body": "error code: 1042\n"
+          }
+        ]
+      },
+      "states": [
+        {
+          "kind": "route",
+          "payload": {
+            "result": {
+              "enabled": true,
+              "previews_enabled": true
+            },
+            "success": true,
+            "errors": [],
+            "messages": []
+          }
+        },
+        {
+          "kind": "deployments",
+          "payload": {
+            "result": {
+              "deployments": [
+                {
+                  "id": "e4e54179-f4a4-4fb5-bd23-ae6cf1dcceb8",
+                  "source": "wrangler",
+                  "strategy": "percentage",
+                  "author_email": "jayantjoshi.joshi@gmail.com",
+                  "annotations": {
+                    "workers/message": "Automatic deployment on upload.",
+                    "workers/triggered_by": "upload"
+                  },
+                  "versions": [
+                    {
+                      "version_id": "7cca7632-9c95-494e-8074-3dd2ded8bfe0",
+                      "percentage": 100
+                    }
+                  ],
+                  "created_on": "2026-11-02T16:31:56.796031Z"
+                }
+              ]
+            },
+            "success": true,
+            "errors": [],
+            "messages": [],
+            "result_info": {
+              "page": 1,
+              "per_page": 10,
+              "count": 1,
+              "total_count": 1,
+              "total_pages": 1
+            }
+          }
+        },
+        {
+          "kind": "subdomain",
+          "payload": {
+            "result": {
+              "subdomain": "jayantjoshi-joshi"
+            },
+            "success": true,
+            "errors": [],
+            "messages": []
+          }
+        }
+      ],
+      "version": "7cca7632-9c95-494e-8074-3dd2ded8bfe0",
+      "cleanup": true,
+      "control": [
+        {
+          "path": "/health",
+          "status": 403,
+          "headers": {
+            "Date": "Mon, 02 Nov 2026 16:32:00 GMT",
+            "Content-Type": "text/plain; charset=UTF-8",
+            "Content-Length": "17",
+            "Connection": "close",
+            "Cache-Control": "private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
+            "Expires": "Thu, 01 Jan 1970 00:00:01 GMT",
+            "Referrer-Policy": "same-origin",
+            "X-Frame-Options": "SAMEORIGIN",
+            "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=aCo31NBgGdcgGE1syBO79w08Pl2BYOeCXI7IEIXTJ6JSsJxMcgHMzCs59Pc3uyepJckjBvBy6Az0dzFOs3A0Uz88neeDouliblI2DO4FT%2FuAIDgatswGa%2FZLNcaQ5xmRK%2FGdqVSTpOE0AGClq8BcaCTfQTHUTXbsO3ohwjnI7%2FK8pxEeL8N8IPbhlo4%3D\"}]}",
+            "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+            "Server": "cloudflare",
+            "CF-RAY": "a5448864eabc5086-STL",
+            "alt-svc": "h3=\":443\"; ma=86400"
+          },
+          "body": "error code: 1010\n"
+        },
+        {
+          "path": "/does-not-exist",
+          "status": 403,
+          "headers": {
+            "Date": "Mon, 02 Nov 2026 16:32:00 GMT",
+            "Content-Type": "text/plain; charset=UTF-8",
+            "Content-Length": "17",
+            "Connection": "close",
+            "Cache-Control": "private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
+            "Expires": "Thu, 01 Jan 1970 00:00:01 GMT",
+            "Referrer-Policy": "same-origin",
+            "X-Frame-Options": "SAMEORIGIN",
+            "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=fOWTObtpIgUvJ4q0ZzMr1aiQNBxR%2BRRaJvD0Agsmdjwg8b6XGUknucJ8yeMxbMSKPEoDXbRaEe0HTvaoP7ZY4ZWOPCiTzOKLCs%2FOPRmZ2s%2ByCtSTjjSEuxX1G3UeQLEw8Z13nj%2Fsr62ClCAIFAHDPr0UL%2BgCIp71FPVt2OxRY7msjGFEH8Ou54ZhoB0%3D\"}]}",
+            "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+            "Server": "cloudflare",
+            "CF-RAY": "a54488656ce8b15b-STL",
+            "alt-svc": "h3=\":443\"; ma=86400"
+          },
+          "body": "error code: 1010\n"
+        }
+      ]
+    }
+  ]
+}

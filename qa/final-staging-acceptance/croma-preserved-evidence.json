@@ -1,0 +1,372 @@
+{
+  "status": "PASS",
+  "scope": "unchanged adapter and inherited real VPS direct API evidence; not a new retailer check",
+  "adapterUnchanged": true,
+  "sha256": "4be6c32c90c28757f1cb3ad2ea399274387088612f214d579c8de7e154f18c71",
+  "productionWrites": 0,
+  "cases": [
+    {
+      "sku": "317463",
+      "title": "Apple Watch SE 3 GPS+Cellular with Starlight Sport Band - M/L (44mm Retina LTPO OLED Display, Starlight Aluminium Case)",
+      "category": "smartwatches",
+      "result": {
+        "status": "ok",
+        "priceNum": 33900,
+        "in_stock": null,
+        "availability": null
+      },
+      "latencyMs": 370,
+      "traces": [
+        {
+          "at": "2026-11-02T15:19:08.277Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=Apple+Watch+SE+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:08 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:08 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": "317463",
+          "buyPrice": {
+            "formattedValue": "₹33,900",
+            "priceType": "BUY",
+            "value": 33900
+          }
+        }
+      ]
+    },
+    {
+      "sku": "300154",
+      "title": "Crompton Energion Hyperjet 5 Star 1200mm 3 Blade BLDC Motor Ceiling Fan with Remote (Anti rust, Brown)",
+      "category": "ceiling-fans",
+      "result": {
+        "status": "ok",
+        "priceNum": 2799,
+        "in_stock": null,
+        "availability": null
+      },
+      "latencyMs": 479,
+      "traces": [
+        {
+          "at": "2026-11-02T15:19:08.647Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=Crompton+Energion+Hyperjet+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:09 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:09 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": "300154",
+          "buyPrice": {
+            "formattedValue": "₹2,799",
+            "priceType": "BUY",
+            "value": 2799
+          }
+        }
+      ]
+    },
+    {
+      "sku": "316459",
+      "title": "Croma 5 Star 1200mm 3 Blade BLDC Motor Ceiling Fan with Remote (Sleep Function, Brown)",
+      "category": "ceiling-fans",
+      "result": {
+        "status": "no_price",
+        "in_stock": null
+      },
+      "latencyMs": 1769,
+      "traces": [
+        {
+          "at": "2026-11-02T15:19:09.127Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=Croma+5+Star+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:09 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:09 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": null,
+          "buyPrice": null
+        },
+        {
+          "at": "2026-11-02T15:19:09.479Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=Croma+5+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:09 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:09 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": null,
+          "buyPrice": null
+        },
+        {
+          "at": "2026-11-02T15:19:09.919Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=Croma+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:10 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:10 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": null,
+          "buyPrice": null
+        },
+        {
+          "at": "2026-11-02T15:19:10.238Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=1&query=Croma+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:10 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:10 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": null,
+          "buyPrice": null
+        },
+        {
+          "at": "2026-11-02T15:19:10.619Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=2&query=Croma+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:10 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:10 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": null,
+          "buyPrice": null
+        }
+      ]
+    },
+    {
+      "sku": "311096",
+      "title": "Croma AV4315 3 Litres Instant Geyser with Rustproof Design (White)",
+      "category": "geysers",
+      "result": {
+        "status": "no_price",
+        "in_stock": null
+      },
+      "latencyMs": 1033,
+      "traces": [
+        {
+          "at": "2026-11-02T15:19:10.897Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=Croma+AV4315+3+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:11 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:11 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": null,
+          "buyPrice": null
+        },
+        {
+          "at": "2026-11-02T15:19:11.282Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=Croma+AV4315+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:11 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:11 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": null,
+          "buyPrice": null
+        },
+        {
+          "at": "2026-11-02T15:19:11.667Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=Croma+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:11 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:11 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": null,
+          "buyPrice": null
+        },
+        {
+          "at": "2026-11-02T15:19:11.731Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=1&query=Croma+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:11 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:11 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": null,
+          "buyPrice": null
+        },
+        {
+          "at": "2026-11-02T15:19:11.831Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=2&query=Croma+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:11 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:11 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": null,
+          "buyPrice": null
+        }
+      ]
+    },
+    {
+      "sku": "317201",
+      "title": "ASUS Vivobook 15 M1502YA-BQ712WS AMD Ryzen 7 5825U Laptop (16GB, 1TB SSD, Windows 11 Home, 15.6 inch Full HD IPS Display, MS Office Home 2024, Cool Silver, 1.7 KG)",
+      "category": "laptops",
+      "result": {
+        "status": "no_price",
+        "in_stock": null
+      },
+      "latencyMs": 2080,
+      "traces": [
+        {
+          "at": "2026-11-02T15:19:11.930Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=ASUS+Vivobook+15+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:12 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:12 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": null,
+          "buyPrice": null
+        },
+        {
+          "at": "2026-11-02T15:19:12.193Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=ASUS+Vivobook+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:12 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:12 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": null,
+          "buyPrice": null
+        },
+        {
+          "at": "2026-11-02T15:19:12.430Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=Asus+laptop+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:12 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:12 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": null,
+          "buyPrice": null
+        },
+        {
+          "at": "2026-11-02T15:19:12.645Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=1&query=Asus+laptop+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:12 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:12 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": null,
+          "buyPrice": null
+        },
+        {
+          "at": "2026-11-02T15:19:12.891Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=2&query=Asus+laptop+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:13 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:13 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": null,
+          "buyPrice": null
+        },
+        {
+          "at": "2026-11-02T15:19:13.087Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=Asus+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:13 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:13 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": null,
+          "buyPrice": null
+        },
+        {
+          "at": "2026-11-02T15:19:13.407Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=1&query=Asus+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:13 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:13 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": null,
+          "buyPrice": null
+        },
+        {
+          "at": "2026-11-02T15:19:13.690Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=2&query=Asus+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:13 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:13 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": null,
+          "buyPrice": null
+        }
+      ]
+    },
+    {
+      "sku": "312748",
+      "title": "LG 7.5 kg 5 Star Inverter Fully Automatic Top Load Washing Machine (T75VBSF1Z, Smart Inverter Motor, Middle Free Silver)",
+      "category": "washing-machines",
+      "result": {
+        "status": "ok",
+        "priceNum": 21990,
+        "in_stock": null,
+        "availability": null
+      },
+      "latencyMs": 394,
+      "traces": [
+        {
+          "at": "2026-11-02T15:19:14.011Z",
+          "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=LG+7.5+kg+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+          "headers": {
+            "content-type": "application/json",
+            "cache-control": "no-cache, no-store, must-revalidate",
+            "expires": "Mon, 02 Nov 2026 15:19:14 GMT",
+            "date": "Mon, 02 Nov 2026 15:19:14 GMT",
+            "httpStatus": 200
+          },
+          "exactSku": "312748",
+          "buyPrice": {
+            "formattedValue": "₹21,990",
+            "priceType": "BUY",
+            "value": 21990
+          }
+        }
+      ]
+    }
+  ]
+}

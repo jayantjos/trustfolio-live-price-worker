@@ -1,0 +1,47 @@
+const fs=require('fs'),assert=require('assert/strict'),m=require('mongoose');
+(async()=>{
+const uri='mongodb://127.0.0.1:27017/trustfolio_acceptance_disposable';
+assert.equal(process.env.STAGING_MONGO_URI,uri);
+for(const k of ['MONGODB_URI','MONGO_URI','MONGO_URL','DATABASE_URL','TF_DEPLOY_SSH_KEY','CLOUDFLARE_API_TOKEN'])assert.ok(!process.env[k],k+' must be absent');
+const originalConnect=m.connect.bind(m);m.connect=(u,...a)=>{assert.equal(u,uri);return originalConnect(u,...a)};
+await m.connect(uri);assert.equal(m.connection.db.databaseName,'trustfolio_acceptance_disposable');
+const snapshots=JSON.parse(fs.readFileSync('private-sources.json'));
+const root=require('path').resolve('backend');
+for(const [p,s] of Object.entries(snapshots.sources)){assert.ok(!p.includes('..'));assert.ok(!s.includes('mongodb:') && !s.includes('mongodb+srv:'),'Unexpected Mongo URI in source '+p);const f=require('path').join(root,p);fs.mkdirSync(require('path').dirname(f),{recursive:true});fs.writeFileSync(f,s);}
+fs.mkdirSync(root+'/config',{recursive:true});
+fs.writeFileSync(root+'/config/mongo.js',"module.exports=async()=>require('mongoose').connect(process.env.STAGING_MONGO_URI);");
+let live=fs.readFileSync(root+'/services/LivePriceService.js','utf8');
+function replace(a,b){assert.ok(live.includes(a),'Source compatibility mismatch');live=live.replace(a,b);}
+replace("doc.clean_url || doc.url || doc.productUrl","doc.clean_url || doc.product_url || doc.url || doc.productUrl");
+replace("platform: 1, asin: 1, url: 1, clean_url: 1, productUrl: 1, original_product_url: 1,","platform: 1, asin: 1, url: 1, clean_url: 1, product_url: 1, productUrl: 1, original_product_url: 1,");
+replace("  const availabilityKind = classify(result);","  if (result.status === 'ok' && (result.inStock === false || result.in_stock === false || !Number.isFinite(result.priceNum) || result.priceNum <= 0)) result={...result,status:'error',error:'invalid_accepted_quote'};\n  const availabilityKind = classify(result);");
+replace("const priced = (liveStatus === 'ok' || liveStatus === 'out_of_stock') && result.priceNum > 0;","const priced = liveStatus === 'ok' && Number.isFinite(result.priceNum) && result.priceNum > 0;");
+replace("? result.in_stock : liveStatus === 'ok',","? result.in_stock : Object.prototype.hasOwnProperty.call(result,'inStock') ? result.inStock : null,");
+replace("const WORKER_TIMEOUT_MS = 6000;","const WORKER_TIMEOUT_MS = 10000;");
+fs.writeFileSync(root+'/services/LivePriceService.js',live);
+let budget=fs.readFileSync(root+'/services/LiveBudgetRecommendationService.js','utf8');
+const start=budget.indexOf('      let displayPrice = candidate.price_inr;'),end=budget.indexOf('      if (!goodPrice(displayPrice, budgetCap)) continue;',start);
+assert.ok(start>0&&end>start);
+budget=budget.slice(0,start)+"      if (live?.status !== 'ok' || live.in_stock === false || live.inStock === false) continue;\n      const displayPrice = Number(live.price_inr);\n      const priceSource = 'website_live_price_api';\n"+budget.slice(end);
+fs.writeFileSync(root+'/services/LiveBudgetRecommendationService.js',budget);
+process.env.PRICE_WORKER_URL='https://staging-fixture.invalid';process.env.PRICE_WORKER_KEY='simulation-only';process.env.LIVE_PRICE_FRESH_MS='-1';
+const actualModules=['services/LivePriceService','services/LiveBudgetRecommendationService','services/ProductAvailabilityPolicy','controllers/ProductController','services/CategoryService','controllers/CategoryController','services/ProductRecommendationService','services/CromaLivePriceDirect','scripts/trustfolio-category-price-watcher'];
+for(const p of actualModules)require(root+'/'+p);
+const service=require(root+'/services/LivePriceService');const col=m.connection.collection('my_products'),archive=m.connection.collection('my_products_deleted');
+const events=[],results=[];let quote={};
+global.fetch=async()=>({ok:true,json:async()=>({results:[{asin:'B074J9SPYX',amazon:quote}]})});
+const originalArchive=archive.bulkWrite.bind(archive),originalDelete=col.deleteMany.bind(col);
+archive.bulkWrite=async(...a)=>{events.push({event:'archive_start',at:new Date().toISOString()});const r=await originalArchive(...a);events.push({event:'archive_complete',at:new Date().toISOString()});return r;};
+col.deleteMany=async(filter,...a)=>{for(const id of filter._id.$in)assert.ok(await archive.findOne({_id:id}));events.push({event:'delete_start',at:new Date().toISOString()});const r=await originalDelete(filter,...a);events.push({event:'delete_complete',at:new Date().toISOString()});return r;};
+const id=new m.Types.ObjectId(),original={_id:id,platform:'amazon',asin:'B074J9SPYX',title:'Staging archive ordering fixture',price:'100',price_inr:100};
+await col.insertOne(original);quote={status:'out_of_stock',in_stock:false,availability:'out_of_stock',priceNum:null,httpStatus:200};await service.getLivePrices([id]);
+assert.equal(await col.findOne({_id:id}),null);assert.ok(await archive.findOne({_id:id}));assert.deepEqual(events.map(x=>x.event),['archive_start','archive_complete','delete_start','delete_complete']);
+await col.insertOne(original);assert.deepEqual(await col.findOne({_id:id}),original);
+results.push({test:'archive_order_and_restoration',status:'PASS',kind:'real disposable MongoDB; actual service/policy/controller; simulated explicit OOS quote',fixtureId:String(id),events,restored:true});
+const iid=new m.Types.ObjectId();await col.insertOne({_id:iid,platform:'amazon',asin:'B0DVH1HDVQ',title:'Staging invalid HTML fixture',price:'2499',price_inr:2499,currentPriceValue:2499});
+quote={status:'error',error:'invalid_html',httpStatus:200};const beforeEvents=events.length;await service.getLivePrices([iid]);await service.getLivePrices([iid]);const doc=await col.findOne({_id:iid});assert.equal(doc.price_inr,2499);assert.equal(await archive.findOne({_id:iid}),null);assert.equal(events.length,beforeEvents);assert.equal(doc.live.unavailable_checks,0);
+results.push({test:'invalid_html_two_fresh_failures',status:'PASS',kind:'real disposable MongoDB; actual service/policy/controller; simulated parser failure',fixtureId:String(iid),canonicalPrice:doc.price_inr,unavailableChecks:doc.live.unavailable_checks});
+const report={status:'PASS',scope:'missing deletion evidence only',sourceSha256:snapshots.sha256,actualModulesLoaded:actualModules,productionCredentialsAvailable:false,productionWrites:0,db:m.connection.db.databaseName,retailerRequests:0,workerQuoteAcceptance:'BLOCKED by unresolved 1042',top5:'UNVERIFIED',watcherExecution:'UNVERIFIED; module loaded only',identityContext:'UNVERIFIED; ordinary Worker contract lacks catalog context',results};
+fs.writeFileSync('missing-deletion-results.json',JSON.stringify(report,null,2));console.log('MISSING_DELETION_RESULTS='+JSON.stringify(report));
+await m.connection.dropDatabase();await m.disconnect();console.log('DISPOSABLE_DATABASE_REMOVED=true');
+})().catch(e=>{console.error(e.stack);process.exit(1)});
