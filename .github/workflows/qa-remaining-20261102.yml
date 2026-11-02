@@ -77,13 +77,14 @@ jobs:
       - name: Require deployed structured-error boundary
         run: |
           python3 - <<'PY'
-          import json,time
-          from urllib.request import urlopen
+          import json,time,subprocess
           for i in range(20):
               try:
-                  with urlopen('https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/health',timeout=10) as r:d=json.load(r)
+                  p=subprocess.run(['curl','-fsS','--max-time','10','https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/health'],capture_output=True,text=True,timeout=15)
+                  d=json.loads(p.stdout)
+                  print('HEALTH_BOUNDARY='+str(d.get('fixedAuditErrors')))
                   if d.get('fixedAuditErrors')=='structured-v1':break
-              except Exception:pass
+              except Exception as e:print('HEALTH_TRANSPORT='+type(e).__name__)
               time.sleep(3)
           else:raise SystemExit('Deployment boundary not confirmed; no product checks started')
           PY
