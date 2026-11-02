@@ -1,0 +1,429 @@
+{
+  "status": "UNVERIFIED",
+  "rootCause": "UNCONFIRMED",
+  "workerRequests": 0,
+  "retailerCalls": 0,
+  "productionChanges": 0,
+  "metadataCollection": {
+    "runId": 41486276930,
+    "status": "UNVERIFIED",
+    "purpose": "read-only account metadata and dry historical Ray correlation; no Worker HTTP requests, deployments, mutations or retailer calls",
+    "sourceCommit": "5bde59c83a06213d30d60228efa6844c5a9fb41a",
+    "observedAtUTC": "2026-11-02T16:56:26.337061+00:00",
+    "accountId": "354ff26b7db5ae21ded578fbae86c15f",
+    "rows": [
+      {
+        "label": "account_workers_subdomain",
+        "path": "/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/subdomain",
+        "httpStatus": 200,
+        "response": {
+          "result": {
+            "subdomain": "jayantjoshi-joshi"
+          },
+          "success": true,
+          "errors": [],
+          "messages": []
+        }
+      },
+      {
+        "label": "account_workers_settings",
+        "path": "/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/account-settings",
+        "httpStatus": 200,
+        "response": {
+          "result": {
+            "default_usage_model": "standard",
+            "green_compute": false
+          },
+          "success": true,
+          "errors": [],
+          "messages": []
+        }
+      },
+      {
+        "label": "production_workers_dev_exposure",
+        "path": "/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/scripts/trustfolio-live-price-worker/subdomain",
+        "httpStatus": 200,
+        "response": {
+          "result": {
+            "enabled": true,
+            "previews_enabled": true
+          },
+          "success": true,
+          "errors": [],
+          "messages": []
+        }
+      },
+      {
+        "label": "production_live_settings",
+        "path": "/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/scripts/trustfolio-live-price-worker/settings",
+        "httpStatus": 200,
+        "response": {
+          "success": true,
+          "result": {
+            "compatibility_date": "2026-10-29",
+            "compatibility_flags": [],
+            "usage_model": "standard",
+            "logpush": false,
+            "observability": {
+              "enabled": true,
+              "head_sampling_rate": 1,
+              "redact_query_string": false,
+              "logs": {
+                "enabled": true,
+                "head_sampling_rate": 1,
+                "persist": true,
+                "invocation_logs": true
+              },
+              "traces": {
+                "enabled": false,
+                "persist": true,
+                "head_sampling_rate": 1
+              }
+            },
+            "tail_consumers": [],
+            "placement": {},
+            "bindings": [
+              {
+                "name": "BROWSER",
+                "type": "browser"
+              },
+              {
+                "class_name": "PriceMonitorState",
+                "name": "MONITOR_STATE",
+                "type": "durable_object_namespace"
+              },
+              {
+                "name": "TF_PRICE_WORKER_KEY",
+                "type": "secret_text"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "label": "production_live_script_settings",
+        "path": "/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/scripts/trustfolio-live-price-worker/script-settings",
+        "httpStatus": 200,
+        "response": {
+          "success": true,
+          "result": {
+            "logpush": false,
+            "observability": {
+              "enabled": true,
+              "head_sampling_rate": 1,
+              "redact_query_string": false,
+              "logs": {
+                "enabled": true,
+                "head_sampling_rate": 1,
+                "persist": true,
+                "invocation_logs": true
+              },
+              "traces": {
+                "enabled": false,
+                "persist": true,
+                "head_sampling_rate": 1
+              }
+            },
+            "tail_consumers": null,
+            "bindings": []
+          }
+        }
+      },
+      {
+        "label": "production_live_deployments",
+        "path": "/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/scripts/trustfolio-live-price-worker/deployments",
+        "httpStatus": 200,
+        "response": {
+          "success": true,
+          "result": [
+            {
+              "id": "b5647cfe-fed7-4165-9941-0d4b7d91d473",
+              "created_on": "2026-11-02T16:43:47.935062Z",
+              "source": "wrangler",
+              "strategy": "percentage",
+              "versions": [
+                {
+                  "version_id": "d993efa1-adcd-46b0-bb56-452781c8f12a",
+                  "percentage": 100
+                }
+              ]
+            },
+            {
+              "id": "3c0a03fa-7600-4220-87fa-c69dd9d1e65a",
+              "created_on": "2026-11-02T16:34:04.018692Z",
+              "source": "wrangler",
+              "strategy": "percentage",
+              "versions": [
+                {
+                  "version_id": "f6168ad1-255a-42db-a43d-0b0694f23bf4",
+                  "percentage": 100
+                }
+              ]
+            },
+            {
+              "id": "a9c67464-2030-427a-af05-87a3e473108a",
+              "created_on": "2026-11-02T16:31:06.090171Z",
+              "source": "wrangler",
+              "strategy": "percentage",
+              "versions": [
+                {
+                  "version_id": "6e727bac-a08a-42f7-811f-81a5ce81b61b",
+                  "percentage": 100
+                }
+              ]
+            },
+            {
+              "id": "c8a0663b-c4b8-4c0d-88d5-d2480f1fa173",
+              "created_on": "2026-11-02T16:29:31.766978Z",
+              "source": "wrangler",
+              "strategy": "percentage",
+              "versions": [
+                {
+                  "version_id": "3ea4bd04-8215-4579-964f-bfc91673606d",
+                  "percentage": 100
+                }
+              ]
+            },
+            {
+              "id": "1b0d346a-272b-4dfb-8b08-a7286144d2c1",
+              "created_on": "2026-11-02T16:15:48.963775Z",
+              "source": "wrangler",
+              "strategy": "percentage",
+              "versions": [
+                {
+                  "version_id": "979f3726-69f9-4615-ae57-81fecf20bcef",
+                  "percentage": 100
+                }
+              ]
+            },
+            {
+              "id": "cf6053a0-3731-40f3-9277-0c681edab74a",
+              "created_on": "2026-11-02T16:12:47.571229Z",
+              "source": "wrangler",
+              "strategy": "percentage",
+              "versions": [
+                {
+                  "version_id": "bead1830-3c40-434a-a9f1-e1f8cd974dc9",
+                  "percentage": 100
+                }
+              ]
+            },
+            {
+              "id": "43f0ccde-05e3-4412-86db-db52a6615139",
+              "created_on": "2026-11-02T16:09:35.302844Z",
+              "source": "wrangler",
+              "strategy": "percentage",
+              "versions": [
+                {
+                  "version_id": "a59f1145-277e-4b1f-92a9-857c3cb5f981",
+                  "percentage": 100
+                }
+              ]
+            },
+            {
+              "id": "72550b24-13bf-4e75-821f-4a346875b0f9",
+              "created_on": "2026-11-02T15:39:44.521572Z",
+              "source": "wrangler",
+              "strategy": "percentage",
+              "versions": [
+                {
+                  "version_id": "2821dd03-ac12-41af-b227-b75d59d80d3d",
+                  "percentage": 100
+                }
+              ]
+            },
+            {
+              "id": "571c5dff-44c7-4969-9e3f-8ca684dd596c",
+              "created_on": "2026-11-02T15:33:15.102822Z",
+              "source": "wrangler",
+              "strategy": "percentage",
+              "versions": [
+                {
+                  "version_id": "587b63cd-7f90-4e11-abbc-9a3597509a6b",
+                  "percentage": 100
+                }
+              ]
+            },
+            {
+              "id": "bcb17bb8-85c3-43a2-b6c9-f2db5b01f0f7",
+              "created_on": "2026-11-02T15:31:47.876284Z",
+              "source": "wrangler",
+              "strategy": "percentage",
+              "versions": [
+                {
+                  "version_id": "5e4fc4a1-a929-49cf-b5eb-c3465a1da441",
+                  "percentage": 100
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "label": "deleted_staging_route_current_state",
+        "path": "/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/scripts/trustfolio-diag-41481857078/subdomain",
+        "httpStatus": 404,
+        "response": {
+          "result": null,
+          "success": false,
+          "errors": [
+            {
+              "code": 10007,
+              "message": "This Worker does not exist on your account."
+            }
+          ],
+          "messages": []
+        }
+      },
+      {
+        "label": "deleted_staging_saved_version_current_state",
+        "path": "/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/scripts/trustfolio-diag-41481857078/versions/a65e03e9-bfa4-4b29-9e85-b1a3071df70b",
+        "httpStatus": 404,
+        "response": {
+          "result": null,
+          "success": false,
+          "errors": [
+            {
+              "code": 10007,
+              "message": "This Worker does not exist on your account."
+            }
+          ],
+          "messages": []
+        }
+      },
+      {
+        "label": "historical_ray_correlation_no_new_requests",
+        "path": "/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/observability/telemetry/query",
+        "httpStatus": 200,
+        "response": {
+          "success": true,
+          "result": {
+            "run": {
+              "id": "4lhi9nqnkt2dqka9mk0hxbra",
+              "status": "COMPLETED",
+              "dry": true
+            },
+            "statistics": {
+              "elapsed": 0.076629606,
+              "rows_read": 306269,
+              "bytes_read": 2450152,
+              "abr_level": 1
+            },
+            "events": {
+              "count": 0,
+              "events": []
+            }
+          }
+        }
+      },
+      {
+        "label": "zone_visibility_for_security_events",
+        "path": "/zones?account.id=354ff26b7db5ae21ded578fbae86c15f&per_page=50",
+        "httpStatus": 200,
+        "response": {
+          "success": true,
+          "result": []
+        }
+      }
+    ]
+  },
+  "fieldDiscoveryAndCorrelation": {
+    "runId": 41486515369,
+    "status": "UNVERIFIED",
+    "purpose": "historical schema discovery and saved-Ray correlation only; no Worker requests or mutations",
+    "sourceCommit": "7caef84ef0753a21c11e795599160fef26451fa8",
+    "observedAtUTC": "2026-11-02T16:57:53.540840+00:00",
+    "rows": [
+      {
+        "label": "discover_historical_telemetry_field_names",
+        "path": "/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/observability/telemetry/keys",
+        "httpStatus": 200,
+        "response": {
+          "success": true,
+          "keyCount": 118,
+          "relevantKeys": [
+            "$metadata.service",
+            "$metadata.transactionName",
+            "$workers.scriptName",
+            "$workers.event.request.headers.cf-ray"
+          ]
+        }
+      },
+      {
+        "label": "correlate_saved_rays_on_discovered_fields",
+        "path": "/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/observability/telemetry/query",
+        "httpStatus": 200,
+        "response": {
+          "success": true,
+          "result": {
+            "run": {
+              "id": "577rw7ng7cewb31g4h0lrrv2",
+              "status": "COMPLETED",
+              "dry": true
+            },
+            "statistics": {
+              "elapsed": 0.150938269,
+              "rows_read": 3998913,
+              "bytes_read": 32037192,
+              "abr_level": 1
+            },
+            "events": {
+              "count": 0,
+              "events": []
+            }
+          }
+        }
+      },
+      {
+        "label": "historical_staging_invocation_lookup",
+        "path": "/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/observability/telemetry/query",
+        "httpStatus": 200,
+        "response": {
+          "success": true,
+          "result": {
+            "run": {
+              "id": "54khvwajhnvmnwjsv7jsqph5",
+              "status": "COMPLETED",
+              "dry": true
+            },
+            "statistics": {
+              "elapsed": 0.113447538,
+              "rows_read": 3232649,
+              "bytes_read": 25890024,
+              "abr_level": 1
+            },
+            "events": {
+              "count": 0,
+              "events": []
+            }
+          }
+        }
+      },
+      {
+        "label": "historical_production_invocation_positive_control",
+        "path": "/accounts/354ff26b7db5ae21ded578fbae86c15f/workers/observability/telemetry/query",
+        "httpStatus": 200,
+        "response": {
+          "success": true,
+          "result": {
+            "run": {
+              "id": "znudfvluwuuren7920opbctu",
+              "status": "COMPLETED",
+              "dry": true
+            },
+            "statistics": {
+              "elapsed": 0.105295225,
+              "rows_read": 3247775,
+              "bytes_read": 26011032,
+              "abr_level": 1
+            },
+            "events": {
+              "count": 0,
+              "events": []
+            }
+          }
+        }
+      }
+    ]
+  }
+}
