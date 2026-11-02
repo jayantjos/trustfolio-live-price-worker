@@ -120,7 +120,7 @@ async function browserRenderedPrice(item, env) {
     const r=await env.BROWSER.quickAction('content',{url:item.url,gotoOptions:{waitUntil:'networkidle2',timeout:30000}});
     if(!r?.ok)return {parsed:null,diagnostic:'browser_http_'+(r?.status??'unknown'),evidence:null};
     const raw=await r.text();
-    if(!raw || raw.length>BROWSER_MAX_BYTES)return {parsed:null,diagnostic:'browser_content_empty_or_too_large',evidence:null};
+    if(!raw || raw.length>BROWSER_MAX_BYTES)return {parsed:null,diagnostic:!raw?'browser_content_empty':'browser_content_exceeds_limit',evidence:{rawChars:raw?.length||0,limitChars:BROWSER_MAX_BYTES}};
     let html=raw,meta=null;
     if(/^\s*\{/.test(raw)){
       let d;try{d=JSON.parse(raw)}catch(_){return {parsed:null,diagnostic:'browser_invalid_json_envelope',evidence:null}}
