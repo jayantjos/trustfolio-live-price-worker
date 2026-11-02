@@ -1,4 +1,4 @@
-name: Retest cooled remaining Flipkart catalog and resolver cases
+name: Retest cooled BAJAJ TECHFIRE and HP cases
 on:
   push:
     paths: ['.github/workflows/qa-resume-flipkart-final-20261102.yml']
@@ -16,7 +16,7 @@ jobs:
           import json,datetime,subprocess
           report={'mongo_writes':0,'browser_run_calls':0,'checks':[]}
           base='https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev'
-          for seq,due in [(152,'2026-11-02T10:44:23+00:00'),(156,'2026-11-02T10:51:34+00:00'),(157,'2026-11-02T10:51:40+00:00'),(159,'2026-11-02T10:58:10+00:00'),(183,'2026-11-02T11:11:02+00:00'),(200,'2026-11-02T11:30:23+00:00')]:
+          for seq,due in [(156,'2026-11-02T10:51:34+00:00'),(157,'2026-11-02T10:51:40+00:00'),(159,'2026-11-02T10:58:10+00:00'),(183,'2026-11-02T11:11:02+00:00'),(200,'2026-11-02T11:30:23+00:00')]:
               now=datetime.datetime.now(datetime.timezone.utc)
               if now<datetime.datetime.fromisoformat(due):
                   report['checks'].append({'sequence':seq,'attempted':False,'reason':'existing 3-hour cooldown','eligible_at':due});continue
