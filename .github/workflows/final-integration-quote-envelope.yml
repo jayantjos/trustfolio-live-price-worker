@@ -1,0 +1,119 @@
+name: Quote credential envelope and only unresolved PID evidence
+on:
+  push:
+    branches: [final-live-integration-20261103]
+    paths: ['.github/workflows/final-integration-quote-envelope.yml']
+permissions:
+  contents: read
+jobs:
+  envelope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Prepare public destination certificate
+        run: |
+          cat > staging-cert.pem <<'CERT'
+          -----BEGIN CERTIFICATE-----
+          MIIELzCCApegAwIBAgIUZziedt50ahtWguOu65xnbUBNqOswDQYJKoZIhvcNAQEL
+          BQAwJzElMCMGA1UEAwwcVHJ1c3RGb2xpb0ZpbmFsSXNvbGF0ZWRTdGFnZTAeFw0y
+          NjExMDIxOTAzMzZaFw0yNjExMDMxOTAzMzZaMCcxJTAjBgNVBAMMHFRydXN0Rm9s
+          aW9GaW5hbElzb2xhdGVkU3RhZ2UwggGiMA0GCSqGSIb3DQEBAQUAA4IBjwAwggGK
+          AoIBgQCxheqJfzEnNmNKL8hTbtejoQ194DeC1S8n432toN86+1Vc+LXRrQ8KNeja
+          AhFqpea/71GzKoKTJhqRbixeNMpTa9K+iqlWK6KpDlhfj7dkQdeG7IAA3X6BLEoh
+          jlqp14PlkuY0JLquO/DO+b8/BRqK7ghNJv4tOLTRfF4Rbx06zi8h8H+lJ4wbiCHn
+          C5I2wLxLpCt2DX8yJa4RtN6c90H+ZAPExYXFYdJubPF7V1/EWRaLwSn0FHUn66qG
+          Zvxqbreua8cN8zTQm9aVTGLWoBV3M9czrM4UflJdA7BTWgBFIaQH4aTKPdeiORvF
+          Nzc4l/sK6MvZkqo9e3txpRAxI+rChd3AnN4AbCi0V5gsdDOODzJMUS9CN2F4OS0g
+          48wwgdeutx95+jHQArm5nqhLmTTF+o8PzcIkP+2HQhR0Sq8JUmMGVMENt8UkOJur
+          VaokKvLDA0LrS62wAv6k5RDrRr7/85OwF+5DilMnCPOTQ5eXaNGDn57daUpIeSEM
+          9YYjPLcCAwEAAaNTMFEwHQYDVR0OBBYEFOtgouFiyskv32QFn5FlgSUVv5lAMB8G
+          A1UdIwQYMBaAFOtgouFiyskv32QFn5FlgSUVv5lAMA8GA1UdEwEB/wQFMAMBAf8w
+          DQYJKoZIhvcNAQELBQADggGBAEEHcuMutUtKpORMlZWxj8axlABB/eBp20EP06nL
+          jUMunaqo4vb1YCFjZsaUHf2znsHra0z3WxNjwAJkTbUgY033OWidx6hMdysOXJPh
+          P7uK+I0OeELiW1LIVtTtRwisMhc6Pai3s+Wl2XDhOejrg97Xkjxx4siLLWudjpWo
+          /NCVy1j94zgnLvDTbQ+2Gof/KFZmOZ9udHy0cSQvHLxGe65deKy5yesbN5NedYgE
+          DfGT7ZXnfMV+AGGpIhYv9wjx5mAnr+mfdAJ3tMw2krCcBKcLIU1UpMD6+uz/E8IZ
+          m5kXancxsPbcdqA0OI6ePENOdIi23sridKeDldmMbnqVBqDuxHbFXJuVh4RgBCVX
+          IoPzSj8MD3uDUZY71aD8nAwgMZgw8PGlOEIFRL6krSQzaRSYMNLX6foBiD4NUUni
+          EPHrs/hPezEPBdD7BF3tSKv9b/3wD47MJAYmU0e/NfYEAPwpUlqiuQPGtr8I88Vh
+          fpdeMfTPeAhHX4ewJ1ObnDtrFQ==
+          -----END CERTIFICATE-----
+          CERT
+      - name: Encrypt quote credential and inspect only two unresolved canonical listings
+        env:
+          TF_KEY: ${{ secrets.TF_PRICE_WORKER_KEY }}
+        run: |
+          python3 - <<'PY'
+          import os,json,re,time,datetime,hashlib
+          from pathlib import Path
+          from urllib.request import Request,urlopen
+          from urllib.error import HTTPError
+          from html.parser import HTMLParser
+          key=os.getenv('TF_KEY','')
+          assert key,'Configured quote credential missing'
+          # Write only to transient runner file; encrypted before transport.
+          Path('quote-key.txt').write_text(key)
+          class Parser(HTMLParser):
+           def __init__(self):super().__init__();self.active=False;self.parts=[];self.scripts=[];self.canonical=None
+           def handle_starttag(self,t,a):
+            a=dict(a)
+            if t=='link' and a.get('rel')=='canonical':self.canonical=a.get('href')
+            if t=='script' and a.get('type')=='application/ld+json':self.active=True;self.parts=[]
+           def handle_endtag(self,t):
+            if t=='script' and self.active:self.scripts.append(''.join(self.parts));self.active=False
+           def handle_data(self,s):
+            if self.active:self.parts.append(s)
+          cases=[
+           {'sequence':155,'brand':'gamesoul','model':'js39p','url':'https://www.flipkart.com/gamesoul-js39p-4k-brushless-motor-gimbal-camera-drone-display-remote/p/itmf65781027269c'},
+           {'sequence':234,'brand':'dzab','model':'di5','url':'https://www.flipkart.com/dzab-gaming-core-i5-16-gb-ddr4-512-ssd-windows-11-home-4-gb-22-inch-screen-di5-3470-61-16-512-22-11/p/itmf0e126c67d776'}
+          ]
+          for c in cases:
+           c['status']='BLOCKED';start=time.monotonic()
+           try:
+            req=Request(c['url'],headers={'User-Agent':'TrustFolio-Exact-Mapping/1.0','Accept':'text/html'})
+            with urlopen(req,timeout=8) as res:raw=res.read(2500001);c['httpStatus']=res.status;c['finalUrl']=res.url
+            c['bytes']=len(raw);c['sha256']=hashlib.sha256(raw).hexdigest()
+            if len(raw)>2500000:raise ValueError('bounded_body_limit')
+            p=Parser();p.feed(raw.decode(errors='replace'));products=[]
+            def walk(x):
+             if isinstance(x,list):
+              for y in x:walk(y)
+             elif isinstance(x,dict):
+              if x.get('@type')=='Product':products.append(x)
+              if '@graph' in x:walk(x['@graph'])
+            for s in p.scripts:
+             try:walk(json.loads(s))
+             except:pass
+            c['productCount']=len(products);c['canonical']=p.canonical
+            if len(products)==1:
+             prod=products[0];pid=str(prod.get('sku') or prod.get('productID') or '')
+             c['primaryProduct']={k:prod.get(k) for k in ['name','sku','productID','url','offers']}
+             name=str(prod.get('name','')).lower()
+             if re.fullmatch(r'[A-Z]{3}[A-Z0-9]{13}',pid) and c['brand'] in name and c['model'] in name:
+              c['pid']=pid;c['status']='PASS';url=c['url']+'?pid='+pid
+              req=Request('https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/api/check',headers={'x-api-key':key,'Content-Type':'application/json','User-Agent':'TrustFolio-Exact-Mapping/1.0'},data=json.dumps({'items':[url],'useCache':False,'browserProbe':False}).encode())
+              t=time.monotonic()
+              with urlopen(req,timeout=12) as res:c['workerHttpStatus']=res.status;c['workerRay']=res.headers.get('cf-ray');c['worker']=json.load(res)
+              c['workerLatencyMs']=round((time.monotonic()-t)*1000)
+            if c['status']=='BLOCKED':c['reason']='No trustworthy unique primary Product SKU/PID matching catalog identity'
+           except HTTPError as e:c['httpStatus']=e.code;c['reason']='Retailer HTTP failure; no bypass or retry'
+           except Exception as e:c['reason']=type(e).__name__+': '+str(e)
+           c['latencyMs']=round((time.monotonic()-start)*1000)
+          report={'status':'PASS' if all(x['status']=='PASS' for x in cases) else 'BLOCKED','productionWrites':0,'records':cases,'atUTC':datetime.datetime.now(datetime.timezone.utc).isoformat()}
+          safe=json.dumps(report,ensure_ascii=False).replace(key,'[REDACTED]')
+          Path('remaining-mapping-network-results.json').write_text(safe)
+          print('REMAINING_MAPPING_NETWORK='+safe)
+          
+          PY
+          openssl cms -encrypt -binary -aes256 -in quote-key.txt -outform DER -out quote-key.enc staging-cert.pem
+          rm -f quote-key.txt
+          python3 - <<'PY'
+          import base64,json
+          from pathlib import Path
+          print('WORKER_KEY_ENVELOPE='+json.dumps({'ciphertext':base64.b64encode(Path('quote-key.enc').read_bytes()).decode(),'kind':'CMS AES256 encrypted quote-only credential for isolated runner'}))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: remaining-pid-mapping-network
+          path: remaining-mapping-network-results.json
+          retention-days: 30
