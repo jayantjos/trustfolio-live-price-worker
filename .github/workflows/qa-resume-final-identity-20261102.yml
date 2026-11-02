@@ -1,0 +1,34 @@
+name: Retest remaining eligible fixed identity failures
+on:
+  push:
+    paths: ['.github/workflows/qa-resume-final-identity-20261102.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: One request per cooled record, no Browser Run or Mongo writes
+        run: |
+          python3 - <<'PY'
+          import json,datetime,subprocess
+          report={'mongo_writes':0,'browser_run_calls':0,'checks':[]}
+          base='https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev'
+          for seq,due in [(43,'2026-11-02T10:17:54+00:00'),(113,'2026-11-02T10:29:50+00:00'),(134,'2026-11-02T10:31:37+00:00'),(156,'2026-11-02T10:51:34+00:00'),(157,'2026-11-02T10:51:40+00:00'),(200,'2026-11-02T11:30:23+00:00')]:
+              now=datetime.datetime.now(datetime.timezone.utc)
+              if now<datetime.datetime.fromisoformat(due):
+                  report['checks'].append({'sequence':seq,'attempted':False,'reason':'existing 3-hour cooldown','eligible_at':due});continue
+              p=subprocess.run(['curl','-sS','--max-time','45',base+'/qa/audit-300?sequence='+str(seq)],capture_output=True,text=True,timeout=50)
+              try:body=json.loads(p.stdout)
+              except:body={'error':'transport_or_non_json','exit_code':p.returncode}
+              report['checks'].append({'sequence':seq,'attempted':True,'response':body})
+          open('resume-cooled-checks.json','w').write(json.dumps(report,indent=2))
+          print('RESUME_CHECKS='+json.dumps(report,separators=(',',':')))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: resume-cooled-and-internal-canaries
+          path: resume-cooled-checks.json
