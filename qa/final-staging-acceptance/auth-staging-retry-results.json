@@ -1,0 +1,149 @@
+{
+  "productionChanges": 0,
+  "stagingName": "trustfolio-acceptance-41478638789",
+  "sourceCommit": "2ba346681aeb66b5182f611037eb133562c13696",
+  "browserBinding": false,
+  "cron": false,
+  "results": [
+    {
+      "test": "missing",
+      "type": "REAL HTTP staging Worker; live retailer response for valid requests",
+      "product": "B0DVH1HDVQ",
+      "httpStatus": 401,
+      "latencyMs": 123,
+      "response": {
+        "body": "{\"error\":\"unauthorized\"}"
+      }
+    },
+    {
+      "test": "incorrect",
+      "type": "REAL HTTP staging Worker; live retailer response for valid requests",
+      "product": "B0DVH1HDVQ",
+      "httpStatus": 404,
+      "latencyMs": 433,
+      "response": {
+        "body": "error code: 1042\n"
+      }
+    },
+    {
+      "test": "valid-amazon",
+      "type": "REAL HTTP staging Worker; live retailer response for valid requests",
+      "product": "B0DVH1HDVQ",
+      "httpStatus": 200,
+      "latencyMs": 2172,
+      "response": {
+        "success": true,
+        "results": [
+          {
+            "asin": "B0DVH1HDVQ",
+            "pid": "B0DVH1HDVQ",
+            "input": "B0DVH1HDVQ",
+            "amazon": {
+              "platform": "Amazon",
+              "url": "https://www.amazon.in/dp/B0DVH1HDVQ",
+              "title": "RAJ REFRESHING AIR JOURNEY 90L Desert Air Cooler With 30&quot; Axial Fan &amp; 18,000 CMH Airflow For Outdoor Use (TENTO FIGHTER 30 90 L) : Amazon.in: Home &amp; Kitchen",
+              "price": "₹26,030",
+              "priceNum": 26030,
+              "inStock": true,
+              "in_stock": true,
+              "status": "ok",
+              "verificationStatus": "ok",
+              "verificationOutcome": "selling_price_verified",
+              "availability": null,
+              "error": null,
+              "httpStatus": 200,
+              "extractionSource": "amazon_price_to_pay",
+              "bytesRead": "1282 KB",
+              "latencyMs": 1931
+            },
+            "flipkart": {
+              "platform": "Flipkart",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "croma": {
+              "platform": "Croma",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "not_supported"
+            },
+            "bestDeal": {
+              "winner": "amazon",
+              "savings": 0,
+              "status": "ok"
+            },
+            "cached": false,
+            "itemLatencyMs": 1931
+          }
+        ]
+      }
+    },
+    {
+      "test": "valid-flipkart",
+      "type": "REAL HTTP staging Worker; live retailer response for valid requests",
+      "product": "https://www.flipkart.com/crompton-100-l-desert-air-cooler/p/itmfdwa95yeshx4x?pid=AICGETHFNCZCX7PA",
+      "httpStatus": 200,
+      "latencyMs": 1345,
+      "response": {
+        "success": true,
+        "results": [
+          {
+            "asin": null,
+            "pid": "AICGETHFNCZCX7PA",
+            "input": "https://www.flipkart.com/crompton-100-l-desert-air-cooler/p/itmfdwa95yeshx4x?pid=AICGETHFNCZCX7PA",
+            "amazon": {
+              "platform": "Amazon",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "flipkart": {
+              "platform": "Flipkart",
+              "url": "https://www.flipkart.com/crompton-100-l-desert-air-cooler/p/itmfdwa95yeshx4x?pid=AICGETHFNCZCX7PA",
+              "title": "Crompton 100 L Desert Air Cooler Price in India - Buy Crompton 100 L Desert Air Cooler online at Flipkart.com",
+              "price": null,
+              "priceNum": null,
+              "inStock": false,
+              "in_stock": false,
+              "status": "out_of_stock",
+              "verificationStatus": "out_of_stock",
+              "verificationOutcome": "out_of_stock",
+              "availability": "out_of_stock",
+              "error": "out_of_stock",
+              "httpStatus": 200,
+              "extractionSource": "jsonld_product_offer",
+              "bytesRead": "1432 KB",
+              "latencyMs": 1123
+            },
+            "croma": {
+              "platform": "Croma",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "not_supported"
+            },
+            "bestDeal": {
+              "winner": null,
+              "savings": 0,
+              "status": "no_price"
+            },
+            "cached": false,
+            "itemLatencyMs": 1123
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+# Final staging acceptance — partial, not production ready
+
+See the five requested Markdown reports. Actual disposable MongoDB tests passed12 recorded scenarios with simulated retailer inputs. Two genuine staged Worker price requests returned Amazon26030 and FlipkartOOS/null. Consolidated auth acceptance failed due intermittent Cloudflare edge1042 despite individual missing/wrong401 and earlier valid200 observations. Actual Top-5/ranker, real quote-driven Mongo update and real controller/watcher/frontend min/max acceptance were not completed.
+
+Production Worker code and configuration unchanged. Production backend, Mongo data, credentials, deletion policy, PM2, watcher, Croma service and social workflows unchanged. Temporary staging Workers were deleted. No Browser Rendering, Croma blocked sweep, screenshot re-audit, or cooldown reset.
+
+mongo-staging-results.json is actual MongoDB evidence with simulated retailer responses; auth-staging-retry-results.json is real live retailer HTTP evidence. auth-only-results.json contains no retailer fetches. staging.cjs is the reproducible isolated source-copy harness, requires private source snapshots and the hardcoded disposable local Mongo URI. No private backend source or credentials are published. See workflows in both repositories for reproducible run definitions and cleanup. Exact runtime archive-before-delete operation ordering and some synthetic fixture IDs were not captured; these remain evidence gaps.

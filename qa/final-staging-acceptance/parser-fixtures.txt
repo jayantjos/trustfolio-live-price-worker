@@ -1,0 +1,22 @@
+✔ empty primary price node cannot swallow neighboring other-seller minimum (3.428793ms)
+✔ balanced price-to-pay excludes adjacent MRP and supports class-based actual selling scope (18.986557ms)
+✔ historical priceblock text extracts only exact currency text (1.053696ms)
+✔ aggregate/other-seller JSON-LD is not primary Amazon price (0.736649ms)
+✔ explicit primary stock states override a leftover price; unrelated recommendation does not (0.619313ms)
+✔ in-stock is explicit evidence and unknown stock is never invented (0.274994ms)
+✔ legacy adapter distinguishes all seven rich states without fabricated positive prices (0.168164ms)
+✔ E002 is temporary and explicit discontinued JSON-LD remains distinct (2.753506ms)
+✔ empty priceToPay cannot fall back to other sellers inside apex (0.367013ms)
+✔ whole and fraction are combined only in exact price-to-pay scope (0.68379ms)
+✔ primary ASIN input mismatch cannot be rescued by requested ASIN in recommendations (0.146421ms)
+✔ Flipkart primary PID conflict cannot fall through to unrelated fsp price (0.42548ms)
+✔ multiple seller offers cannot turn first seller stock or minimum into primary acceptance (0.254964ms)
+✔ historical fsp belongs to exact PID JSON owner; recommendations and unscoped ppd rejected (0.806133ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 180.202425

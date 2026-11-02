@@ -1,0 +1,81 @@
+{
+  "productionWrites": 0,
+  "disposableDatabase": "trustfolio_acceptance_disposable",
+  "retailerNetworkCalls": 0,
+  "realRetailerIntegration": false,
+  "controllerCacheInvalidationCalls": 13,
+  "minmaxWatcherTested": false,
+  "archiveBeforeDelete": "Final archive/delete states verified; operation ordering is source-inspected, not runtime-instrumented",
+  "evidence": [
+    {
+      "test": "canonical_price_update",
+      "type": "REAL disposable MongoDB + actual patched service; simulated retailer quote",
+      "pass": true,
+      "productId": "6ae8b51b4059bf9831e57068",
+      "price": 2499,
+      "stock": null
+    },
+    {
+      "test": "failure_preserves_price_and_product",
+      "type": "REAL MongoDB, simulated retailer failure",
+      "error": "store_http_429",
+      "pass": true
+    },
+    {
+      "test": "failure_preserves_price_and_product",
+      "type": "REAL MongoDB, simulated retailer failure",
+      "error": "store_http_502",
+      "pass": true
+    },
+    {
+      "test": "failure_preserves_price_and_product",
+      "type": "REAL MongoDB, simulated retailer failure",
+      "error": "TimeoutError",
+      "pass": true
+    },
+    {
+      "test": "failure_preserves_price_and_product",
+      "type": "REAL MongoDB, simulated retailer failure",
+      "error": "invalid_json",
+      "pass": true
+    },
+    {
+      "test": "failure_preserves_price_and_product",
+      "type": "REAL MongoDB, simulated retailer failure",
+      "error": "identity_mismatch",
+      "pass": true
+    },
+    {
+      "test": "failure_preserves_price_and_product",
+      "type": "REAL MongoDB, simulated retailer failure",
+      "error": "not_deliverable",
+      "pass": true
+    },
+    {
+      "test": "failure_preserves_price_and_product",
+      "type": "REAL MongoDB, simulated retailer failure",
+      "error": "no_price",
+      "pass": true
+    },
+    {
+      "test": "out_of_stock_archive_delete_restore",
+      "type": "REAL disposable MongoDB; simulated explicit stock evidence",
+      "pass": true
+    },
+    {
+      "test": "discontinued_archive_delete_restore",
+      "type": "REAL disposable MongoDB; simulated explicit stock evidence",
+      "pass": true
+    },
+    {
+      "test": "ambiguous_requires_two_checks",
+      "type": "REAL disposable MongoDB; simulated evidence",
+      "pass": true
+    },
+    {
+      "test": "five_removal_cap",
+      "type": "REAL disposable MongoDB; simulated OOS",
+      "pass": true
+    }
+  ]
+}

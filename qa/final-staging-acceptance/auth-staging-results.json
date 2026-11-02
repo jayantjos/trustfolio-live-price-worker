@@ -1,0 +1,49 @@
+{
+  "productionChanges": 0,
+  "stagingName": "trustfolio-acceptance-41478424751",
+  "sourceCommit": "60dd4a4fa5376d91bca0a2c303f18e2469204996",
+  "browserBinding": false,
+  "cron": false,
+  "results": [
+    {
+      "test": "missing",
+      "type": "REAL HTTP staging Worker; live retailer response for valid requests",
+      "product": "B0DVH1HDVQ",
+      "httpStatus": 503,
+      "latencyMs": 133,
+      "response": {
+        "body": "{\"error\":\"worker_key_not_configured\"}"
+      }
+    },
+    {
+      "test": "incorrect",
+      "type": "REAL HTTP staging Worker; live retailer response for valid requests",
+      "product": "B0DVH1HDVQ",
+      "httpStatus": 503,
+      "latencyMs": 63,
+      "response": {
+        "body": "{\"error\":\"worker_key_not_configured\"}"
+      }
+    },
+    {
+      "test": "valid-amazon",
+      "type": "REAL HTTP staging Worker; live retailer response for valid requests",
+      "product": "B0DVH1HDVQ",
+      "httpStatus": 503,
+      "latencyMs": 73,
+      "response": {
+        "body": "{\"error\":\"worker_key_not_configured\"}"
+      }
+    },
+    {
+      "test": "valid-flipkart",
+      "type": "REAL HTTP staging Worker; live retailer response for valid requests",
+      "product": "https://www.flipkart.com/poco-x7-5g-yellow-256-gb/p/itm1cd5ce9a66fef?pid=MOBH7YZ9NSDFC3EK",
+      "httpStatus": 503,
+      "latencyMs": 131,
+      "response": {
+        "body": "{\"error\":\"worker_key_not_configured\"}"
+      }
+    }
+  ]
+}

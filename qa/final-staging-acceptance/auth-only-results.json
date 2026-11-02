@@ -1,0 +1,39 @@
+{
+  "productionChanges": 0,
+  "stagingName": "trustfolio-acceptance-41478863603",
+  "sourceCommit": "9411b14b868abbccabf6387de7a095d590f5f4e5",
+  "browserBinding": false,
+  "cron": false,
+  "results": [
+    {
+      "test": "missing",
+      "type": "REAL HTTP staging Worker; live retailer response for valid requests",
+      "product": "invalid-staging-product",
+      "httpStatus": 401,
+      "latencyMs": 182,
+      "response": {
+        "body": "{\"error\":\"unauthorized\"}"
+      }
+    },
+    {
+      "test": "incorrect",
+      "type": "REAL HTTP staging Worker; live retailer response for valid requests",
+      "product": "invalid-staging-product",
+      "httpStatus": 401,
+      "latencyMs": 228,
+      "response": {
+        "body": "{\"error\":\"unauthorized\"}"
+      }
+    },
+    {
+      "test": "valid",
+      "type": "REAL HTTP staging Worker; live retailer response for valid requests",
+      "product": "invalid-staging-product",
+      "httpStatus": 404,
+      "latencyMs": 175,
+      "response": {
+        "body": "error code: 1042\n"
+      }
+    }
+  ]
+}
