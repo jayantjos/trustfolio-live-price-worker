@@ -1,0 +1,97 @@
+name: Quote envelope and changed Lenovo independent evidence
+on:
+  push:
+    branches: [final-live-integration-20261103]
+    paths: ['.github/workflows/final-top5-quote-envelope.yml']
+permissions:
+  contents: read
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Encrypt matching quote-only credential
+        env:
+          TF_KEY: ${{ secrets.TF_PRICE_WORKER_KEY }}
+        run: |
+          cat > staging-cert.pem <<'CERT'
+          -----BEGIN CERTIFICATE-----
+          MIIELzCCApegAwIBAgIURUzoySSZV4VbuQIQaVyFrLIZ7JUwDQYJKoZIhvcNAQEL
+          BQAwJzElMCMGA1UEAwwcVHJ1c3RGb2xpb0ZpbmFsSXNvbGF0ZWRTdGFnZTAeFw0y
+          NjExMDIxOTEwMDdaFw0yNjExMDMxOTEwMDdaMCcxJTAjBgNVBAMMHFRydXN0Rm9s
+          aW9GaW5hbElzb2xhdGVkU3RhZ2UwggGiMA0GCSqGSIb3DQEBAQUAA4IBjwAwggGK
+          AoIBgQCrx1Y11Iph4wpy1SW1qOpVdI4g2DrVxxX+SIRmf0mmX5JlSX0Py/jBm6Uj
+          eVHru4vNHMWd5p4Y3BXpwh1Pbwb6zPkVBDWiJRykjSdpaEJsUcO1wOkgoyCWlnfq
+          Es+VNU0gs9S5FscNdSeoqKhl+jcGL2znI8tHp0UsfJTUu7Vm6Kh3l6KKBQVEMpqM
+          a5n7mZn4pjPMd4BpeRMVB46GJCgxFX7T9luqMTw09bAKnIfIXUnj+8pryVxGo8DI
+          I6nQJMTPYnT25s857NidbO5LB9ogbyDROXXZLpbz7pWUPBzPoSATBJipu05m3G/F
+          2VHrgWrFO/pwEu9uOt/a26aXgHUHPavNcbdYkA+033sESWaWH6LELP9y+r5A3q+w
+          phQ7/dBxSMoOU5fWj+jBEzsLegfWtTzLIR8pAzZOmj6hCVHbYLMBETicF2kItmwd
+          QZXs2/Jwp0QQxBFpe8Jo4dBYIQ/8Nac9xoKMWN4FPIE3d2kD5W8itr7HDlC63zch
+          T+IWwOUCAwEAAaNTMFEwHQYDVR0OBBYEFDKFtRWRAZnbCSeOQDhhgx7egWH4MB8G
+          A1UdIwQYMBaAFDKFtRWRAZnbCSeOQDhhgx7egWH4MA8GA1UdEwEB/wQFMAMBAf8w
+          DQYJKoZIhvcNAQELBQADggGBAJCxqXj4W4EiG4pC/mX3Z3k+cpv08rzk0MWF86YB
+          tX0/X11J+aAEbnra7huocg+v6eJkz3ymvip1D7sPohvAmXSRuHr7rpVFgcrvZbrM
+          s+3bwOMzQBpm8ZMQ9wK/wH9nAeusIdBcMavWWNyvvSvOcav4urqji8dFZnEPmp2K
+          Ivhj/u7nlawl1WvSOs+8F3wAJ2U1vcWcjc1+U+iZ1yKAHjs1zCRn++yd4JXw/24j
+          LpofgP2Xlaubi1pbHwY/KlXue0T7SuIJISlKnr8D0vjpxh1FYweSYDqGbKsB5+3V
+          2oej9VLmp/lHcW4e3byhUOiUyHn/G8DAJToAjxAmOHY7B+EKmDv50qBZoWj43WF4
+          F6VXeWQw5BOnt/Y6rcexkX0yWq0eBYkBsciny8p33AJGSgsf7nVO3SyqbdStH7lF
+          bvpsYVL/xhbk/RBPR6kZG4FlQAFQTSlUO2LYhZxtZh0PAhPrF6hbwmJeAFBDFenX
+          6OZQDDRY8wrg7PLmlPnSM7SFBQ==
+          -----END CERTIFICATE-----
+          CERT
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          assert os.getenv('TF_KEY')
+          Path('quote-key.txt').write_text(os.environ['TF_KEY'])
+          PY
+          openssl cms -encrypt -binary -aes256 -in quote-key.txt -outform DER -out quote-key.enc staging-cert.pem
+          rm -f quote-key.txt
+          python3 - <<'PY'
+          import base64,json
+          from pathlib import Path
+          print('WORKER_KEY_ENVELOPE='+json.dumps({'ciphertext':base64.b64encode(Path('quote-key.enc').read_bytes()).decode(),'kind':'CMS encrypted quote-only key'}))
+          PY
+      - name: Independent fresh Lenovo primary Offer because new quote changed
+        run: |
+          python3 - <<'PY'
+          import json,time,re,hashlib,datetime
+          from urllib.request import Request,urlopen
+          from pathlib import Path
+          url='https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH'
+          e={'status':'UNVERIFIED','url':url,'atUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'kind':'independent retailer HTML; not a Worker request'}
+          t=time.monotonic()
+          try:
+           with urlopen(Request(url,headers={'User-Agent':'TrustFolio-Independent-Price/1.0'}),timeout=8) as r:
+            raw=r.read(2500001);e['httpStatus']=r.status;e['finalUrl']=r.url
+           e['bytes']=len(raw);e['sha256']=hashlib.sha256(raw).hexdigest()
+           assert len(raw)<=2500000,'bounded body limit'
+           products=[]
+           def walk(x):
+            if isinstance(x,list):
+             for y in x:walk(y)
+            elif isinstance(x,dict):
+             if x.get('@type')=='Product':products.append(x)
+             if '@graph' in x:walk(x['@graph'])
+           for s in re.findall(r'<script\b[^>]*type=["\']application/ld\+json["\'][^>]*>([\s\S]*?)</script>',raw.decode(errors='replace'),re.I):
+            try:walk(json.loads(s))
+            except:pass
+           e['productCount']=len(products)
+           e['products']=[{k:p.get(k) for k in ['name','sku','productID','offers']} for p in products]
+           if len(products)==1 and products[0].get('sku')=='COMHCYMG83BGNQHH':
+            offers=products[0].get('offers');offers=offers if isinstance(offers,list) else [offers]
+            if len(offers)==1 and offers[0].get('priceCurrency')=='INR':
+             e['primaryPrice']=float(offers[0]['price']);e['matchesCurrentCanary22911']=e['primaryPrice']==22911
+             e['status']='PASS' if e['matchesCurrentCanary22911'] else 'UNVERIFIED'
+          except Exception as err:e['error']=type(err).__name__+': '+str(err)
+          e['latencyMs']=round((time.monotonic()-t)*1000)
+          Path('lenovo-fresh-independent.json').write_text(json.dumps(e))
+          print('LENOVO_FRESH_INDEPENDENT='+json.dumps(e))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lenovo-fresh-independent
+          path: lenovo-fresh-independent.json
+          retention-days: 30
