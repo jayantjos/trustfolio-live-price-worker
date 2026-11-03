@@ -1,0 +1,47 @@
+[
+  {
+    "id": "WMNHBK4HNYBSDJ9U",
+    "url": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U",
+    "platform": "flipkart",
+    "brand": "Godrej",
+    "catalogTitle": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+    "capacity": "9 kg",
+    "catalogMongoId": "69f419329a622ea2d7ccb736"
+  },
+  {
+    "id": "B0D41L64NR",
+    "url": "https://www.amazon.in/dp/B0D41L64NR",
+    "platform": "amazon",
+    "brand": "Bosch",
+    "catalogTitle": "Bosch 9 kg 5 Star Front Load Fully-Automatic Washing Machine, AI ActiveWater, 14 Wash Programs, Removes 99.9% Germs with Steam, No Tangle or Wrinkle, SoftCare Paddle,Zero Vibration, White, WGA14200IN",
+    "capacity": "9 kg",
+    "catalogMongoId": "6a080110fe6fd8dc386bbee3"
+  },
+  {
+    "id": "WMNHHUCY5FWTHBAN",
+    "url": "https://www.flipkart.com/haier-8-kg-ai-smart-wash-ai-dbt-puristeam-525mm-super-drum-fully-automatic-front-load-washing-machine-in-built-heater-black/p/itm5b001b74dc1cc?pid=WMNHHUCY5FWTHBAN",
+    "platform": "flipkart",
+    "brand": "Haier",
+    "catalogTitle": "Haier 8 kg AI Smart Wash (AI-DBT) , PuriSteam , 525mm Super Drum Fully Automatic Front Load Washing Ma",
+    "capacity": "8 kg",
+    "catalogMongoId": "6a2c08a19665e4a0b177b34b"
+  },
+  {
+    "id": "WMNG4WGVXYSRYHJZ",
+    "url": "https://www.flipkart.com/motorola-7-kg-5-star-rating-garment-sterilization-fully-automatic-front-load-washing-machine-in-built-heater-white/p/itm1ad6a5136676c?pid=WMNG4WGVXYSRYHJZ",
+    "platform": "flipkart",
+    "brand": "Motorola",
+    "catalogTitle": "Motorola 7 Kg 5 Star Rating Garment Sterilization Fully Automatic Front Load Washing Machine In Built Heater White",
+    "capacity": "7 kg",
+    "catalogMongoId": "6a1013380f397d1e1344dd59"
+  },
+  {
+    "id": "B0GX9P1BWT",
+    "url": "https://www.amazon.in/dp/B0GX9P1BWT",
+    "platform": "amazon",
+    "brand": "Samsung",
+    "catalogTitle": "Samsung 7 kg, 5 Star, Hygiene Steam, Quick Wash, Digital Inverter Motor, Fully-Automatic Front Load Washing Machine (WW70FG4S02AXTL, Inox)",
+    "capacity": "7 kg",
+    "catalogMongoId": "6a1011ac0f397d1e1344d8d1"
+  }
+]

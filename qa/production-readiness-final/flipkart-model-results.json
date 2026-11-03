@@ -1,0 +1,44 @@
+{
+  "results": [
+    {
+      "id": "WMNHBK4HNYBSDJ9U",
+      "url": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U",
+      "atUTC": "2026-11-03T04:07:37.568864+00:00",
+      "status": "UNVERIFIED",
+      "purpose": "missing model metadata only; no Worker or price retest",
+      "http": 200,
+      "finalUrl": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U",
+      "sha256": "db99cf5fa802d4c17c771d16d4522283860691af2e08589ceeab8e17e8cd70ec",
+      "jsonTrees": 4,
+      "exactOwnerCount": 251,
+      "modelFields": []
+    },
+    {
+      "id": "WMNHHUCY5FWTHBAN",
+      "url": "https://www.flipkart.com/haier-8-kg-ai-smart-wash-ai-dbt-puristeam-525mm-super-drum-fully-automatic-front-load-washing-machine-in-built-heater-black/p/itm5b001b74dc1cc?pid=WMNHHUCY5FWTHBAN",
+      "atUTC": "2026-11-03T04:07:37.569553+00:00",
+      "status": "UNVERIFIED",
+      "purpose": "missing model metadata only; no Worker or price retest",
+      "http": 200,
+      "finalUrl": "https://www.flipkart.com/haier-8-kg-ai-smart-wash-ai-dbt-puristeam-525mm-super-drum-fully-automatic-front-load-washing-machine-in-built-heater-black/p/itm5b001b74dc1cc?pid=WMNHHUCY5FWTHBAN",
+      "sha256": "d7c75db840fee971eb2bdfacf1dcc054b2f64a5939738592c42cb5b51a37041e",
+      "jsonTrees": 4,
+      "exactOwnerCount": 321,
+      "modelFields": []
+    },
+    {
+      "id": "WMNG4WGVXYSRYHJZ",
+      "url": "https://www.flipkart.com/motorola-7-kg-5-star-rating-garment-sterilization-fully-automatic-front-load-washing-machine-in-built-heater-white/p/itm1ad6a5136676c?pid=WMNG4WGVXYSRYHJZ",
+      "atUTC": "2026-11-03T04:07:38.586986+00:00",
+      "status": "UNVERIFIED",
+      "purpose": "missing model metadata only; no Worker or price retest",
+      "http": 200,
+      "finalUrl": "https://www.flipkart.com/motorola-7-kg-5-star-rating-garment-sterilization-fully-automatic-front-load-washing-machine-in-built-heater-white/p/itm1ad6a5136676c?pid=WMNG4WGVXYSRYHJZ",
+      "sha256": "391403d116b5d8e1873ceba515835eaad222c4b1684f1e10b516d3db620428ce",
+      "jsonTrees": 4,
+      "exactOwnerCount": 267,
+      "modelFields": []
+    }
+  ],
+  "productionWrites": 0
+}

@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "focusedIdentityAssertions": 21,
+  "diffApplyCheck": "PASS",
+  "syntax": "PASS",
+  "sourcesMatchActualVPS": true,
+  "databasesDropped": [
+    true,
+    true,
+    true
+  ],
+  "capability": [
+    "2026-11-03T03:59:36.6932578Z CAPABILITY docker ABSENT",
+    "2026-11-03T03:59:36.6932899Z CAPABILITY podman ABSENT",
+    "2026-11-03T03:59:36.6933097Z CAPABILITY mongod ABSENT",
+    "2026-11-03T03:59:36.6933294Z CAPABILITY mongosh ABSENT",
+    "2026-11-03T03:59:36.6933513Z CAPABILITY unshare PRESENT"
+  ],
+  "capabilityRun": 41575423669,
+  "finalCleanup": {
+    "status": "PASS",
+    "transport": [
+      {
+        "file": "transport-public-cert.pem",
+        "status": "already_absent"
+      },
+      {
+        "file": "worker-key-envelope.json",
+        "status": "already_absent"
+      },
+      {
+        "file": "croma-request.json",
+        "status": "already_absent"
+      },
+      {
+        "file": "croma-response.json",
+        "status": "already_absent"
+      }
+    ],
+    "encryptedSourceArtifacts": [
+      {
+        "run": 41574910954,
+        "id": 13203675446,
+        "status": "deleted"
+      }
+    ],
+    "productionChanges": 0
+  },
+  "finalCleanupRun": 41575477144,
+  "productionChanges": 0
+}

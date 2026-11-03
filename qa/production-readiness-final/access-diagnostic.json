@@ -1,0 +1,57 @@
+{
+  "results": [
+    {
+      "case": "health",
+      "atUTC": "2026-11-03T03:44:58.811938+00:00",
+      "http": 200,
+      "headers": {
+        "cf-ray": "a5486230080eb163-IAD",
+        "server": "cloudflare",
+        "content-type": "application/json; charset=utf-8",
+        "retry-after": null
+      },
+      "body": "{\"ok\":true,\"worker\":\"trustfolio-live-price-worker\",\"version\":\"1.2.2\",\"cromaSearchComparison\":\"fixed-six-v1\",\"priceVerificationContract\":\"seven-states-v1\",\"amazonPrimaryScope\":\"balanced-elements-v1\",\"flipkartFspIdentity\":\"json-owner-v1\",\"amazonBrowserExtraction\":\"primary-sections-v3\",\"amazonCanonicalIdentity\":\"exact-canonical-v1\",\"flipkartAuditResolution\":\"fixed-primary-jsonld-v4\",\"productTitleIdentity\":\"bounded-2048-v1\",\"flipkartAuditIdentity\":\"primary-product-v1\",\"flipkartAuditVariant\":\"explicit-dimensions-v1\",\"fixedAuditErrors\":\"structured-v1\",\"fixedAuditCatalogIdentity\":\"shared-variants-v2\"",
+      "latencyMs": 101
+    },
+    {
+      "case": "missing",
+      "atUTC": "2026-11-03T03:44:58.913349+00:00",
+      "http": 401,
+      "headers": {
+        "cf-ray": "a5486230690b5009-IAD",
+        "server": "cloudflare",
+        "content-type": "application/json; charset=utf-8",
+        "retry-after": null
+      },
+      "body": "{\"error\":\"unauthorized\"}",
+      "latencyMs": 62
+    },
+    {
+      "case": "wrong",
+      "atUTC": "2026-11-03T03:44:58.975131+00:00",
+      "http": 401,
+      "headers": {
+        "cf-ray": "a5486230cdc7d687-IAD",
+        "server": "cloudflare",
+        "content-type": "application/json; charset=utf-8",
+        "retry-after": null
+      },
+      "body": "{\"error\":\"unauthorized\"}",
+      "latencyMs": 54
+    },
+    {
+      "case": "valid",
+      "atUTC": "2026-11-03T03:44:59.028968+00:00",
+      "http": 200,
+      "headers": {
+        "cf-ray": "a54862311bd9187e-IAD",
+        "server": "cloudflare",
+        "content-type": "application/json; charset=utf-8",
+        "retry-after": null
+      },
+      "body": "{\"success\":true,\"results\":[{\"asin\":null,\"pid\":null,\"input\":\"https://example.com/not-a-product\",\"amazon\":{\"platform\":\"Amazon\",\"url\":null,\"title\":null,\"price\":null,\"priceNum\":null,\"inStock\":null,\"status\":\"skipped\"},\"flipkart\":{\"platform\":\"Flipkart\",\"url\":null,\"title\":null,\"price\":null,\"priceNum\":null,\"inStock\":null,\"status\":\"skipped\"},\"croma\":{\"platform\":\"Croma\",\"url\":null,\"title\":null,\"price\":null,\"priceNum\":null,\"inStock\":null,\"status\":\"not_supported\"},\"bestDeal\":{\"winner\":null,\"savings\":0,\"status\":\"no_price\"},\"cached\":false,\"itemLatencyMs\":0,\"error\":\"unsupported_product_url\"}]}",
+      "latencyMs": 44
+    }
+  ],
+  "kind": "non-retailer auth-only diagnostic"
+}

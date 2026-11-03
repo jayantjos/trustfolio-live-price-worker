@@ -1,0 +1,123 @@
+[
+  {
+    "id": "WMNHBK4HNYBSDJ9U",
+    "platform": "flipkart",
+    "workerAt": "2026-11-03T03:46:03.386Z",
+    "independentAt": "2026-11-03T03:45:00.262405+00:00",
+    "workerPrice": 34490,
+    "primaryPrices": [
+      34490
+    ],
+    "match": true,
+    "workerRay": "a54863bc4894af1e-LAX",
+    "workerRTT": 1212,
+    "independentIdentity": true,
+    "capacity": true,
+    "brand": true,
+    "primaryTitle": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+    "variantRows": [],
+    "primaryModel": null,
+    "primaryColor": "Glacial White",
+    "independentSHA": "4a5cc8965b093be81f0d85d25314dc10b923cc6c48966ef4f75a8e62a4a87f95"
+  },
+  {
+    "id": "WMNHHUCY5FWTHBAN",
+    "platform": "flipkart",
+    "workerAt": "2026-11-03T03:46:11.299Z",
+    "independentAt": "2026-11-03T03:45:01.315317+00:00",
+    "workerPrice": 30130,
+    "primaryPrices": [
+      30130
+    ],
+    "match": true,
+    "workerRay": "a54863ec4f32194a-LAX",
+    "workerRTT": 1388,
+    "independentIdentity": true,
+    "capacity": true,
+    "brand": true,
+    "primaryTitle": "Haier 8 kg AI One Touch, AI Smart Wash (AI-DBT), PuriSteam, 525 mm Super Drum, Inbuilt Heater, Wi-Fi Enabled Fully Automatic Front Load Washing Machine with In-built Heater Black",
+    "variantRows": [],
+    "primaryModel": null,
+    "primaryColor": "Black",
+    "independentSHA": "35ce064be13e507acadca994474833dff4832388ab8c0bb7cd00276b827a8e1b"
+  },
+  {
+    "id": "WMNG4WGVXYSRYHJZ",
+    "platform": "flipkart",
+    "workerAt": "2026-11-03T03:46:11.610Z",
+    "independentAt": "2026-11-03T03:45:01.634289+00:00",
+    "workerPrice": 33990,
+    "primaryPrices": [
+      33990
+    ],
+    "match": true,
+    "workerRay": "a54863ec39dea682-LAX",
+    "workerRTT": 1700,
+    "independentIdentity": true,
+    "capacity": true,
+    "brand": true,
+    "primaryTitle": "MOTOROLA 7 kg 5 Star Rating Garment Sterilization Fully Automatic Front Load Washing Machine with In-built Heater White",
+    "variantRows": [],
+    "primaryModel": null,
+    "primaryColor": "White",
+    "independentSHA": "63b797412057cf9ce8d5b95fc6d5509ecd77bbe46be4df7bddcd2d89706c93a2"
+  },
+  {
+    "id": "B0D41L64NR",
+    "platform": "amazon",
+    "workerAt": "2026-11-03T03:46:04.807Z",
+    "independentAt": "2026-11-03T03:50:08.383193+00:00",
+    "workerPrice": 33490,
+    "primaryPrices": [
+      33490
+    ],
+    "match": true,
+    "workerRay": "a54863bc3833b941-LAX",
+    "workerRTT": 2630,
+    "independentIdentity": true,
+    "capacity": true,
+    "brand": true,
+    "primaryTitle": "Bosch 9 kg 5 Star Front Load Fully-Automatic Washing Machine, AI ActiveWater, 14 Wash Programs, Removes 99.9% Germs with Steam, No Tangle or Wrinkle, SoftCare Paddle,Zero Vibration, White, WGA14200IN",
+    "variantRows": [
+      "Brand Bosch",
+      "Capacity 9 kg",
+      "Capacity 9 kg",
+      "Brand Name Bosch",
+      "Model Name WM",
+      "Model Number WGA14200IN",
+      "Colour 9kg - White"
+    ],
+    "primaryModel": null,
+    "primaryColor": null,
+    "independentSHA": "57aa7e6589072f1ad7749af2e25711eebbe64d9ffe7e3d43de7b1519d9f057a7"
+  },
+  {
+    "id": "B0GX9P1BWT",
+    "platform": "amazon",
+    "workerAt": "2026-11-03T03:46:12.320Z",
+    "independentAt": "2026-11-03T03:50:07.841560+00:00",
+    "workerPrice": 32990,
+    "primaryPrices": [
+      32990
+    ],
+    "match": true,
+    "workerRay": "a54863ec3e1ca2d6-LAX",
+    "workerRTT": 2411,
+    "independentIdentity": true,
+    "capacity": true,
+    "brand": true,
+    "primaryTitle": "Samsung 7 kg, 5 Star, Hygiene Steam, Quick Wash, Digital Inverter Motor, Fully-Automatic Front Load Washing Machine (WW70FG4S02AXTL, Inox)",
+    "variantRows": [
+      "Brand Samsung",
+      "Capacity 7 kg",
+      "Capacity 7 kg",
+      "Colour Inox",
+      "Brand Name Samsung",
+      "Model Name WM",
+      "Model Number WW70FG4S02AXTL"
+    ],
+    "primaryModel": null,
+    "primaryColor": null,
+    "independentSHA": "a6e4f5a93b3707a76fe48735a6c586243164ac3e3437c8a66c5bfc36095671b5"
+  }
+]

@@ -1,0 +1,37 @@
+{
+  "atUTC": "2026-11-03T03:53:13.281Z",
+  "result": {
+    "status": "ok",
+    "priceNum": 21990,
+    "in_stock": null,
+    "availability": null
+  },
+  "evidence": [
+    {
+      "url": "https://api.croma.com/searchservices/v1/search?currentPage=0&query=LG+7.5+kg+%3Arelevance&fields=FULL&channel=WEB&channelCode=400049&spellOpt=DEFAULT",
+      "httpStatus": 200,
+      "sha256": "b6fe4c1732fa310c2b0ab936eccddacd9e9a033cc9c552989be8958e2825b3f4",
+      "hit": {
+        "code": "312748",
+        "name": "LG 7.5 kg 5 Star Inverter Fully Automatic Top Load Washing Machine (T75VBSF1Z.ASFQEIL, Smart Inverter Motor, Middle Free Silver)",
+        "price": {
+          "formattedValue": "₹21,990",
+          "priceType": "BUY",
+          "value": 21990
+        },
+        "pincodePrice": {
+          "formattedValue": "₹21,990",
+          "priceType": "BUY",
+          "value": 21990
+        },
+        "specialSku": false,
+        "url": "/lg-7-5-kg-5-star-inverter-fully-automatic-top-load-washing-machine-t75vbsf1z-asfqeil-smart-inverter-motor-middle-free-silver-/p/312748",
+        "stockFlag": [
+          "LA-E054"
+        ]
+      }
+    }
+  ],
+  "latencyMs": 68,
+  "productionWrites": 0
+}

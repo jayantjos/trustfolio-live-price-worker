@@ -1,0 +1,52 @@
+{
+  "sampleN": 21,
+  "method": "nearest-rank",
+  "p50": 2108,
+  "p95": 2630,
+  "max": 6695,
+  "overheadP50": 181,
+  "overheadP95": 269,
+  "overheadMax": 334,
+  "topSamples": [
+    10207,
+    10105
+  ],
+  "faults": [
+    {
+      "name": "valid_slow",
+      "delay": 1200,
+      "latency": 1210,
+      "status": "ok"
+    },
+    {
+      "name": "valid_near_deadline",
+      "delay": 6900,
+      "latency": 6908,
+      "status": "ok"
+    },
+    {
+      "name": "timeout",
+      "delay": 9000,
+      "latency": 8009,
+      "status": "error"
+    },
+    {
+      "name": "wrong_identity",
+      "delay": 0,
+      "latency": 8,
+      "status": "error"
+    },
+    {
+      "name": "wrong_variant",
+      "delay": 0,
+      "latency": 7,
+      "status": "error"
+    },
+    {
+      "name": "unknown_stock",
+      "delay": 0,
+      "latency": 8,
+      "status": "ok"
+    }
+  ]
+}

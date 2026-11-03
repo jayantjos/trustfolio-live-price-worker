@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "transport": [
+    {
+      "file": "transport-public-cert.pem",
+      "status": "already_absent"
+    },
+    {
+      "file": "worker-key-envelope.json",
+      "status": "already_absent"
+    },
+    {
+      "file": "croma-request.json",
+      "status": "already_absent"
+    },
+    {
+      "file": "croma-response.json",
+      "status": "already_absent"
+    }
+  ],
+  "encryptedSourceArtifacts": [
+    {
+      "run": 41573927581,
+      "id": 13202323589,
+      "status": "deleted"
+    },
+    {
+      "run": 41574433908,
+      "id": 13202857048,
+      "status": "deleted"
+    }
+  ],
+  "productionChanges": 0
+}

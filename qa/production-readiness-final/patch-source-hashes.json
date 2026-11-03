@@ -1,0 +1,26 @@
+{
+  "controllers/ProductController.js": {
+    "base_sha256": "4d927892c950ba50e59d1fa53bf7110ea95c96018d63953b3ff3107ee5526562",
+    "candidate_sha256": "8b8e9b8e33ad3e27058c51bb3af0d4545e72a782d83136cf2f866169ebf53fb5"
+  },
+  "services/CatalogIdentityGuard.js": {
+    "base_sha256": null,
+    "candidate_sha256": "1864d439a61929774502f0b955a6af26664711e29d67306b981d287402c13dbc"
+  },
+  "services/LiveBudgetRecommendationService.js": {
+    "base_sha256": "136ece5770aec60f3f712abc43983d0a5c5d56ce4065e8fcb1dd603474222184",
+    "candidate_sha256": "c52e0ccfb4b8dfc32226d129355d8b589528000e27f76bceb04c60357be016da"
+  },
+  "services/LivePriceIdentity.js": {
+    "base_sha256": null,
+    "candidate_sha256": "9d4a0383effc73d58f68ea67f62357c979398cd2f47dfa506f47d332d14cef1f"
+  },
+  "services/LivePriceService.js": {
+    "base_sha256": "03d5c3c8ac73f7df281162bdaea467fef4f94859427938db1fbde65fef637f0d",
+    "candidate_sha256": "df4f566f3bbc7bc6c17c344d31cccfcbf188de70e188a91d71cfdbb69ed685bb"
+  },
+  "services/ProductRecommendationService.js": {
+    "base_sha256": "cadaae48fe765d2535449508bba75811ffc1df172eb01f3f9b07d30ff527d6e9",
+    "candidate_sha256": "0d589d1d6ad37a709ae61e1355e7c15198ea653db918a7f15b3ef328e0ea27f3"
+  }
+}
