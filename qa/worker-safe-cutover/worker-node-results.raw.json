@@ -1,0 +1,278 @@
+{
+  "client": "native Node fetch as used by actual backend; default user-agent unchanged",
+  "productionChanges": 0,
+  "requests": [
+    {
+      "test": "health",
+      "at": "2026-11-03T05:26:07.412Z",
+      "http": 200,
+      "latencyMS": 206,
+      "requestID": "372a2842-492e-4f19-be6a-201b8ada10cd",
+      "headers": {
+        "cf-ray": "a548f6596e716ee6-DFW",
+        "cf-mitigated": null,
+        "server": "cloudflare",
+        "content-type": "application/json; charset=utf-8",
+        "date": "Tue, 03 Nov 2026 05:26:07 GMT"
+      },
+      "application": {
+        "ok": true,
+        "worker": "trustfolio-live-price-worker",
+        "version": "1.2.2",
+        "cromaSearchComparison": "fixed-six-v1",
+        "priceVerificationContract": "seven-states-v1",
+        "amazonPrimaryScope": "balanced-elements-v1",
+        "flipkartFspIdentity": "json-owner-v1",
+        "amazonBrowserExtraction": "primary-sections-v3",
+        "amazonCanonicalIdentity": "exact-canonical-v1",
+        "flipkartAuditResolution": "fixed-primary-jsonld-v4",
+        "productTitleIdentity": "bounded-2048-v1",
+        "flipkartAuditIdentity": "primary-product-v1",
+        "flipkartAuditVariant": "explicit-dimensions-v1",
+        "fixedAuditErrors": "structured-v1",
+        "fixedAuditCatalogIdentity": "shared-variants-v2",
+        "amazonBrowserQALock": "per-asin-v2",
+        "ready": true,
+        "monitoring": {
+          "cronUTC": "5 */6 * * *",
+          "items": 3,
+          "logs": "Workers Logs",
+          "statusUrl": "/monitor/latest",
+          "testUrl": "/qa/sample",
+          "cromaTestUrl": "/qa/croma",
+          "budgetTestUrl": "/qa/budget20k",
+          "batch100Url": "/qa/check-100",
+          "storageConfigured": true
+        },
+        "note": "Actual-price checks require configured secret and verifiable source content."
+      },
+      "bodySHA256": "eb5950634b13976a8b15222e55364ccf5d6c9fc41f0de5a4cc2522c709bf642a",
+      "htmlTitle": null,
+      "cloudflareError": null
+    },
+    {
+      "test": "missing_key",
+      "at": "2026-11-03T05:26:07.619Z",
+      "http": 401,
+      "latencyMS": 36,
+      "requestID": "96c46604-eacd-41ef-9727-acba04bc917e",
+      "headers": {
+        "cf-ray": "a548f659af3c6ee6-DFW",
+        "cf-mitigated": null,
+        "server": "cloudflare",
+        "content-type": "application/json; charset=utf-8",
+        "date": "Tue, 03 Nov 2026 05:26:07 GMT"
+      },
+      "application": {
+        "error": "unauthorized"
+      },
+      "bodySHA256": "782eeaa7f1915f6783146f8180751785584f0f24bd4e503165c7fc4a597da600",
+      "htmlTitle": null,
+      "cloudflareError": null
+    },
+    {
+      "test": "wrong_key",
+      "at": "2026-11-03T05:26:07.655Z",
+      "http": 401,
+      "latencyMS": 76,
+      "requestID": "6a71f834-7bbe-4a55-bf22-fa7151f02b41",
+      "headers": {
+        "cf-ray": "a548f65a1c18f78b-DFW",
+        "cf-mitigated": null,
+        "server": "cloudflare",
+        "content-type": "application/json; charset=utf-8",
+        "date": "Tue, 03 Nov 2026 05:26:07 GMT"
+      },
+      "application": {
+        "error": "unauthorized"
+      },
+      "bodySHA256": "782eeaa7f1915f6783146f8180751785584f0f24bd4e503165c7fc4a597da600",
+      "htmlTitle": null,
+      "cloudflareError": null
+    },
+    {
+      "test": "amazon_price",
+      "at": "2026-11-03T05:26:07.731Z",
+      "http": 200,
+      "latencyMS": 2185,
+      "requestID": "37d47d99-d2f3-4a79-bca0-1693bac0cc2a",
+      "headers": {
+        "cf-ray": "a548f65a597c6ee6-DFW",
+        "cf-mitigated": null,
+        "server": "cloudflare",
+        "content-type": "application/json; charset=utf-8",
+        "date": "Tue, 03 Nov 2026 05:26:09 GMT"
+      },
+      "application": {
+        "success": true,
+        "results": [
+          {
+            "asin": "B0D41L64NR",
+            "pid": "B0D41L64NR",
+            "input": "B0D41L64NR",
+            "amazon": {
+              "platform": "Amazon",
+              "url": "https://www.amazon.in/dp/B0D41L64NR",
+              "title": "Bosch 9 kg 5 Star Front Load Fully-Automatic Washing Machine, AI ActiveWater, 14 Wash Programs, Removes 99.9% Germs with Steam, No Tangle or Wrinkle, SoftCare Paddle,Zero Vibration, White, WGA14200IN : Amazon.in: Home &amp; Kitchen",
+              "price": "₹33,490",
+              "priceNum": 33490,
+              "inStock": true,
+              "in_stock": true,
+              "status": "ok",
+              "verificationStatus": "ok",
+              "verificationOutcome": "selling_price_verified",
+              "availability": null,
+              "error": null,
+              "httpStatus": 200,
+              "extractionSource": "amazon_price_to_pay_parts",
+              "bytesRead": "2147 KB",
+              "latencyMs": 2090
+            },
+            "flipkart": {
+              "platform": "Flipkart",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "croma": {
+              "platform": "Croma",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "not_supported"
+            },
+            "bestDeal": {
+              "winner": "amazon",
+              "savings": 0,
+              "status": "ok"
+            },
+            "cached": false,
+            "itemLatencyMs": 2090
+          }
+        ]
+      },
+      "bodySHA256": "8a71bf1f8289889622944849331fe32a6dda4f13589f2a23bcfbd4ee8b1781ae",
+      "htmlTitle": null,
+      "cloudflareError": null,
+      "expectedID": "B0D41L64NR",
+      "actualID": "B0D41L64NR",
+      "summary": {
+        "platform": "Amazon",
+        "url": "https://www.amazon.in/dp/B0D41L64NR",
+        "title": "Bosch 9 kg 5 Star Front Load Fully-Automatic Washing Machine, AI ActiveWater, 14 Wash Programs, Removes 99.9% Germs with Steam, No Tangle or Wrinkle, SoftCare Paddle,Zero Vibration, White, WGA14200IN : Amazon.in: Home &amp; Kitchen",
+        "price": "₹33,490",
+        "priceNum": 33490,
+        "inStock": true,
+        "in_stock": true,
+        "status": "ok",
+        "verificationStatus": "ok",
+        "verificationOutcome": "selling_price_verified",
+        "availability": null,
+        "error": null,
+        "httpStatus": 200,
+        "extractionSource": "amazon_price_to_pay_parts",
+        "bytesRead": "2147 KB",
+        "latencyMs": 2090
+      },
+      "identityMatches": true
+    },
+    {
+      "test": "flipkart_price",
+      "at": "2026-11-03T05:26:09.916Z",
+      "http": 200,
+      "latencyMS": 6538,
+      "requestID": "8377ce60-efee-4587-b980-702e7429fb58",
+      "headers": {
+        "cf-ray": "a548f66808a16ee6-DFW",
+        "cf-mitigated": null,
+        "server": "cloudflare",
+        "content-type": "application/json; charset=utf-8",
+        "date": "Tue, 03 Nov 2026 05:26:16 GMT"
+      },
+      "application": {
+        "success": true,
+        "results": [
+          {
+            "asin": null,
+            "pid": "WMNHBK4HNYBSDJ9U",
+            "input": "https://www.flipkart.com/godrej-9-kg/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U",
+            "amazon": {
+              "platform": "Amazon",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "flipkart": {
+              "platform": "Flipkart",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "error",
+              "error": "html_read_failed",
+              "httpStatus": 200,
+              "verificationStatus": "temporary_error",
+              "in_stock": null,
+              "availability": null,
+              "source": null,
+              "verificationOutcome": "temporary_error",
+              "latencyMs": 6500
+            },
+            "croma": {
+              "platform": "Croma",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "not_supported"
+            },
+            "bestDeal": {
+              "winner": null,
+              "savings": 0,
+              "status": "no_price"
+            },
+            "cached": false,
+            "itemLatencyMs": 6500
+          }
+        ]
+      },
+      "bodySHA256": "febbd6a99b3ae891759b31880d0a53ba644018940d360f01dfc299c172fddb8c",
+      "htmlTitle": null,
+      "cloudflareError": null,
+      "expectedID": "WMNHBK4HNYBSDJ9U",
+      "actualID": "WMNHBK4HNYBSDJ9U",
+      "summary": {
+        "platform": "Flipkart",
+        "url": null,
+        "title": null,
+        "price": null,
+        "priceNum": null,
+        "inStock": null,
+        "status": "error",
+        "error": "html_read_failed",
+        "httpStatus": 200,
+        "verificationStatus": "temporary_error",
+        "in_stock": null,
+        "availability": null,
+        "source": null,
+        "verificationOutcome": "temporary_error",
+        "latencyMs": 6500
+      },
+      "identityMatches": true
+    }
+  ],
+  "priceRequestCount": 2,
+  "authPass": true,
+  "status": "PASS"
+}
+

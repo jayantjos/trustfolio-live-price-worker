@@ -1,0 +1,93 @@
+{
+  "status": "PASS",
+  "createdAtUTC": "20261103T052423Z",
+  "backupPath": "/home/***/trustfolio-cutover-backups/20261103T052423Z-41583713914",
+  "productionConfigChanges": 0,
+  "productionDatabaseWrites": 0,
+  "restarts": 0,
+  "activeConfiguredWorkerURL": "https://spring-shape-2759.1shailendrasoni1.workers.dev",
+  "configuredWorkerKeyPresent": false,
+  "keyReference": "not resolved",
+  "pm2": [
+    {
+      "name": "trustfolio-backend",
+      "pid": 130603,
+      "status": "online",
+      "restartCount": 12
+    },
+    {
+      "name": "trustfolio-web",
+      "pid": 175946,
+      "status": "online",
+      "restartCount": 7
+    },
+    {
+      "name": "trustfolio-admin",
+      "pid": 33509,
+      "status": "online",
+      "restartCount": 2
+    },
+    {
+      "name": "trustfolio-price-watcher",
+      "pid": 80454,
+      "status": "online",
+      "restartCount": 0
+    }
+  ],
+  "backendCwdMatches": true,
+  "backendSourceSHA256": {
+    "services/LivePriceService.js": "03d5c3c8ac73f7df281162bdaea467fef4f94859427938db1fbde65fef637f0d",
+    "services/ProductAvailabilityPolicy.js": "a814eb2a9f78289c66bb6cf9f9d9e4fff60769384147fa361f8ccd53b4150673",
+    "services/CromaLivePriceDirect.js": "4be6c32c90c28757f1cb3ad2ea399274387088612f214d579c8de7e154f18c71",
+    "services/LiveBudgetRecommendationService.js": "136ece5770aec60f3f712abc43983d0a5c5d56ce4065e8fcb1dd603474222184",
+    "services/ProductRecommendationService.js": "cadaae48fe765d2535449508bba75811ffc1df172eb01f3f9b07d30ff527d6e9",
+    "controllers/ProductController.js": "4d927892c950ba50e59d1fa53bf7110ea95c96018d63953b3ff3107ee5526562"
+  },
+  "revision": "27f2127477cecc939294afc199e3ae33c4519eb2",
+  "dotenvStartupLines": [
+    {
+      "line": 1,
+      "code": "require('dotenv').config();"
+    }
+  ],
+  "workerCallerTimeoutMS": 6000,
+  "frontendSourceSHA256": "36d74bdbfe88a2221c1929897caba75df4bddb8e260cd5a6ab5829be61410521",
+  "frontendDefaultTimeoutMS": 8000,
+  "frontendTimeoutOverrides": [],
+  "mongoPing": "PASS",
+  "oldWorkerAuthControls": [
+    {
+      "label": "missing",
+      "http": 403,
+      "latencyMS": 362,
+      "ray": "a548f3d35ae699f2-MRS",
+      "jsonResponse": false,
+      "hasResultsArray": false,
+      "bodySHA256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+      "retailerItems": 0
+    },
+    {
+      "label": "configured_previous_key",
+      "http": 403,
+      "latencyMS": 322,
+      "ray": "a548f3d56c99be8a-MRS",
+      "jsonResponse": false,
+      "hasResultsArray": false,
+      "bodySHA256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+      "retailerItems": 0
+    }
+  ],
+  "backup": {
+    "files": 119,
+    "archiveSHA256": "0805617812b132f1ad6d624d02e12ea3233b680afed5ac7728d5111120b81357",
+    "bytes": 203050,
+    "mode": "0o600",
+    "restoreToPrivateDirectory": "PASS",
+    "liveRestorePerformed": false,
+    "pm2Captured": true,
+    "nginxFiles": 3,
+    "envFileCaptured": true
+  },
+  "sameBackendPidAndRestartCount": true
+}
+

@@ -1,0 +1,67 @@
+{
+  "environment": "GitHub runner direct to permanent Worker; no backend/Mongo writes",
+  "productionChanges": 0,
+  "requests": [
+    {
+      "test": "health",
+      "timestampUTC": "2026-11-03T05:24:53.840099+00:00",
+      "http": 403,
+      "latencyMS": 68,
+      "ray": "a548f48cd815f700-IAD",
+      "requestID": "5c7852fe-2537-4e88-8275-e3815a0392f3",
+      "application": null,
+      "platform1042": false
+    },
+    {
+      "test": "missing_key",
+      "timestampUTC": "2026-11-03T05:24:53.908199+00:00",
+      "http": 403,
+      "latencyMS": 29,
+      "ray": "a548f48d0cfcb163-IAD",
+      "requestID": "d576f36a-bdd8-4b3c-b238-751954d8a9c8",
+      "application": null,
+      "platform1042": false
+    },
+    {
+      "test": "wrong_key",
+      "timestampUTC": "2026-11-03T05:24:53.937176+00:00",
+      "http": 403,
+      "latencyMS": 28,
+      "ray": "a548f48d2e5ad694-IAD",
+      "requestID": "87f1e25e-c10a-4466-aec1-7243bce30105",
+      "application": null,
+      "platform1042": false
+    },
+    {
+      "test": "amazon_price",
+      "timestampUTC": "2026-11-03T05:24:53.965541+00:00",
+      "http": 403,
+      "latencyMS": 33,
+      "ray": "a548f48d6e09d65d-IAD",
+      "requestID": "ff6ea251-a390-423b-b2d1-0dfc9d19a903",
+      "application": null,
+      "platform1042": false,
+      "expectedIdentifier": "B0D41L64NR",
+      "actualIdentifier": null,
+      "summary": {
+        "status": null,
+        "priceNum": null,
+        "price": null,
+        "inStock": null,
+        "in_stock": null,
+        "verificationStatus": null,
+        "extractionSource": null,
+        "url": null,
+        "title": null,
+        "error": null
+      },
+      "identityMatches": false
+    }
+  ],
+  "retailerRequests": 1,
+  "stoppedEarly": true,
+  "authPass": false,
+  "healthPass": false,
+  "platform1042Observed": false
+}
+

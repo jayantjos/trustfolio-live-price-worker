@@ -1,0 +1,18 @@
+{
+  "at": "2026-11-03T05:26:40.297Z",
+  "client": "native Node fetch unchanged",
+  "url": "https://spring-shape-2759.1shailendrasoni1.workers.dev",
+  "http": 400,
+  "latencyMS": 420,
+  "ray": "a548f7254e65ae2d-MRS",
+  "contentType": "application/json",
+  "cfMitigated": null,
+  "jsonResponse": true,
+  "hasResultsArray": false,
+  "htmlTitle": null,
+  "bodySHA256": "2fa05ac8df0601cec1bcba2111b7dfc8e9c03af432ceb525d178b92e0b475d17",
+  "credentialPresent": false,
+  "retailerItems": 0,
+  "productionChanges": 0
+}
+

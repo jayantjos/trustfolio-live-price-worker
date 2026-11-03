@@ -1,0 +1,14 @@
+{
+  "finalStatus": "NOT SWITCHED — SAFETY GATE BLOCKED",
+  "workerAuthentication": "PASS",
+  "amazonQuote": "PASS_WORKER_EXTRACTION_ONLY",
+  "flipkartQuote": "FAIL_FRESH_SUCCESS_GATE_TEMPORARY_ERROR_NULL_PRICE",
+  "frontendDeadline": "FAIL",
+  "nativeTop5": "BLOCKED",
+  "productionNewKeyProvisioning": "NOT_PERFORMED_WHILE_GATE_BLOCKED",
+  "backupRestoreToPrivateDirectory": "PASS",
+  "oldWorkerApplicationReachability": "PASS_HTTP400_ZERO_ITEMS",
+  "oldWorkerPriceRollbackVerification": "UNVERIFIED",
+  "productionChanged": false
+}
+

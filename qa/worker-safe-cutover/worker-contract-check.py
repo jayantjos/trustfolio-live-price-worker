@@ -1,0 +1,38 @@
+"""Bounded genuine Worker canaries; no Mongo/VPS credentials or writes."""
+import datetime,json,os,time,urllib.request,urllib.error,uuid
+from pathlib import Path
+BASE='https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev'
+KEY=os.environ['TF_PRICE_WORKER_KEY'];assert KEY
+report={'environment':'GitHub runner direct to permanent Worker; no backend/Mongo writes','productionChanges':0,'requests':[],'retailerRequests':0}
+def request(label,path,payload=None,key=None):
+ headers={'content-type':'application/json','x-request-id':str(uuid.uuid4())}
+ if key:headers['x-api-key']=key
+ start=time.monotonic();now=datetime.datetime.now(datetime.timezone.utc).isoformat()
+ try:
+  req=urllib.request.Request(BASE+path,data=json.dumps(payload).encode() if payload is not None else None,headers=headers)
+  try:res=urllib.request.urlopen(req,timeout=12)
+  except urllib.error.HTTPError as e:res=e
+  text=res.read(200000).decode('utf-8','replace')
+  try:body=json.loads(text)
+  except ValueError:body=None
+  row={'test':label,'timestampUTC':now,'http':res.code,'latencyMS':round((time.monotonic()-start)*1000),'ray':res.headers.get('CF-Ray'),'requestID':headers['x-request-id'],'application':body,'platform1042':'error code: 1042' in text.lower() or 'error 1042' in text.lower()}
+ except Exception as e:row={'test':label,'timestampUTC':now,'errorClass':type(e).__name__,'latencyMS':round((time.monotonic()-start)*1000)}
+ report['requests'].append(row);return row
+h=request('health','/health')
+empty={'items':[],'useCache':False,'browserProbe':False}
+request('missing_key','/api/check',empty)
+request('wrong_key','/api/check',empty,'deliberately-wrong-public-test-value')
+cases=[('amazon_price','B0D41L64NR','amazon','B0D41L64NR'),('flipkart_price','https://www.flipkart.com/godrej-9-kg/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U','flipkart','WMNHBK4HNYBSDJ9U'),('historical_oos','https://www.flipkart.com/crompton-100-l-desert-air-cooler/p/itmfdwa95yeshx4x?pid=AICGETHFNCZCX7PA','flipkart','AICGETHFNCZCX7PA'),('historical_unverified','https://www.flipkart.com/acer-chromebook-intel-celeron-dual-core-n4500-8-gb-128-gb-emmc-storage-chrome-os-cb314-3h-c5qe-cb314-3h-c0bz/p/itm04458b376eefa?pid=COMGSV3GZYUDG6NP','flipkart','COMGSV3GZYUDG6NP')]
+for label,item,platform,expected in cases:
+ row=request(label,'/api/check',{'items':[item],'useCache':False,'browserProbe':False},KEY);report['retailerRequests']+=1
+ b=row.get('application') or {};r=(b.get('results') or [{}])[0];s=r.get(platform) or {}
+ row['expectedIdentifier']=expected;row['actualIdentifier']=r.get('asin') if platform=='amazon' else r.get('pid')
+ row['summary']={k:s.get(k) for k in ['status','priceNum','price','inStock','in_stock','verificationStatus','extractionSource','url','title','error']}
+ row['identityMatches']=row['actualIdentifier']==expected
+ if row.get('http') in [401,403] or row.get('platform1042') or 'errorClass' in row:
+  report['stoppedEarly']=True;break
+report['authPass']=all(next(x for x in report['requests'] if x['test']==t).get('http')==401 for t in ['missing_key','wrong_key']) and any(x['test']=='amazon_price' and x.get('http')==200 and x.get('identityMatches') for x in report['requests'])
+report['healthPass']=h.get('http')==200 and (h.get('application') or {}).get('worker')=='trustfolio-live-price-worker'
+report['platform1042Observed']=any(x.get('platform1042') for x in report['requests'])
+Path('worker-contract-results.json').write_text(json.dumps(report,indent=2)+'\n')
+print('WORKER_CONTRACT_METADATA='+json.dumps(report))

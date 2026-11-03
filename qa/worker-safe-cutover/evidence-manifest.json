@@ -1,0 +1,54 @@
+{
+  "CUTOVER_EXECUTION_RESULT.md": {
+    "sha256": "7db9acb0158d76c6eb1e865569a1c9135861a2662d6034e19a59944ca4cd8d5f",
+    "bytes": 2835
+  },
+  "PRE_CUTOVER_BACKUP_REPORT.md": {
+    "sha256": "8e690ec21449213fd93e03eb103c1513c57e7822e652cc20572a661c83f690ca",
+    "bytes": 2558
+  },
+  "PRODUCTION_PRICE_ACCEPTANCE.md": {
+    "sha256": "543473b3ca32e617ec455009d400718b0c05339e8f52f8e898a93df602bb6094",
+    "bytes": 2227
+  },
+  "ROLLBACK_VERIFICATION.md": {
+    "sha256": "b25bebe39c90c854cd2f3fdbf28b46f286df937a3434de30a4f9fe613abef01c",
+    "bytes": 6347
+  },
+  "WORKER_CONTRACT_CHECK.md": {
+    "sha256": "052cd17c296b7319996a201c8618906cd4ec3efe8aabcfccc1a7468d9f14ba2c",
+    "bytes": 4716
+  },
+  "acceptance-summary.json": {
+    "sha256": "3ccd3f9f751f4dfd776564831728ac96ae788a4387c22c55a0e56d42b59ffd27",
+    "bytes": 537
+  },
+  "node-contract-check.cjs": {
+    "sha256": "9bb7597e3c7c8692a7b61e3d3ca231e411756feccd450f9970df7a770fd2bd96",
+    "bytes": 3221
+  },
+  "old-worker-native-node-results.json": {
+    "sha256": "3b27370173ef41f4b12e52546a97751af88902cbb96d74909f86da2c0d17d658",
+    "bytes": 513
+  },
+  "precutover-backup-results.json": {
+    "sha256": "347bb0746920ee79c70083e38b9ac10b1704e6a79baff36f66d799870fe34f2d",
+    "bytes": 2989
+  },
+  "precutover-backup.py": {
+    "sha256": "cd52817262bec8c48af81ba81f74b438d1d3d6408d289854fa55f3ad2ea710ec",
+    "bytes": 9184
+  },
+  "worker-contract-check.py": {
+    "sha256": "56317b099c76ebbcff4086433966b815148c4ff8176bac9e13c0a597d7cdf542",
+    "bytes": 3521
+  },
+  "worker-node-results.raw.json": {
+    "sha256": "c51227df994897f5170441f93520cb97b45cfce0c1533683ec691d4a1538b58e",
+    "bytes": 9327
+  },
+  "worker-python-results.raw.json": {
+    "sha256": "752b5185814b6811652ee3e6d3289663c40e4cd2042bff89a0d35997bbd3074b",
+    "bytes": 1822
+  }
+}
