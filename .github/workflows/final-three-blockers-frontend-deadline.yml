@@ -1,0 +1,109 @@
+name: Current frontend abort deadline isolated contract reproduction
+on:
+  push:
+    branches: [final-three-blockers-20261103]
+    paths: ['.github/workflows/final-three-blockers-frontend-deadline.yml']
+permissions:
+  contents: read
+jobs:
+  deadline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Actual frontend wrapper with two simulated local origin delays only
+        run: |
+          npm install --no-audit --no-fund --ignore-scripts typescript@5
+          cat > frontend-wrapper.ts.txt <<'TS'
+          function isAbortError(error: unknown) {
+            return error instanceof Error && error.name === 'AbortError';
+          }
+          
+          /**
+           * Generic fetch wrapper with error handling
+           */
+          async function fetchAPI<T>(
+            endpoint: string,
+            options?: RequestInit
+          ): Promise<ApiResponse<T>> {
+            const bases = getApiBaseCandidates();
+            const errors: string[] = [];
+          
+            for (const base of bases) {
+              const url = `${base}${endpoint}`;
+              const controller = new AbortController();
+              const cleanupFns: Array<() => void> = [];
+              const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+              cleanupFns.push(() => clearTimeout(timeoutId));
+          
+              if (options?.signal) {
+                const handleAbort = () => controller.abort();
+          
+                if (options.signal.aborted) {
+                  controller.abort();
+                } else {
+                  options.signal.addEventListener('abort', handleAbort, { once: true });
+                  cleanupFns.push(() => options.signal?.removeEventListener('abort', handleAbort));
+                }
+              }
+          
+              try {
+                const response = await fetch(url, {
+                  ...options,
+                  signal: controller.signal,
+                  headers: {
+                    'Content-Type': 'application/json',
+                    ...options?.headers,
+                  },
+                });
+          
+                let data: ApiResponse<T>;
+                try {
+                  data = await response.json();
+                } catch {
+                  data = { success: false, message: `HTTP ${response.status}`, data: null as T };
+                }
+          
+                if (!response.ok) {
+                  const msg = typeof data?.message === 'string' ? data.message : `HTTP error! status: ${response.status}`;
+                  throw new Error(msg);
+                }
+          
+                return data;
+              } catch (error) {
+                const message = error instanceof Error ? error.message : 'Unknown error';
+                errors.push(`${base}: ${message}`);
+                const isNetworkError = message === 'Failed to fetch' || (error instanceof TypeError && message.includes('fetch'));
+                const isAbort = isAbortError(error);
+                if (isAbort) {
+                  errors.push(`${base}: timed out after ${Math.round(API_TIMEOUT_MS / 1000)}s`);
+                }
+                // try next base
+              } finally {
+                // cleanup timeouts/listeners
+                // @ts-ignore
+                cleanupFns.forEach((cleanup) => cleanup());
+              }
+            }
+          
+            throw new Error(`All API bases failed: ${errors.join(' | ')}`);
+          }
+          TS
+          cat > frontend-deadline-test.cjs <<'JS'
+          const fs=require('fs'),http=require('http'),ts=require('typescript');
+          const source=fs.readFileSync('frontend-wrapper.ts.txt','utf8');
+          const compiled=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
+          (async()=>{const active=new Set();const server=http.createServer((req,res)=>{const timer=setTimeout(()=>{res.setHeader('content-type','application/json');res.end(JSON.stringify({success:true,data:{kind:'SIMULATED_DELAYED_ORIGIN'}}));},9000);active.add(timer);res.on('close',()=>{clearTimeout(timer);active.delete(timer);});});server.listen(0,'127.0.0.1');await new Promise(r=>server.on('listening',r));const endpoint='http://127.0.0.1:'+server.address().port;const out=[];
+          try{for(const timeout of [8000,20000]){const create=new Function('getApiBaseCandidates','API_TIMEOUT_MS',compiled+';return fetchAPI;');const fetchAPI=create(()=>[endpoint],timeout);const t=Date.now();let response,error;try{response=await fetchAPI('/simulated-late-response');}catch(e){error=e.message;}out.push({kind:'actual frontend wrapper; SIMULATED local HTTP origin; no retailer/DB/proxy traffic',callerTimeoutMs:timeout,originDelayMs:9000,latencyMs:Date.now()-t,success:!!response?.success,error:error||null});}
+          const report={status:!out[0].success&&out[1].success?'PASS':'FAIL',results:out,productionChanges:0,scope:'Failure reproduction and one hypothetical staging-only outer deadline; not native acceptance'};fs.writeFileSync('frontend-deadline-results.json',JSON.stringify(report,null,2));console.log('FRONTEND_DEADLINE_RESULTS='+JSON.stringify(report));}
+          finally{for(const t of active)clearTimeout(t);server.closeAllConnections();await new Promise(r=>server.close(r));}})();
+          JS
+          node frontend-deadline-test.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frontend-current-deadline-contract
+          path: frontend-deadline-results.json
+          retention-days: 30
