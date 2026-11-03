@@ -1,0 +1,56 @@
+name: Final allowlist quote-only encrypted credential handoff
+on:
+  push:
+    branches: [final-three-blockers-20261103]
+    paths: ['.github/workflows/final-three-blockers-quote-key.yml']
+permissions:
+  contents: read
+jobs:
+  envelope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Encrypt matching credential without retailer requests or plaintext output
+        env:
+          TF_KEY: ${{ secrets.TF_PRICE_WORKER_KEY }}
+        run: |
+          cat > staging-cert.pem <<'CERT'
+          -----BEGIN CERTIFICATE-----
+          MIIELzCCApegAwIBAgIUdN6ps3kKZ4t1xeNMp7AbTQqHPuAwDQYJKoZIhvcNAQEL
+          BQAwJzElMCMGA1UEAwwcVHJ1c3RGb2xpb0ZpbmFsSXNvbGF0ZWRTdGFnZTAeFw0y
+          NjExMDMwNDM3MzJaFw0yNjExMDQwNDM3MzJaMCcxJTAjBgNVBAMMHFRydXN0Rm9s
+          aW9GaW5hbElzb2xhdGVkU3RhZ2UwggGiMA0GCSqGSIb3DQEBAQUAA4IBjwAwggGK
+          AoIBgQCcsSA5B0dF7YZaIUgXfV6XiBmnCqtvvJVUjnwxit3EukOl4IpOJJiYlpr4
+          S8Scy/ogcVF/UK2vy6S7onqV7GlN/bS24aP1uZZw8cb6Z4p3jxnlN8BnICmtl5/Q
+          jY+o6OkMTLmBUFWoAPhTleKcSRy811TCAslg5FKE7LVYG1noFeF3uZiP7vWEde1b
+          mXimla9MkFnQIDH+cmH9mUERAoudVDzvEZqPb9bj01LkCA5j5wx4Ss8kEHMeQA8f
+          IOK7kKuHW2QUBFFVLhmi92kMiGTAEn01WpIeWDg3BCYIZY1yu2AfZhyVxYYRKEdw
+          8jmpaDJMNL2Nt/X8pApfXshXZ28qAQ8054JtySbn34nr4w2TYQbTyeDQxH9MwPG+
+          sw0/8PNoRZtz2KXjhP39tWto1wEKixEC2cs9U5ruamUB7sF6GOc7yUr1qKskxQSh
+          M7hPmjyoqoQ9d9KV/eHEIRcIUE0JPfJ2ivPXM/9rSQSx1Qzt5YhnYsaI6xv6Y17d
+          ixEUwPUCAwEAAaNTMFEwHQYDVR0OBBYEFD6LXPFULvmsmPVMya7fUAROM5FnMB8G
+          A1UdIwQYMBaAFD6LXPFULvmsmPVMya7fUAROM5FnMA8GA1UdEwEB/wQFMAMBAf8w
+          DQYJKoZIhvcNAQELBQADggGBABxpRbdlVJxZAKnnVhzvi/Vo/pVjqT54qIRwoeln
+          /0MLPhGKutYb2k8L+OgnI0dTYPOIsWjr5527zy1I0OGCaRTIYlmfmTetfvNekjyZ
+          b+fmaLfnHXx4Qm4bCnsIHjTvfk/e3WZy/QDMDhK1VlIoqlACaV66CwWPdh1rTQBA
+          tBBn3aKDEDV3ylrjOQq7NzW4qpwId7DO7YULPaTjolvZNgGi5/i2JhhkWa0gr7Pi
+          7BSMKkLwNFzYHrIXi7GpU5ep1OK4jK6KSyGCeoAspZD7zECm3rPtZQZ88mRlG1zx
+          oik8AvCbQVK4W/guMckAxmk3IyNwKGSsaFd8a9NE6iX0O9BegoHSSIs9pXY/dqEt
+          82o8Gh3sSTHxeA2tE9cIMHSUF+UBdfyASeJ6bAs/5CFe5aFyEw3ppMeBYXcXAsMt
+          TynQehA26J/Ua7Lk161Pr81+ZMtlRja56Kc3IhchpQSkkfRRy+nsOkb9czqk4Coo
+          KQ+/tgAfQ4HAvqBWzGDFNkBhnQ==
+          -----END CERTIFICATE-----
+          CERT
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          assert os.getenv('TF_KEY')
+          Path('quote-key.txt').write_text(os.environ['TF_KEY'])
+          PY
+          openssl cms -encrypt -binary -aes256 -in quote-key.txt -outform DER -out quote-key.enc staging-cert.pem
+          python3 - <<'PY'
+          import base64,json
+          from pathlib import Path
+          Path('quote-key.txt').unlink()
+          print('WORKER_KEY_ENVELOPE='+json.dumps({'ciphertext':base64.b64encode(Path('quote-key.enc').read_bytes()).decode(),'kind':'CMS encrypted quote-only key'}))
+          PY
