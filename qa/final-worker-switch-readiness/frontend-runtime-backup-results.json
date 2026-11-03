@@ -1,0 +1,30 @@
+{
+  "at": "2026-11-03T06:22:14.220651+00:00",
+  "status": "PASS",
+  "backendBackupUnchanged": true,
+  "productionChanges": 0,
+  "restarts": 0,
+  "runtimeFileCount": 464,
+  "uncompressedBytes": 8365598,
+  "freeBytesBefore": 41158766592,
+  "sourceHash": "36d74bdbfe88a2221c1929897caba75df4bddb8e260cd5a6ab5829be61410521",
+  "buildIdHash": "aca59b8541bab211db4b703962afc700a89ef81e628b3157755bd5682a58669d",
+  "symlinkCount": 1,
+  "runtimeLinks": [
+    {
+      "path": ".next/standalone/node_modules",
+      "name": "node_modules",
+      "underFrontendRoot": true,
+      "isDirectory": true
+    }
+  ],
+  "backupPath": "/home/***/trustfolio-cutover-backups/20261103T052423Z-41583713914/frontend-timeout-preparation",
+  "archiveHash": "b70bef21639df14897b7ff291c6dcf5c3d581715ebaa4dc176e4843e88a463a4",
+  "archiveBytes": 2855374,
+  "archiveMode": "0600",
+  "privateRestore": "PASS",
+  "liveFilesUnchanged": true,
+  "webPIDUnchanged": true,
+  "nodeModulesPreservedNotDuplicated": true,
+  "liveActivationTested": false
+}

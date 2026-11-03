@@ -1,0 +1,285 @@
+--- a/controllers/ProductController.js
++++ b/controllers/ProductController.js
+@@ -1,3 +1,4 @@
++const Deadline=require('../services/LivePriceDeadline');
+ const mongoose = require('mongoose');
+ const MyProduct = require('../entities/MyProduct');
+ const Product = require('../entities/Product');
+@@ -595,6 +596,14 @@
+ }
+ 
+ async function getTopProducts(req, res) {
++  const controller=new AbortController();
++  const stop=()=>controller.abort(new DOMException('Client disconnected','AbortError'));
++  const close=()=>{if(!res.writableEnded)stop();};
++  req.once('aborted',stop); res.once('close',close);
++  try { return await Deadline.run(()=>getTopProductsInner(req,res),{signal:controller.signal}); }
++  finally {req.removeListener('aborted',stop);res.removeListener('close',close);}
++}
++async function getTopProductsInner(req, res) {
+   try {
+     const category = req.query.category;
+     const budget = parseFloat(req.query.budget);
+@@ -635,7 +644,7 @@
+ }
+ 
+ if (brand) {
+-  const brandValid = await BrandService.isValidBrandForCategory(normalizedCategory, brand);
++  const brandValid = await Deadline.wait(BrandService.isValidBrandForCategory(normalizedCategory, brand));
+   if (!brandValid) {
+     return res.status(400).json(
+       apiResponse(false, 'Brand is not available for this category. Select a brand from the list.')
+@@ -643,7 +652,7 @@
+   }
+ }
+ 
+-    const [recommendation] = await Promise.all([
++    const [recommendation] = await Deadline.wait(Promise.all([
+   LiveBudgetRecommendationService.getTopProductsForCategoryAndBudget(
+     normalizedCategory,
+     budget,
+@@ -653,9 +662,9 @@
+     console.warn('[Products] Price bounds lookup skipped:', error.message || error);
+     return { min: null, max: null, count: 0 };
+   }),
+-]);
+-
+-const catalogPriceRange = await getLivePriceBoundsForCategory(normalizedCategory);
++]));
++
++const catalogPriceRange = await Deadline.wait(getLivePriceBoundsForCategory(normalizedCategory));
+ const budgetCap = Math.floor(Number(budget));
+ let topProducts = recommendation.products || [];
+ topProducts = topProducts
+@@ -774,9 +783,12 @@
+       response
+     );
+ 
++    Deadline.check();
+     topProductsResponseCache.set(topCacheKey, { at: Date.now(), value: responseBody });
+     return res.json(responseBody);
+   } catch (e) {
++    if (res.destroyed || res.writableEnded) return;
++    if (Deadline.current()?.signal.aborted) return res.status(504).json(apiResponse(false, 'Live price request deadline exceeded; no stale recommendation returned'));
+     res.status(400).json(apiResponse(false, `Failed to retrieve top products: ${e.message}`));
+   }
+ }
+--- a/services/LiveBudgetRecommendationService.js
++++ b/services/LiveBudgetRecommendationService.js
+@@ -1,3 +1,4 @@
++const Deadline=require('./LivePriceDeadline');
+ 'use strict';
+ 
+ /**
+@@ -30,14 +31,15 @@
+   let waveCount = 0;
+ 
+   for (let wave = 0; wave < MAX_WAVES && qualified.length < limit; wave++) {
+-    if(Date.now()-started>8000) break; // Do not admit another 8000 ms fetch wave after 8000 ms elapsed.
++    Deadline.check();
++    if(Deadline.remaining() < Deadline.WORKER_MS + Deadline.WRITE_RESERVE_MS) break;
+     waveCount++;
+-    const rec = await ranker.getTopProductsForCategoryAndBudget(category, budgetCap, {
++    const rec = await Deadline.wait(ranker.getTopProductsForCategoryAndBudget(category, budgetCap, {
+       ...opts,
+       livePriceCandidates: true,
+       limit,
+       excludeProductIds: [...inspected],
+-    });
++    }));
+     if (!initial) initial = rec;
+     latest = rec;
+     const batch = (rec.products || []).filter((p) => {
+--- a/services/LivePriceService.js
++++ b/services/LivePriceService.js
+@@ -1,3 +1,4 @@
++const Deadline = require('./LivePriceDeadline');
+ /**
+  * Live store prices for my_products listings, fetched through the Cloudflare price Worker
+  * (worker-trustfolio-fetch-cloudflare). Amazon by ASIN, Flipkart by product link; Croma has no live price.
+@@ -26,7 +27,7 @@
+     method: 'POST',
+     headers,
+     body: JSON.stringify({ items: [item], useCache: false, browserProbe: false }),
+-    signal: AbortSignal.timeout(WORKER_TIMEOUT_MS),
++    signal: Deadline.workerSignal(),
+   });
+   if (!res.ok) return { status: 'error', error: `worker http ${res.status}` };
+ 
+@@ -70,6 +71,10 @@
+  * from Mongo; the rest are fetched from the Worker in parallel and saved under `live`.
+  */
+ async function getLivePrices(ids) {
++  return Deadline.run(() => getLivePricesInner(ids));
++}
++async function getLivePricesInner(ids) {
++  Deadline.check();
+   const objectIds = [...new Set((Array.isArray(ids) ? ids : []).map(String))]
+     .filter((id) => mongoose.Types.ObjectId.isValid(id))
+     .slice(0, MAX_IDS)
+@@ -82,6 +87,7 @@
+     .find(
+       { _id: { $in: objectIds } },
+       {
++        ...Deadline.options(),
+         projection: {
+           platform: 1, asin: 1, url: 1, clean_url: 1, product_url: 1, productUrl: 1, original_product_url: 1,
+           platform_product_id: 1, title: 1, brand: 1, category: 1, model: 1, model_number: 1, specifications: 1, price_inr: 1, live: 1,
+@@ -99,25 +105,31 @@
+ 
+   const fetched = await Promise.all(
+     due.map(async (d) => {
+-      const key = String(d._id);
++      const key = `${Deadline.current().id}:${d._id}`;
+       if (!inflight.has(key)) {
+         const job = (canFetchCroma(d) ? fetchCromaDirect(d).then(r => ({...r, verificationStatus:r.status==='ok'?'ok':null, extractionSource:'croma_vps_exact_sku_buy', retailer_product_id:String(d.platform_product_id), retailer_url:d.original_product_url||d.clean_url||d.product_url||d.url||null})) : fetchLive(workerItem(d), d))
+           .catch((e) => ({ status: 'error', error: e.message }));
+         inflight.set(key, job.finally(() => inflight.delete(key)));
+       }
+-      d.live = toLive(await inflight.get(key), d.live || {});
++      d.live = toLive(await Deadline.wait(inflight.get(key)), d.live || {});
+       return d;
+     })
+   );
+ 
++  Deadline.check();
++  let deletedIds;
++  const session = await mongoose.startSession();
++  try {
++  await session.withTransaction(async () => {
++  Deadline.check();
+   // Out of stock listings are removed from my_products. Only a confirmed out_of_stock result counts;
+   // blocks, timeouts and errors never delete. A copy goes to my_products_deleted so a delete can be undone.
+   // Bound irreversible per-request removals. Archive precedes delete, and
+   // transient 502/503/timeout/WAF failures NEVER count as unavailable.
+   const outOfStock = fetched.filter((d) => isConfirmedUnavailable(d.live)).slice(0, 5);
+-  const deletedIds = new Set(outOfStock.map((d) => String(d._id)));
++  deletedIds = new Set(outOfStock.map((d) => String(d._id)));
+   if (outOfStock.length) {
+-    const full = await col.find({ _id: { $in: outOfStock.map((d) => d._id) } }).toArray();
++    const full = await col.find({ _id: { $in: outOfStock.map((d) => d._id) } }, Deadline.options({session})).toArray();
+     const deletedAt = new Date();
+     if (full.length) {
+       await mongoose.connection.collection('my_products_deleted').bulkWrite(
+@@ -134,14 +146,16 @@
+             upsert: true,
+           },
+         })),
+-        { ordered: false }
++        Deadline.options({ordered:false,session})
+       );
+-      await col.deleteMany({ _id: { $in: full.map((doc) => doc._id) } });
++      Deadline.check();
++      await col.deleteMany({ _id: { $in: full.map((doc) => doc._id) } }, Deadline.options({session}));
+     }
+   }
+ 
+   const kept = fetched.filter((d) => !deletedIds.has(String(d._id)));
+   if (kept.length) {
++    Deadline.check();
+     await col.bulkWrite(
+       kept.map((d) => {
+         const fields = { live: d.live };
+@@ -155,18 +169,27 @@
+         }
+         return { updateOne: { filter: { _id: d._id }, update: { $set: fields } } };
+       }),
+-      { ordered: false }
++      Deadline.options({ordered:false,session})
+     );
+   }
+ 
+   if (fetched.length) {
+     const changedCategories=[...new Set(fetched.filter(d=>deletedIds.has(String(d._id)) || d.live.status==='ok').map(d=>d.category).filter(Boolean))];
+-    await Promise.all(changedCategories.map(slug=>require('./CategoryService').updateCategoryPriceRange(slug)));
+-
++    for (const slug of changedCategories) {
++      Deadline.check();
++      await require('./CategoryService').updateCategoryPriceRange(slug, Deadline.options({session}));
++    }
++
++  }
++  Deadline.check();
++  }, {timeoutMS:Deadline.remaining(),maxCommitTimeMS:Math.min(1000,Deadline.remaining())});
++  } finally { await session.endSession(); }
++  if (fetched.length) {
+     // Clear in-process cache immediately after actual live-price writes.
+     require('../controllers/ProductController').invalidatePriceCaches();
+   }
+ 
++  Deadline.check();
+   return docs.map((d) => ({
+     id: String(d._id),
+     platform: d.platform || null,
+--- a/services/CategoryService.js
++++ b/services/CategoryService.js
+@@ -240,8 +240,8 @@
+   return category.save();
+ }
+ 
+-async function updateCategoryPriceRange(categorySlug) {
+-  const category = await Category.findOne({ slug: categorySlug });
++async function updateCategoryPriceRange(categorySlug, requestOptions = {}) {
++  const category = await Category.findOne({ slug: categorySlug }).setOptions(requestOptions);
+   if (!category) return null;
+ 
+   const slug = String(categorySlug || '').trim();
+@@ -271,6 +271,7 @@
+         price_inr: 1,
+       }
+     )
++      .setOptions(requestOptions)
+       .sort({ scrapedAt: -1 })
+       .lean(),
+     slug
+@@ -308,7 +309,7 @@
+     category.max_price = null;
+     category.price_ranges = [];
+     category.updated_at = formatDate();
+-    return category.save();
++    return category.save(requestOptions);
+   }
+ 
+   const minPrice = Math.min(...prices);
+@@ -326,7 +327,7 @@
+     },
+   ];
+   category.updated_at = now;
+-  return category.save();
++  return category.save(requestOptions);
+ }
+ 
+ async function updateAllCategoryPriceRanges() {
+--- /dev/null
++++ b/services/LivePriceDeadline.js
+@@ -0,0 +1,30 @@
++'use strict';
++const {AsyncLocalStorage}=require('node:async_hooks');
++const {randomUUID}=require('node:crypto');
++const storage=new AsyncLocalStorage();
++const BACKEND_MS=18500,WORKER_MS=7500,WRITE_RESERVE_MS=1500;
++function current(){return storage.getStore();}
++function check(){const c=current();if(c){if(Date.now()>=c.endsAt&&!c.signal.aborted)c.controller.abort(new DOMException('Live price request deadline exceeded','TimeoutError'));c.signal.throwIfAborted();}}
++function remaining(){check();return current()?Math.max(1,current().endsAt-Date.now()):BACKEND_MS;}
++function options(extra={}){
++ check();
++ if(!current())return extra;
++ // withTransaction owns the aggregate CSOT; driver forbids per-operation overrides there.
++ return {...extra,signal:current().signal,...(extra.session?.inTransaction()?{}:{timeoutMS:remaining()})};
++}
++async function wait(promise){
++ const c=current();if(!c)return promise;
++ check();let abort;
++ const stopped=new Promise((_,reject)=>{abort=()=>reject(c.signal.reason);c.signal.addEventListener('abort',abort,{once:true});});
++ try{return await Promise.race([promise,stopped]);}finally{c.signal.removeEventListener('abort',abort);}
++}
++function workerSignal(){check();const s=AbortSignal.timeout(Math.min(WORKER_MS,Math.max(1,remaining()-WRITE_RESERVE_MS)));return current()?AbortSignal.any([s,current().signal]):s;}
++async function run(fn,{timeoutMS=BACKEND_MS,signal}={}){
++ if(current())return fn();
++ const controller=new AbortController(),c={id:randomUUID(),controller,signal:controller.signal,endsAt:Date.now()+timeoutMS};
++ const stop=()=>controller.abort(signal.reason||new DOMException('Client disconnected','AbortError'));
++ if(signal){if(signal.aborted)stop();else signal.addEventListener('abort',stop,{once:true});}
++ const timer=setTimeout(()=>controller.abort(new DOMException('Live price request deadline exceeded','TimeoutError')),timeoutMS);
++ try{return await storage.run(c,fn);}finally{clearTimeout(timer);signal?.removeEventListener('abort',stop);}
++}
++module.exports={current,check,remaining,options,wait,workerSignal,run,BACKEND_MS,WORKER_MS,WRITE_RESERVE_MS};

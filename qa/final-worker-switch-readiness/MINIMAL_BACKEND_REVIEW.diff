@@ -1,0 +1,501 @@
+--- a/controllers/ProductController.js
++++ b/controllers/ProductController.js
+@@ -1,3 +1,4 @@
++const Deadline=require('../services/LivePriceDeadline');
+ const mongoose = require('mongoose');
+ const MyProduct = require('../entities/MyProduct');
+ const Product = require('../entities/Product');
+@@ -595,6 +596,14 @@
+ }
+ 
+ async function getTopProducts(req, res) {
++  const controller=new AbortController();
++  const stop=()=>controller.abort(new DOMException('Client disconnected','AbortError'));
++  const close=()=>{if(!res.writableEnded)stop();};
++  req.once('aborted',stop); res.once('close',close);
++  try { return await Deadline.run(()=>getTopProductsInner(req,res),{signal:controller.signal}); }
++  finally {req.removeListener('aborted',stop);res.removeListener('close',close);}
++}
++async function getTopProductsInner(req, res) {
+   try {
+     const category = req.query.category;
+     const budget = parseFloat(req.query.budget);
+@@ -635,7 +644,7 @@
+ }
+ 
+ if (brand) {
+-  const brandValid = await BrandService.isValidBrandForCategory(normalizedCategory, brand);
++  const brandValid = await Deadline.wait(BrandService.isValidBrandForCategory(normalizedCategory, brand));
+   if (!brandValid) {
+     return res.status(400).json(
+       apiResponse(false, 'Brand is not available for this category. Select a brand from the list.')
+@@ -643,7 +652,7 @@
+   }
+ }
+ 
+-    const [recommendation, catalogPriceRange] = await Promise.all([
++    const [recommendation] = await Deadline.wait(Promise.all([
+   LiveBudgetRecommendationService.getTopProductsForCategoryAndBudget(
+     normalizedCategory,
+     budget,
+@@ -653,8 +662,9 @@
+     console.warn('[Products] Price bounds lookup skipped:', error.message || error);
+     return { min: null, max: null, count: 0 };
+   }),
+-]);
+-
++]));
++
++const catalogPriceRange = await Deadline.wait(getLivePriceBoundsForCategory(normalizedCategory));
+ const budgetCap = Math.floor(Number(budget));
+ let topProducts = recommendation.products || [];
+ topProducts = topProducts
+@@ -773,9 +783,12 @@
+       response
+     );
+ 
++    Deadline.check();
+     topProductsResponseCache.set(topCacheKey, { at: Date.now(), value: responseBody });
+     return res.json(responseBody);
+   } catch (e) {
++    if (res.destroyed || res.writableEnded) return;
++    if (Deadline.current()?.signal.aborted) return res.status(504).json(apiResponse(false, 'Live price request deadline exceeded; no stale recommendation returned'));
+     res.status(400).json(apiResponse(false, `Failed to retrieve top products: ${e.message}`));
+   }
+ }
+--- /dev/null
++++ b/services/CatalogIdentityGuard.js
+@@ -0,0 +1,40 @@
++function catalogVariantConflicts(sample,product) {
++  const norm=s=>String(s||'').toLowerCase().replace(/\b(\d{1,2})\s+(\d)\s+(ton|kg|inch)\b/g,(_,a,b,u)=>a+'.'+b+' '+u);
++  const expected=norm(sample.title),actual=norm(product.name),conflicts=[];
++  const check=(field,re)=>{const a=re.exec(expected)?.[1],b=re.exec(actual)?.[1];if(a&&b&&Number(a)!==Number(b))conflicts.push({field,catalog:a,retailer:b});};
++  const category=sample.category;
++  if(['air-conditioners','refrigerators','washing-machines'].includes(category))check('star_rating',/\b(\d)\s*star\b/);
++  if(category==='air-conditioners')check('ton_capacity',/\b(\d+(?:\.\d+)?)\s*tons?\b/);
++  if(['air-coolers','geysers','refrigerators','microwave-ovens','water-purifiers'].includes(category))check('litre_capacity',/\b(\d+(?:\.\d+)?)\s*(?:l|litres?|liters?)\b/);
++  if(category==='washing-machines')check('kg_capacity',/\b(\d+(?:\.\d+)?)\s*kg\b/);
++  if(category==='ceiling-fans')check('blade_sweep_mm',/\b(\d{3,4})\s*mm\b/);
++  if(['smart-tvs','tablets','laptops','desktop-computers'].includes(category))check('display_inches',/\b(\d+(?:\.\d+)?)\s*(?:inches|inch|")/);
++  const storage=s=>[...s.matchAll(/\b(64|128|256|512|1024|2048)\s*gb\b/g)].map(m=>Number(m[1]));
++  const a=storage(expected),b=storage(actual);
++  if(a.length&&b.length&&Math.max(...a)!==Math.max(...b))
++    conflicts.push({field:'storage_gb',catalog:Math.max(...a),retailer:Math.max(...b)});
++  check('ram_gb',/\b(\d+)\s*gb\s*(?:ram\b|ddr\d*\b)/);
++  const cpu=s=>/\b(ryzen|ath[oa]lon|celeron|pentium)\b/.exec(s)?.[1];
++  if(cpu(expected)&&cpu(actual)&&cpu(expected)!==cpu(actual))
++    conflicts.push({field:'processor_family',catalog:cpu(expected),retailer:cpu(actual)});
++  if(category==='induction-cooktops')check('power_watts',/\b(\d+)\s*w(?:atts?)?\b/);
++  if(category==='tablets'&&/\b[45]g\b/.test(expected)&&/\bwi[ -]?fi only\b/.test(actual))
++    conflicts.push({field:'connectivity',catalog:'cellular',retailer:'wi-fi only'});
++  const palette=['black','white','blue','green','red','maroon','silver','grey','gray','pink','purple','violet','yellow','orange','brown','gold'];
++  const color=s=>palette.find(c=>new RegExp('\\b'+c+'\\b').test(s))?.replace('gray','grey');
++  if(color(expected)&&color(actual)&&color(expected)!==color(actual))
++    conflicts.push({field:'color',catalog:color(expected),retailer:color(actual)});
++  // An explicit trailing tablet color can be a named finish (not a basic
++  // palette word). Compare it only with the primary Product's color field.
++  if(category==='tablets'&&product.color) {
++    const finish=/\btablet\s*\(?\s*([a-z]+(?:\s+[a-z]+){0,2})\)?$/.exec(expected)?.[1];
++    const normColor=s=>String(s).replace(/[^a-z]/g,'');
++    if(finish&&!/\b(with|only|wifi|wi|fi|gaming|rom|ram|lte)\b/.test(finish)&&normColor(finish)!==normColor(norm(product.color)))
++      conflicts.push({field:'named_color',catalog:finish,retailer:product.color});
++  }
++  return conflicts;
++}
++
++
++module.exports={catalogVariantConflicts};
++
+--- a/services/LiveBudgetRecommendationService.js
++++ b/services/LiveBudgetRecommendationService.js
+@@ -1,3 +1,4 @@
++const Deadline=require('./LivePriceDeadline');
+ 'use strict';
+ 
+ /**
+@@ -21,6 +22,7 @@
+     throw new Error('Invalid budget for live price ranking');
+   }
+ 
++  const started=Date.now();
+   const inspected = new Set();
+   const qualified = [];
+   let initial = null;
+@@ -29,12 +31,14 @@
+   let waveCount = 0;
+ 
+   for (let wave = 0; wave < MAX_WAVES && qualified.length < limit; wave++) {
++    Deadline.check();
++    if(Deadline.remaining() < Deadline.WORKER_MS + Deadline.WRITE_RESERVE_MS) break;
+     waveCount++;
+-    const rec = await ranker.getTopProductsForCategoryAndBudget(category, budgetCap, {
++    const rec = await Deadline.wait(ranker.getTopProductsForCategoryAndBudget(category, budgetCap, {
+       ...opts,
+       limit,
+       excludeProductIds: [...inspected],
+-    });
++    }));
+     if (!initial) initial = rec;
+     latest = rec;
+     const batch = (rec.products || []).filter((p) => {
+@@ -63,15 +67,17 @@
+       const live = row.live || null;
+       if (row.deleted || live?.status === 'out_of_stock') continue;
+ 
+-      let displayPrice = candidate.price_inr;
+-      let priceSource = 'website_catalog';
+-      if (live?.status === 'ok') {
+-        displayPrice = Number(live.price_inr);
+-        priceSource = 'website_live_price_api';
+-      }
++      if (!row.supported || live?.status!=='ok' || live.verification_status!=='ok' || live.in_stock===false || !live.priced_at || Date.now()-new Date(live.priced_at).getTime()>60000) continue;
++      const displayPrice=live.price_inr;
++      const priceSource='website_live_price_api';
+       if (!goodPrice(displayPrice, budgetCap)) continue;
+       qualified.push({
+         ...candidate,
++        in_stock:live.in_stock,
++        inStock:live.in_stock,
++        availability_status:live.in_stock===true?'In Stock':null,
++        product_url:live.retailer_url||candidate.product_url,
++        verified_retailer_id:live.retailer_product_id,
+         price_inr: Number(displayPrice),
+         price_source: priceSource,
+         live_price_status: live?.status || null,
+@@ -103,6 +109,7 @@
+ 
+   return {
+     ...original,
++    priceWindow:{min:0,max:budgetCap},
+     products,
+     matchType,
+     fallbackApplied,
+--- /dev/null
++++ b/services/LivePriceIdentity.js
+@@ -0,0 +1,47 @@
++'use strict';
++const {catalogVariantConflicts}=require('./CatalogIdentityGuard');
++const asin=x=>/^[A-Z0-9]{10}$/.test(x),pid=x=>/^[A-Z]{3}[A-Z0-9]{13}$/.test(x)&&!/^ITM/i.test(x);
++// Read-only approvals from exact primary retailer SKU evidence in qa/final-live-price-integration/.
++// Never infer a SKU from an itm page identifier. Unknown pages remain unsupported.
++const approvedPages={
++ itm85c805abf4849:{pid:'WMNHBK4HNYBSDJ9U',brand:'godrej',capacity:9},
++ itm1ad6a5136676c:{pid:'WMNG4WGVXYSRYHJZ',brand:'motorola',capacity:7},
++ itm5b001b74dc1cc:{pid:'WMNHHUCY5FWTHBAN',brand:'haier',capacity:8},
++ itm0381052d06f11:{pid:'WMNGYGJKCVNKSZWY',brand:'samsung',capacity:7},
++ itmd2a376187074e:{pid:'COMHCYMG83BGNQHH',brand:'lenovo'}
++};
++function workerItem(doc){
++ const platform=String(doc.platform||'').toLowerCase(),id=String(doc.platform_product_id||doc.asin||'').toUpperCase();
++ const urls=[doc.original_product_url,doc.clean_url,doc.product_url,doc.url,doc.productUrl].filter(Boolean);
++ if(platform==='amazon'){
++  const fromUrls=urls.flatMap(s=>{try{const u=new URL(s);if(!/^(www\.)?amazon\.in$/.test(u.hostname))return[];const m=u.pathname.match(/\/(?:dp|gp\/product)\/([A-Z0-9]{10})(?:\/|$)/i);return m?[m[1].toUpperCase()]:[];}catch{return[];}});
++  const ids=[...(asin(id)?[id]:[]),...fromUrls];return ids.length&&new Set(ids).size===1?ids[0]:null;
++ }
++ if(platform==='flipkart')for(const s of urls){try{
++  const u=new URL(s);if(u.protocol!=='https:'||!/^(www\.)?flipkart\.com$/.test(u.hostname)||!u.pathname.includes('/p/itm'))continue;
++  const p=String(u.searchParams.get('pid')||'').toUpperCase();
++  const approved=approvedPages[u.pathname.match(/\/p\/(itm[a-z0-9]+)/i)?.[1]?.toLowerCase()];
++  if(approved && (p && p!==approved.pid || pid(id)&&id!==approved.pid))return null;
++  const approvedForCatalog=approved && String(doc.brand||'').toLowerCase()===approved.brand
++    && (!approved.capacity || Number(/\b(\d+(?:\.\d+)?)\s*kg\b/i.exec(doc.title||'')?.[1])===approved.capacity);
++  if(p&&(!pid(p)||(pid(id)&&id!==p)))return null;
++  const exact=p||(pid(id)?id:null)||(approvedForCatalog?approved.pid:null);if(exact){u.search='';u.hash='';u.searchParams.set('pid',exact);return u.href;}
++ }catch{}}
++ return null;
++}
++function validateWorkerQuote(doc,item,r){
++ const amazon=String(doc.platform).toLowerCase()==='amazon',expected=amazon?item:new URL(item).searchParams.get('pid');
++ const actual=amazon?r.asin:r.pid,s=amazon?r.amazon:r.flipkart;
++ const reject=error=>({status:'error',error,in_stock:null});
++ if(!expected||actual!==expected||!s)return reject('identity_mismatch');
++ try{const u=new URL(s.url);if(amazon){if(!/^(www\.)?amazon\.in$/.test(u.hostname)||!u.pathname.includes('/'+expected))return reject('retailer_url_mismatch');}else if(!/^(www\.)?flipkart\.com$/.test(u.hostname)||u.searchParams.get('pid')!==expected)return reject('retailer_url_mismatch');}catch{return reject('retailer_url_missing');}
++ if(!s.title)return reject('catalog_identity_unverified');
++ const n=x=>String(x||'').toLowerCase().replace(/[^a-z0-9]/g,'');
++ if(doc.brand&&!n(s.title).includes(n(doc.brand)))return reject('catalog_brand_mismatch');
++ const conflicts=catalogVariantConflicts(doc,{name:s.title});
++ const model=doc.model_number||doc.model||doc.specifications?.['Model Number'];
++ if(model&&!n(s.title).includes(n(model)))conflicts.push({field:'model'});
++ if(conflicts.length)return reject('catalog_variant_mismatch');
++ return {...s,retailer_product_id:actual,retailer_url:s.url};
++}
++module.exports={workerItem,validateWorkerQuote};
+--- a/services/LivePriceService.js
++++ b/services/LivePriceService.js
+@@ -1,3 +1,4 @@
++const Deadline = require('./LivePriceDeadline');
+ /**
+  * Live store prices for my_products listings, fetched through the Cloudflare price Worker
+  * (worker-trustfolio-fetch-cloudflare). Amazon by ASIN, Flipkart by product link; Croma has no live price.
+@@ -5,49 +6,28 @@
+ const mongoose = require('mongoose');
+ const { canFetchCroma, fetchCromaDirect } = require('./CromaLivePriceDirect');
+ const { classify, toAvailabilityState, isConfirmedUnavailable } = require('./ProductAvailabilityPolicy');
++const { workerItem, validateWorkerQuote } = require('./LivePriceIdentity');
+ 
+ const WORKER_URL = (process.env.PRICE_WORKER_URL || '').replace(/\/+$/, '');
+ const WORKER_KEY = process.env.PRICE_WORKER_KEY || '';
+ const FRESH_MS = parseInt(process.env.LIVE_PRICE_FRESH_MS || '60000', 10); // a listing is fetched at most once per window
+-const WORKER_TIMEOUT_MS = 6000;
++const WORKER_TIMEOUT_MS = 8000; // 6500 ms upstream + 1500 ms response/parsing margin
+ const MAX_IDS = 30;
+ 
+ /** listing id -> pending fetch, shared by concurrent page views */
+ const inflight = new Map();
+ 
+ /** What the Worker should fetch for a listing; null = no live price (Croma, missing link). */
+-function workerItem(doc) {
+-  const platform = String(doc.platform || '').toLowerCase();
+-  const url = String(doc.original_product_url || doc.clean_url || doc.url || doc.productUrl || '');
+-  const id = String(doc.platform_product_id || doc.asin || '');
+-
+-  if (platform.includes('amazon')) {
+-    if (/^B0[A-Z0-9]{8}$/i.test(id)) return id.toUpperCase();
+-    const m = url.match(/\/(?:dp|gp\/product)\/(B0[A-Z0-9]{8})/i);
+-    return m ? m[1].toUpperCase() : null;
+-  }
+-
+-  if (platform.includes('flipkart')) {
+-    if (!/flipkart\.com\/.+\/p\/itm/i.test(url)) return null;
+-    // One itm page covers several variants; the pid picks the exact one.
+-    if (!/[?&]pid=/i.test(url) && /^[A-Z]{3}[A-Z0-9]{13}$/.test(id) && !id.startsWith('ITM')) {
+-      return url + (url.includes('?') ? '&' : '?') + 'pid=' + id;
+-    }
+-    return url;
+-  }
+-
+-  return null;
+-}
+-
+-async function fetchLive(item) {
++
++async function fetchLive(item, doc) {
+   const headers = { 'content-type': 'application/json' };
+   if (WORKER_KEY) headers['x-api-key'] = WORKER_KEY;
+ 
+   const res = await fetch(`${WORKER_URL}/api/check`, {
+     method: 'POST',
+     headers,
+-    body: JSON.stringify({ items: [item], useCache: true }),
+-    signal: AbortSignal.timeout(WORKER_TIMEOUT_MS),
++    body: JSON.stringify({ items: [item], useCache: false, browserProbe: false }),
++    signal: Deadline.workerSignal(),
+   });
+   if (!res.ok) return { status: 'error', error: `worker http ${res.status}` };
+ 
+@@ -55,26 +35,31 @@
+   const r = body && Array.isArray(body.results) ? body.results[0] : null;
+   if (!r) return { status: 'error', error: 'empty worker response' };
+   if (r.error) return { status: 'error', error: r.error };
+-  return (r.asin ? r.amazon : r.flipkart) || { status: 'error', error: 'no store result' };
++  return validateWorkerQuote(doc, item, r);
+ }
+ 
+ function toLive(result, prev = {}) {
++  if(result.status==='ok' && (!Number.isFinite(result.priceNum) || result.priceNum<=0 || result.verificationStatus!=='ok' || result.in_stock===false || result.inStock===false)) result={status:'error',error:'invalid_accepted_quote',in_stock:null};
+   const availabilityKind = classify(result);
+   // Do not show a fresh LIVE badge for a product whose listing explicitly says unavailable.
+   const liveStatus = availabilityKind === 'permanent' ? 'out_of_stock'
+     : availabilityKind === 'ambiguous' ? 'not_available'
+     : availabilityKind === 'transient' && result.status === 'ok' ? 'error' : result.status;
+-  const priced = (liveStatus === 'ok' || liveStatus === 'out_of_stock') && result.priceNum > 0;
++  const priced = liveStatus === 'ok' && Number.isFinite(result.priceNum) && result.priceNum > 0;
+   const availabilityState = toAvailabilityState(result, prev);
+   return {
+     ...availabilityState,
+     status: liveStatus,
+     checked_at: new Date(),
++    verification_status:result.verificationStatus||null,
++    extraction_source:result.extractionSource||null,
++    retailer_product_id:result.retailer_product_id||null,
++    retailer_url:result.retailer_url||result.url||null,
+     // On blocks and timeouts keep the last good price so the page still shows one.
+     price_inr: priced ? result.priceNum : prev.price_inr ?? null,
+     priced_at: priced ? new Date() : prev.priced_at ?? null,
+     in_stock: Object.prototype.hasOwnProperty.call(result, 'in_stock')
+-      ? result.in_stock : liveStatus === 'ok',
++      ? (typeof result.in_stock==='boolean'?result.in_stock:null) : (typeof result.inStock==='boolean'?result.inStock:null),
+     availability: result.availability ?? null,
+     error: result.error ? String(result.error).slice(0, 180) : null,
+     http_status: Number(result.http_status ?? result.httpStatus ?? result.statusCode) || null,
+@@ -86,6 +71,10 @@
+  * from Mongo; the rest are fetched from the Worker in parallel and saved under `live`.
+  */
+ async function getLivePrices(ids) {
++  return Deadline.run(() => getLivePricesInner(ids));
++}
++async function getLivePricesInner(ids) {
++  Deadline.check();
+   const objectIds = [...new Set((Array.isArray(ids) ? ids : []).map(String))]
+     .filter((id) => mongoose.Types.ObjectId.isValid(id))
+     .slice(0, MAX_IDS)
+@@ -98,9 +87,10 @@
+     .find(
+       { _id: { $in: objectIds } },
+       {
++        ...Deadline.options(),
+         projection: {
+-          platform: 1, asin: 1, url: 1, clean_url: 1, productUrl: 1, original_product_url: 1,
+-          platform_product_id: 1, title: 1, brand: 1, category: 1, price_inr: 1, live: 1,
++          platform: 1, asin: 1, url: 1, clean_url: 1, product_url: 1, productUrl: 1, original_product_url: 1,
++          platform_product_id: 1, title: 1, brand: 1, category: 1, model: 1, model_number: 1, specifications: 1, price_inr: 1, live: 1,
+         },
+       }
+     )
+@@ -115,25 +105,31 @@
+ 
+   const fetched = await Promise.all(
+     due.map(async (d) => {
+-      const key = String(d._id);
++      const key = `${Deadline.current().id}:${d._id}`;
+       if (!inflight.has(key)) {
+-        const job = (canFetchCroma(d) ? fetchCromaDirect(d) : fetchLive(workerItem(d)))
++        const job = (canFetchCroma(d) ? fetchCromaDirect(d).then(r => ({...r, verificationStatus:r.status==='ok'?'ok':null, extractionSource:'croma_vps_exact_sku_buy', retailer_product_id:String(d.platform_product_id), retailer_url:d.original_product_url||d.clean_url||d.product_url||d.url||null})) : fetchLive(workerItem(d), d))
+           .catch((e) => ({ status: 'error', error: e.message }));
+         inflight.set(key, job.finally(() => inflight.delete(key)));
+       }
+-      d.live = toLive(await inflight.get(key), d.live || {});
++      d.live = toLive(await Deadline.wait(inflight.get(key)), d.live || {});
+       return d;
+     })
+   );
+ 
++  Deadline.check();
++  let deletedIds;
++  const session = await mongoose.startSession();
++  try {
++  await session.withTransaction(async () => {
++  Deadline.check();
+   // Out of stock listings are removed from my_products. Only a confirmed out_of_stock result counts;
+   // blocks, timeouts and errors never delete. A copy goes to my_products_deleted so a delete can be undone.
+   // Bound irreversible per-request removals. Archive precedes delete, and
+   // transient 502/503/timeout/WAF failures NEVER count as unavailable.
+   const outOfStock = fetched.filter((d) => isConfirmedUnavailable(d.live)).slice(0, 5);
+-  const deletedIds = new Set(outOfStock.map((d) => String(d._id)));
++  deletedIds = new Set(outOfStock.map((d) => String(d._id)));
+   if (outOfStock.length) {
+-    const full = await col.find({ _id: { $in: outOfStock.map((d) => d._id) } }).toArray();
++    const full = await col.find({ _id: { $in: outOfStock.map((d) => d._id) } }, Deadline.options({session})).toArray();
+     const deletedAt = new Date();
+     if (full.length) {
+       await mongoose.connection.collection('my_products_deleted').bulkWrite(
+@@ -150,14 +146,16 @@
+             upsert: true,
+           },
+         })),
+-        { ordered: false }
++        Deadline.options({ordered:false,session})
+       );
+-      await col.deleteMany({ _id: { $in: full.map((doc) => doc._id) } });
++      Deadline.check();
++      await col.deleteMany({ _id: { $in: full.map((doc) => doc._id) } }, Deadline.options({session}));
+     }
+   }
+ 
+   const kept = fetched.filter((d) => !deletedIds.has(String(d._id)));
+   if (kept.length) {
++    Deadline.check();
+     await col.bulkWrite(
+       kept.map((d) => {
+         const fields = { live: d.live };
+@@ -171,15 +169,27 @@
+         }
+         return { updateOne: { filter: { _id: d._id }, update: { $set: fields } } };
+       }),
+-      { ordered: false }
++      Deadline.options({ordered:false,session})
+     );
+   }
+ 
++  if (fetched.length) {
++    const changedCategories=[...new Set(fetched.filter(d=>deletedIds.has(String(d._id)) || d.live.status==='ok').map(d=>d.category).filter(Boolean))];
++    for (const slug of changedCategories) {
++      Deadline.check();
++      await require('./CategoryService').updateCategoryPriceRange(slug, Deadline.options({session}));
++    }
++
++  }
++  Deadline.check();
++  }, {timeoutMS:Deadline.remaining(),maxCommitTimeMS:Math.min(1000,Deadline.remaining())});
++  } finally { await session.endSession(); }
+   if (fetched.length) {
+     // Clear in-process cache immediately after actual live-price writes.
+     require('../controllers/ProductController').invalidatePriceCaches();
+   }
+ 
++  Deadline.check();
+   return docs.map((d) => ({
+     id: String(d._id),
+     platform: d.platform || null,
+--- a/services/CategoryService.js
++++ b/services/CategoryService.js
+@@ -240,8 +240,8 @@
+   return category.save();
+ }
+ 
+-async function updateCategoryPriceRange(categorySlug) {
+-  const category = await Category.findOne({ slug: categorySlug });
++async function updateCategoryPriceRange(categorySlug, requestOptions = {}) {
++  const category = await Category.findOne({ slug: categorySlug }).setOptions(requestOptions);
+   if (!category) return null;
+ 
+   const slug = String(categorySlug || '').trim();
+@@ -271,6 +271,7 @@
+         price_inr: 1,
+       }
+     )
++      .setOptions(requestOptions)
+       .sort({ scrapedAt: -1 })
+       .lean(),
+     slug
+@@ -308,7 +309,7 @@
+     category.max_price = null;
+     category.price_ranges = [];
+     category.updated_at = formatDate();
+-    return category.save();
++    return category.save(requestOptions);
+   }
+ 
+   const minPrice = Math.min(...prices);
+@@ -326,7 +327,7 @@
+     },
+   ];
+   category.updated_at = now;
+-  return category.save();
++  return category.save(requestOptions);
+ }
+ 
+ async function updateAllCategoryPriceRanges() {
+--- /dev/null
++++ b/services/LivePriceDeadline.js
+@@ -0,0 +1,30 @@
++'use strict';
++const {AsyncLocalStorage}=require('node:async_hooks');
++const {randomUUID}=require('node:crypto');
++const storage=new AsyncLocalStorage();
++const BACKEND_MS=18500,WORKER_MS=7500,WRITE_RESERVE_MS=1500;
++function current(){return storage.getStore();}
++function check(){const c=current();if(c){if(Date.now()>=c.endsAt&&!c.signal.aborted)c.controller.abort(new DOMException('Live price request deadline exceeded','TimeoutError'));c.signal.throwIfAborted();}}
++function remaining(){check();return current()?Math.max(1,current().endsAt-Date.now()):BACKEND_MS;}
++function options(extra={}){
++ check();
++ if(!current())return extra;
++ // withTransaction owns the aggregate CSOT; driver forbids per-operation overrides there.
++ return {...extra,signal:current().signal,...(extra.session?.inTransaction()?{}:{timeoutMS:remaining()})};
++}
++async function wait(promise){
++ const c=current();if(!c)return promise;
++ check();let abort;
++ const stopped=new Promise((_,reject)=>{abort=()=>reject(c.signal.reason);c.signal.addEventListener('abort',abort,{once:true});});
++ try{return await Promise.race([promise,stopped]);}finally{c.signal.removeEventListener('abort',abort);}
++}
++function workerSignal(){check();const s=AbortSignal.timeout(Math.min(WORKER_MS,Math.max(1,remaining()-WRITE_RESERVE_MS)));return current()?AbortSignal.any([s,current().signal]):s;}
++async function run(fn,{timeoutMS=BACKEND_MS,signal}={}){
++ if(current())return fn();
++ const controller=new AbortController(),c={id:randomUUID(),controller,signal:controller.signal,endsAt:Date.now()+timeoutMS};
++ const stop=()=>controller.abort(signal.reason||new DOMException('Client disconnected','AbortError'));
++ if(signal){if(signal.aborted)stop();else signal.addEventListener('abort',stop,{once:true});}
++ const timer=setTimeout(()=>controller.abort(new DOMException('Live price request deadline exceeded','TimeoutError')),timeoutMS);
++ try{return await storage.run(c,fn);}finally{clearTimeout(timer);signal?.removeEventListener('abort',stop);}
++}
++module.exports={current,check,remaining,options,wait,workerSignal,run,BACKEND_MS,WORKER_MS,WRITE_RESERVE_MS};

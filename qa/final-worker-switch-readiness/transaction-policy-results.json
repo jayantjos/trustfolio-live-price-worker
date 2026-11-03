@@ -1,0 +1,79 @@
+{
+  "status": "PASS",
+  "productionWrites": 0,
+  "quotes": [],
+  "checks": [
+    {
+      "name": "archive_before_delete_and_five_item_cap",
+      "status": "PASS"
+    },
+    {
+      "name": "exact_deleted_ids_are_archived",
+      "status": "PASS"
+    },
+    {
+      "name": "transactional_category_bounds",
+      "status": "PASS"
+    },
+    {
+      "name": "deadline_rolls_back_archive_and_prevents_delete",
+      "status": "PASS"
+    },
+    {
+      "name": "expired_archive_transaction_leaves_no_archive",
+      "status": "PASS"
+    }
+  ],
+  "controls": [
+    {
+      "name": "archive_cap",
+      "evidence": "SIMULATED OOS for six disposable catalog copies; real actual-service transaction",
+      "latencyMS": 139,
+      "commands": [
+        "archive-before",
+        "archive-complete",
+        "delete",
+        "delete"
+      ],
+      "ids": [
+        "69f419329a622ea2d7ccb736",
+        "6a080110fe6fd8dc386bbee3",
+        "6a1011ac0f397d1e1344d8d1",
+        "6a1013380f397d1e1344dd59",
+        "6a2c08a19665e4a0b177b34b",
+        "6ae97a0b341c559f0f61fdc8"
+      ]
+    },
+    {
+      "name": "expiry_after_archive_before_delete",
+      "evidence": "SIMULATED OOS; deliberate 250ms archive-return delay inside real Mongo transaction",
+      "latencyWithObservationMS": 558,
+      "commands": [
+        "archive-before",
+        "archive-complete"
+      ],
+      "aborted": true
+    }
+  ],
+  "failures": [],
+  "patchSHA256": "d8a3fc58800f1adb1682a6cd50d4c064bc5171029448f8443c2c76d6e90c6016",
+  "candidateHashes": {
+    "controllers/ProductController.js": "838aea3940432617f73f5eeb1f56a85a4e07816bbe2b5e34e678d23dd957f03b",
+    "services/CatalogIdentityGuard.js": "1864d439a61929774502f0b955a6af26664711e29d67306b981d287402c13dbc",
+    "services/LiveBudgetRecommendationService.js": "7642396495c658cf8a6eb09a88fe275c62ac34ffd692c50d506fbfc1b9da5c73",
+    "services/LivePriceIdentity.js": "9d4a0383effc73d58f68ea67f62357c979398cd2f47dfa506f47d332d14cef1f",
+    "services/LivePriceService.js": "d7183c0c3e2cb2cdf76235d958ab8681fd826c0dfd5aa8c0499c200126b77cc7",
+    "services/ProductRecommendationService.js": "0d589d1d6ad37a709ae61e1355e7c15198ea653db918a7f15b3ef328e0ea27f3",
+    "services/CategoryService.js": "db79624a251b57a7c9044e74212af734b4245fccc598760517c57c4fa9d24645",
+    "services/LivePriceDeadline.js": "18368da9565b65c25a969488ccd6925e014281436c0488464122bd66e02f1ae7"
+  },
+  "frontendCandidateHash": "96e09dce023edb1bd67cc15ea12a35c7cf32df089a28a9e3e1d0c00703c96822",
+  "categoryAfterDeletion": {
+    "min": 33490,
+    "max": 33490,
+    "expected": 33490
+  },
+  "archiveCount": 0,
+  "scope": "CONTROLLED ONLY: no Worker/retailer requests, actual services and disposable Mongo; transaction archive/deletion/cap/category preservation",
+  "databaseDropped": true
+}

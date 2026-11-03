@@ -1,0 +1,147 @@
+{
+  "status": "FAIL",
+  "productionWrites": 0,
+  "quotes": [
+    {
+      "at": "2026-11-03T05:59:22.214Z",
+      "item": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+      "http": 200,
+      "latencyMS": 1676,
+      "ray": "a5492701da70ed19-MSP",
+      "body": {
+        "success": true,
+        "results": [
+          {
+            "asin": null,
+            "pid": "COMHCYMG83BGNQHH",
+            "input": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+            "amazon": {
+              "platform": "Amazon",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "flipkart": {
+              "platform": "Flipkart",
+              "url": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+              "title": "Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromebook 11IJL9 Chromebook Rs.36502  Price in India - Buy Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromebook 11IJL9 Chromebook Maca Blue Online - Lenovo : Flipkart.com",
+              "price": "₹22,911",
+              "priceNum": 22911,
+              "inStock": true,
+              "in_stock": true,
+              "status": "ok",
+              "verificationStatus": "ok",
+              "verificationOutcome": "selling_price_verified",
+              "availability": null,
+              "error": null,
+              "httpStatus": 200,
+              "extractionSource": "jsonld_product_offer",
+              "bytesRead": "1547 KB",
+              "latencyMs": 1511
+            },
+            "croma": {
+              "platform": "Croma",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "not_supported"
+            },
+            "bestDeal": {
+              "winner": "flipkart",
+              "savings": 0,
+              "status": "ok"
+            },
+            "cached": false,
+            "itemLatencyMs": 1511
+          }
+        ]
+      }
+    },
+    {
+      "at": "2026-11-03T05:59:22.948Z",
+      "item": "B0D41L64NR",
+      "http": 200,
+      "latencyMS": 2397,
+      "ray": "a5492701d9fea20c-MSP",
+      "body": {
+        "success": true,
+        "results": [
+          {
+            "asin": "B0D41L64NR",
+            "pid": "B0D41L64NR",
+            "input": "B0D41L64NR",
+            "amazon": {
+              "platform": "Amazon",
+              "url": "https://www.amazon.in/dp/B0D41L64NR",
+              "title": "Bosch 9 kg 5 Star Front Load Fully-Automatic Washing Machine, AI ActiveWater, 14 Wash Programs, Removes 99.9% Germs with Steam, No Tangle or Wrinkle, SoftCare Paddle,Zero Vibration, White, WGA14200IN : Amazon.in: Home &amp; Kitchen",
+              "price": "₹33,490",
+              "priceNum": 33490,
+              "inStock": true,
+              "in_stock": true,
+              "status": "ok",
+              "verificationStatus": "ok",
+              "verificationOutcome": "selling_price_verified",
+              "availability": null,
+              "error": null,
+              "httpStatus": 200,
+              "extractionSource": "amazon_price_to_pay_parts",
+              "bytesRead": "2139 KB",
+              "latencyMs": 2259
+            },
+            "flipkart": {
+              "platform": "Flipkart",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "croma": {
+              "platform": "Croma",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "not_supported"
+            },
+            "bestDeal": {
+              "winner": "amazon",
+              "savings": 0,
+              "status": "ok"
+            },
+            "cached": false,
+            "itemLatencyMs": 2259
+          }
+        ]
+      }
+    }
+  ],
+  "checks": [],
+  "controls": [],
+  "failures": [],
+  "patchSHA256": "db76c3db341312203528cd08fe355ec1f55092c20e5bf77bd36f0efc1e213e17",
+  "candidateHashes": {
+    "controllers/ProductController.js": "838aea3940432617f73f5eeb1f56a85a4e07816bbe2b5e34e678d23dd957f03b",
+    "services/CatalogIdentityGuard.js": "1864d439a61929774502f0b955a6af26664711e29d67306b981d287402c13dbc",
+    "services/LiveBudgetRecommendationService.js": "7642396495c658cf8a6eb09a88fe275c62ac34ffd692c50d506fbfc1b9da5c73",
+    "services/LivePriceIdentity.js": "9d4a0383effc73d58f68ea67f62357c979398cd2f47dfa506f47d332d14cef1f",
+    "services/LivePriceService.js": "d7183c0c3e2cb2cdf76235d958ab8681fd826c0dfd5aa8c0499c200126b77cc7",
+    "services/ProductRecommendationService.js": "0d589d1d6ad37a709ae61e1355e7c15198ea653db918a7f15b3ef328e0ea27f3",
+    "services/CategoryService.js": "db79624a251b57a7c9044e74212af734b4245fccc598760517c57c4fa9d24645",
+    "services/LivePriceDeadline.js": "8fd7ce03fb13386960ef3cfaa1605a59c1abde37e68b990037674a1c9c04bbcd"
+  },
+  "frontendCandidateHash": "96e09dce023edb1bd67cc15ea12a35c7cf32df089a28a9e3e1d0c00703c96822",
+  "fatal": {
+    "name": "MongoInvalidArgumentError",
+    "message": "An operation cannot be given a timeoutMS setting when inside a withTransaction call that has a timeoutMS setting",
+    "stack": "MongoInvalidArgumentError: An operation cannot be given a timeoutMS setting when inside a withTransaction call that has a timeoutMS setting\n    at resolveOptions (/home/runner/work/trustfolio-daily-ads/trustfolio-daily-ads/node_modules/mongodb/lib/utils.js:468:15)\n    at Collection.bulkWrite (/home/runner/work/trustfolio-daily-ads/trustfolio-daily-ads/node_modules/mongodb/lib/collection.js:208:46)\n    at NativeCollection.<computed> [as bulkWrite] (/home/runner/work/trustfolio-daily-ads/trustfolio-daily-ads/node_modules/mongoose/lib/drivers/node-mongodb-native/collection.js:246:33)\n    at /home/runner/work/trustfolio-daily-ads/trustfolio-daily-ads/backend/services/LivePriceService.js:159:15\n    at ClientSession.withTransaction (/home/runner/work/trustfolio-daily-ads/trustfolio-daily-ads/node_modules/mongodb/lib/sessions.js:499:37)\n    at getLivePricesInner (/home/runner/work/trustfolio-daily-ads/trustfolio-daily-ads/backend/services/LivePriceService.js:123:17)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async Object.run (/home/runner/work/trustfolio-daily-ads/trustfolio-daily-ads/backend/services/LivePriceDeadline.js:23:13)\n    at async main (/home/runner/work/trustfolio-daily-ads/trustfolio-daily-ads/integration-runner.cjs:47:30)\n    at async /home/runner/work/trustfolio-daily-ads/trustfolio-daily-ads/integration-runner.cjs:75:16"
+  },
+  "databaseDropped": true
+}

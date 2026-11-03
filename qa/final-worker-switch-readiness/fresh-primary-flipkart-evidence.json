@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "scope": "fresh independent primary retailer UI; no Worker/browserProbe/screenshot, no model research",
+  "observedAtUTC": "2026-11-03T06:10:31.453Z",
+  "url": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U",
+  "pid": "WMNHBK4HNYBSDJ9U",
+  "primarySellingPrice": 34490,
+  "mrpNotAccepted": 58500,
+  "promotionalOfferNotAccepted": 29240,
+  "separateProtectPromiseFee": 236,
+  "selectedVariant": "Non-WiFi, 9 kg; Glacial White",
+  "primarySeller": "KLPLWORLDRetail",
+  "buyNowVisible": true,
+  "deliveryLocation": "not set",
+  "workerComparison": "both 05:51 UTC Worker quotes also 34490; primary UI refreshed about 19 minutes later; no claim of simultaneous atomic price observation"
+}

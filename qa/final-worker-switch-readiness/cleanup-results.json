@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "removed": [
+    {
+      "run": 41586955374,
+      "artifactId": 13208710766,
+      "removed": true
+    },
+    {
+      "run": 41587272943,
+      "artifactId": 13208960299,
+      "removed": true
+    },
+    {
+      "run": 41587820844,
+      "artifactId": 13209270544,
+      "removed": true
+    },
+    {
+      "run": 41588132854,
+      "artifactId": 13208961480,
+      "removed": true
+    }
+  ],
+  "acceptanceArtifactsPreserved": true,
+  "productionChanges": 0
+}

@@ -1,0 +1,114 @@
+{
+  "BACKEND_CONTRACT_VERIFICATION.md": {
+    "sha256": "33a77e8e6da58f2df785a96979137801609b86f42b24a7e27a8b94e9c3e8b900",
+    "bytes": 3452
+  },
+  "BACKEND_ROLLBACK_COMMANDS.sh": {
+    "sha256": "8154bba2addc9d88dfa7d20f42c8f970d6e5a8ee9de2ef1954fb2326fef8aed0",
+    "bytes": 3877
+  },
+  "DEADLINE_EXTENSION_REVIEW.diff": {
+    "sha256": "fdd1228e502111ecf1b103697d5fecb5b3f7fab515bbfdcb3d155b5108c635f7",
+    "bytes": 12050
+  },
+  "END_TO_END_TIMEOUT_FIX.md": {
+    "sha256": "44bea9a447d4fe89d524edb755a01d01f1176a9120de71365f9666ac94e5e3d8",
+    "bytes": 5991
+  },
+  "FINAL_CUTOVER_PACKAGE.md": {
+    "sha256": "7f3bbe8dbe7fdf7fc8f429244499e14403b071c786b2842ab942a8b1fe2f1006",
+    "bytes": 6403
+  },
+  "FINAL_GO_NO_GO.md": {
+    "sha256": "0e1100b408814991d44a5987c33ef60d14f9c0a92604f6f171684754fdf7e7be",
+    "bytes": 5419
+  },
+  "FLIPKART_TEMPORARY_FAILURE_RETEST.md": {
+    "sha256": "ae26debe4c90db67b1e4257d038c8c5247da523903f4285a66fde4ed457213a5",
+    "bytes": 2555
+  },
+  "FRONTEND_ROLLBACK_COMMANDS.sh": {
+    "sha256": "c94be6b4a20275c62c353a614f2ed233d6381acbdb3f939617ef2626c18fc497",
+    "bytes": 2451
+  },
+  "MINIMAL_BACKEND_REVIEW.diff": {
+    "sha256": "6cce97d9ee39331ee134ebba020b62e2cae4975780d54b64ba6e556a518a9fc9",
+    "bytes": 24575
+  },
+  "OLD_WORKER_ROLLBACK_ACCEPTANCE.md": {
+    "sha256": "61ea2736fc40e513a1990e97f565b8745e8a01e30f60d7a4d05b38be94c96d8f",
+    "bytes": 4045
+  },
+  "STAGING_BACKEND_CANDIDATE.diff": {
+    "sha256": "d8a3fc58800f1adb1682a6cd50d4c064bc5171029448f8443c2c76d6e90c6016",
+    "bytes": 25692
+  },
+  "STAGING_FRONTEND_CANDIDATE.diff": {
+    "sha256": "717b76434b5c40abb89b52033719d74dfa4d4628f2cc786d657bb92a686e4de0",
+    "bytes": 1295
+  },
+  "backup-old-worker-results.json": {
+    "sha256": "b63ecf4a5ad1f1431ff07e56ee30288afc1ae9c4e14d2d8a205c5a5823fc2b6e",
+    "bytes": 3287
+  },
+  "cleanup-results.json": {
+    "sha256": "30b8ad104c6d99d3c1403f44645d1406f77ec7abaddbee19b8eed8198c9c78e8",
+    "bytes": 484
+  },
+  "deadline-acceptance.cjs": {
+    "sha256": "e302777bfee9762c04c49995c6f18ca4c02755813a1618e85f40199979c94ab9",
+    "bytes": 11084
+  },
+  "deadline-genuine-and-controls-results.json": {
+    "sha256": "8eaaf1a52ebb21712a703f1a6694e037388bca5d429cf741fca2775154af2a4a",
+    "bytes": 26503
+  },
+  "deadline-initial-failure-results.json": {
+    "sha256": "9d5265394656e21f68238cec6f96ad424bc45726c4d4fe9c03c3c2ab7d43fb1a",
+    "bytes": 7268
+  },
+  "flipkart-retest-results.json": {
+    "sha256": "4cd1840fe41d4162ca17a15251e1bb1a3d90dad193d62a562d1cfe696117b552",
+    "bytes": 4572
+  },
+  "fresh-primary-flipkart-evidence.json": {
+    "sha256": "06498862530ba8d796bcc6bc0baa676f0ff1b51091e5073cc49c69dc7a42dd13",
+    "bytes": 818
+  },
+  "frontend-runtime-backup-results.json": {
+    "sha256": "a6df4c98e2eefbaf3c302d6b0f24db7ad55055205b8821dfcbb82eb207a6a5b1",
+    "bytes": 1014
+  },
+  "frontend-wrapper.staging.ts": {
+    "sha256": "d88471ccf4f445cabbd1225115b64140b56e1f18cfe62f23e88b8a13c6a769fa",
+    "bytes": 2525
+  },
+  "isolated-rollback-results.json": {
+    "sha256": "e000fdaa5807dabe16b45dddf5c59b53533951ee3d1835c506648930e9ec2484",
+    "bytes": 392
+  },
+  "minimal-patch-source-hashes.json": {
+    "sha256": "d045e5b215fff8cc1e47090abb75df367da24d4278e1a9070c613afd091691db",
+    "bytes": 1373
+  },
+  "minimal-scope-acceptance.cjs": {
+    "sha256": "bd92d80fafa622ec425228265ff78505323ac62c9a0aea8640c5e58872fa3354",
+    "bytes": 11470
+  },
+  "minimal-scope-controls-results.json": {
+    "sha256": "119b5f96a724b20ad06a4746993468129045e0fe75eea15e63f6e1f6fcd5fcaa",
+    "bytes": 20343
+  },
+  "patch-source-hashes.json": {
+    "sha256": "f1b6a3309affa045339ce0ee3fdc0d119ee3fb59005f5336d4d6b27042b9ae01",
+    "bytes": 1604
+  },
+  "transaction-policy-regression.cjs": {
+    "sha256": "5ed6bd977ba9d6c2c5087227a45b6a4ae5285a2e60b46ef55d3fb7682c1b98bf",
+    "bytes": 9622
+  },
+  "transaction-policy-results.json": {
+    "sha256": "28bd8cba99bce99b0173c6f5882681a54592bc00c483042ecbe614562a4ead03",
+    "bytes": 2784
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "scope": "final strict minimal patch applied/restored in scratch; .env/credential simulated",
+  "patchSHA256": "6cce97d9ee39331ee134ebba020b62e2cae4975780d54b64ba6e556a518a9fc9",
+  "existingFilesRestored": 4,
+  "newFixtureFilesRemoved": 3,
+  "environmentRestored": true,
+  "rankerCromaPolicyUnchanged": true,
+  "productionChanges": 0,
+  "pm2ActivationTested": false
+}

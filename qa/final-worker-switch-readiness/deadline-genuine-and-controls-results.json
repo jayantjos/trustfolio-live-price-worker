@@ -1,0 +1,667 @@
+{
+  "status": "PASS",
+  "productionWrites": 0,
+  "quotes": [
+    {
+      "at": "2026-11-03T06:03:41.118Z",
+      "item": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+      "http": 200,
+      "latencyMS": 1010,
+      "ray": "a5492d583c7caf22-DFW",
+      "body": {
+        "success": true,
+        "results": [
+          {
+            "asin": null,
+            "pid": "COMHCYMG83BGNQHH",
+            "input": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+            "amazon": {
+              "platform": "Amazon",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "flipkart": {
+              "platform": "Flipkart",
+              "url": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+              "title": "Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromebook 11IJL9 Chromebook Rs.36502  Price in India - Buy Lenovo Chromebook 11IJL9 Intel Celeron Dual Core N4500 - (4 GB/64 GB EMMC Storage/Chrome OS) Chromebook 11IJL9 Chromebook Maca Blue Online - Lenovo : Flipkart.com",
+              "price": "₹22,911",
+              "priceNum": 22911,
+              "inStock": true,
+              "in_stock": true,
+              "status": "ok",
+              "verificationStatus": "ok",
+              "verificationOutcome": "selling_price_verified",
+              "availability": null,
+              "error": null,
+              "httpStatus": 200,
+              "extractionSource": "jsonld_product_offer",
+              "bytesRead": "1544 KB",
+              "latencyMs": 853
+            },
+            "croma": {
+              "platform": "Croma",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "not_supported"
+            },
+            "bestDeal": {
+              "winner": "flipkart",
+              "savings": 0,
+              "status": "ok"
+            },
+            "cached": false,
+            "itemLatencyMs": 853
+          }
+        ]
+      }
+    },
+    {
+      "at": "2026-11-03T06:03:42.472Z",
+      "item": "B0D41L64NR",
+      "http": 200,
+      "latencyMS": 2362,
+      "ray": "a5492d582b94e7ff-DFW",
+      "body": {
+        "success": true,
+        "results": [
+          {
+            "asin": "B0D41L64NR",
+            "pid": "B0D41L64NR",
+            "input": "B0D41L64NR",
+            "amazon": {
+              "platform": "Amazon",
+              "url": "https://www.amazon.in/dp/B0D41L64NR",
+              "title": "Bosch 9 kg 5 Star Front Load Fully-Automatic Washing Machine, AI ActiveWater, 14 Wash Programs, Removes 99.9% Germs with Steam, No Tangle or Wrinkle, SoftCare Paddle,Zero Vibration, White, WGA14200IN : Amazon.in: Home &amp; Kitchen",
+              "price": "₹33,490",
+              "priceNum": 33490,
+              "inStock": true,
+              "in_stock": true,
+              "status": "ok",
+              "verificationStatus": "ok",
+              "verificationOutcome": "selling_price_verified",
+              "availability": null,
+              "error": null,
+              "httpStatus": 200,
+              "extractionSource": "amazon_price_to_pay_parts",
+              "bytesRead": "2319 KB",
+              "latencyMs": 2212
+            },
+            "flipkart": {
+              "platform": "Flipkart",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "skipped"
+            },
+            "croma": {
+              "platform": "Croma",
+              "url": null,
+              "title": null,
+              "price": null,
+              "priceNum": null,
+              "inStock": null,
+              "status": "not_supported"
+            },
+            "bestDeal": {
+              "winner": "amazon",
+              "savings": 0,
+              "status": "ok"
+            },
+            "cached": false,
+            "itemLatencyMs": 2212
+          }
+        ]
+      }
+    }
+  ],
+  "checks": [
+    {
+      "name": "controlled_fast_five_within_client_deadline",
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_slow_five_within_client_deadline",
+      "status": "PASS"
+    },
+    {
+      "name": "failed_quotes_do_not_return_stale_prices_or_delete",
+      "status": "PASS"
+    },
+    {
+      "name": "failed_quote_preserves_canonical_prices",
+      "status": "PASS"
+    },
+    {
+      "name": "late_quote_cannot_mutate_after_timeout",
+      "status": "PASS"
+    },
+    {
+      "name": "expiry_during_mutation_rolls_back_transaction",
+      "status": "PASS"
+    },
+    {
+      "name": "zero_archive_and_no_false_deletion",
+      "status": "PASS"
+    },
+    {
+      "name": "no_archives",
+      "status": "PASS"
+    },
+    {
+      "name": "actual_transactional_service_genuine_quote_persistence",
+      "status": "PASS"
+    }
+  ],
+  "controls": [
+    {
+      "name": "fast",
+      "evidence": "SIMULATED retailer quotes; actual ranker/controller/frontend wrapper/transactional MongoDB",
+      "elapsedMS": 196,
+      "count": 5,
+      "products": [
+        {
+          "id": "69f419329a622ea2d7ccb736",
+          "asin": "69f419329a622ea2d7ccb736",
+          "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+          "description": null,
+          "is_active": true,
+          "brand": "Godrej",
+          "price_inr": 20000,
+          "original_price_inr": null,
+          "price_usd": "$415.54",
+          "average_rating": "4.2",
+          "main_image": "https://rukminim2.flixcart.com/image/300/300/xif0q/washing-machine-new/t/r/k/-original-imahmjqskyzfjeys.jpeg?q=90",
+          "images": [
+            "https://rukminim2.flixcart.com/image/300/300/xif0q/washing-machine-new/t/r/k/-original-imahmjqskyzfjeys.jpeg?q=90"
+          ],
+          "product_category": "washing-machines",
+          "feature_bullets": null,
+          "product_information": {
+            "Capacity": "9 kg",
+            "Automation Type": "Fully Automatic",
+            "Load Type": "Front Load",
+            "Wash Features": "In-built Heater"
+          },
+          "product_details": null,
+          "platform": "flipkart",
+          "product_url": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U",
+          "availability_status": null,
+          "in_stock": null,
+          "specifications": {
+            "Capacity": "9 kg",
+            "Automation Type": "Fully Automatic",
+            "Load Type": "Front Load",
+            "Wash Features": "In-built Heater"
+          },
+          "rank": 1,
+          "inStock": null,
+          "verified_retailer_id": "WMNHBK4HNYBSDJ9U",
+          "price_source": "website_live_price_api",
+          "live_price_status": "ok"
+        },
+        {
+          "id": "6a080110fe6fd8dc386bbee3",
+          "asin": "B0D41L64NR",
+          "title": "Bosch 9 kg 5 Star Front Load Fully-Automatic Washing Machine, AI ActiveWater, 14 Wash Programs, Removes 99.9% Germs with Steam, No Tangle or Wrinkle, SoftCare Paddle,Zero Vibration, White, WGA14200IN",
+          "description": null,
+          "is_active": true,
+          "brand": "Bosch",
+          "price_inr": 20100,
+          "original_price_inr": null,
+          "price_usd": "$403.49",
+          "average_rating": "4",
+          "main_image": "https://m.media-amazon.com/images/I/61Krwhkk6uL.jpg",
+          "images": [
+            "https://m.media-amazon.com/images/I/61Krwhkk6uL.jpg"
+          ],
+          "product_category": "washing-machines",
+          "feature_bullets": null,
+          "product_information": {
+            "Capacity": "9 kg",
+            "Energy Rating": "5 Star",
+            "Load Type": "Front Load",
+            "Washing Machine Type": "Fully Automatic"
+          },
+          "product_details": null,
+          "platform": "amazon",
+          "product_url": "https://www.amazon.in/dp/B0D41L64NR",
+          "availability_status": null,
+          "in_stock": null,
+          "specifications": {
+            "Capacity": "9 kg",
+            "Energy Rating": "5 Star",
+            "Load Type": "Front Load",
+            "Washing Machine Type": "Fully Automatic"
+          },
+          "rank": 2,
+          "inStock": null,
+          "verified_retailer_id": "B0D41L64NR",
+          "price_source": "website_live_price_api",
+          "live_price_status": "ok"
+        },
+        {
+          "id": "6a1011ac0f397d1e1344d8d1",
+          "asin": "B0GX9P1BWT",
+          "title": "Samsung 7 kg, 5 Star, Hygiene Steam, Quick Wash, Digital Inverter Motor, Fully-Automatic Front Load Washing Machine (WW70FG4S02AXTL, Inox)",
+          "description": null,
+          "is_active": true,
+          "brand": "Samsung",
+          "price_inr": 20200,
+          "original_price_inr": null,
+          "price_usd": "$380.00",
+          "average_rating": "",
+          "main_image": "https://m.media-amazon.com/images/I/711E0NzVcUL._AC_UY218_.jpg",
+          "images": [
+            "https://m.media-amazon.com/images/I/711E0NzVcUL._AC_UY218_.jpg"
+          ],
+          "product_category": "washing-machines",
+          "feature_bullets": null,
+          "product_information": {
+            "Capacity": "7 kg",
+            "Energy Rating": "5 Star",
+            "Load Type": "Front Load",
+            "Washing Machine Type": "Fully Automatic"
+          },
+          "product_details": null,
+          "platform": "amazon",
+          "product_url": "https://www.amazon.in/dp/B0GX9P1BWT",
+          "availability_status": null,
+          "in_stock": null,
+          "specifications": {
+            "Capacity": "7 kg",
+            "Energy Rating": "5 Star",
+            "Load Type": "Front Load",
+            "Washing Machine Type": "Fully Automatic"
+          },
+          "rank": 3,
+          "inStock": null,
+          "verified_retailer_id": "B0GX9P1BWT",
+          "price_source": "website_live_price_api",
+          "live_price_status": "ok"
+        },
+        {
+          "id": "6a1013380f397d1e1344dd59",
+          "asin": "6a1013380f397d1e1344dd59",
+          "title": "Motorola 7 Kg 5 Star Rating Garment Sterilization Fully Automatic Front Load Washing Machine In Built Heater White",
+          "description": null,
+          "is_active": true,
+          "brand": "Motorola",
+          "price_inr": 20300,
+          "original_price_inr": null,
+          "price_usd": "$409.52",
+          "average_rating": "",
+          "main_image": "https://rukminim2.flixcart.com/image/312/312/ku1k4280/washing-machine-new/e/u/h/70flam5w-motorola-original-imag79cjzzzrgbsy.jpeg?q=70",
+          "images": [
+            "https://rukminim2.flixcart.com/image/312/312/ku1k4280/washing-machine-new/e/u/h/70flam5w-motorola-original-imag79cjzzzrgbsy.jpeg?q=70"
+          ],
+          "product_category": "washing-machines",
+          "feature_bullets": null,
+          "product_information": {
+            "Capacity": "7 kg",
+            "Automation Type": "Fully Automatic",
+            "Load Type": "Front Load",
+            "Energy Rating": "5 Star"
+          },
+          "product_details": null,
+          "platform": "flipkart",
+          "product_url": "https://www.flipkart.com/motorola-7-kg-5-star-rating-garment-sterilization-fully-automatic-front-load-washing-machine-in-built-heater-white/p/itm1ad6a5136676c?pid=WMNG4WGVXYSRYHJZ",
+          "availability_status": null,
+          "in_stock": null,
+          "specifications": {
+            "Capacity": "7 kg",
+            "Automation Type": "Fully Automatic",
+            "Load Type": "Front Load",
+            "Energy Rating": "5 Star"
+          },
+          "rank": 4,
+          "inStock": null,
+          "verified_retailer_id": "WMNG4WGVXYSRYHJZ",
+          "price_source": "website_live_price_api",
+          "live_price_status": "ok"
+        },
+        {
+          "id": "6a2c08a19665e4a0b177b34b",
+          "asin": "6a2c08a19665e4a0b177b34b",
+          "title": "Haier 8 kg AI Smart Wash (AI-DBT) , PuriSteam , 525mm Super Drum Fully Automatic Front Load Washing Ma",
+          "description": null,
+          "is_active": true,
+          "brand": "Haier",
+          "price_inr": 20400,
+          "original_price_inr": null,
+          "price_usd": "$404.94",
+          "average_rating": "",
+          "main_image": "https://rukminim2.flixcart.com/image/312/312/xif0q/washing-machine-new/z/o/1/-original-imahmf2zbqrsjzax.jpeg?q=70",
+          "images": [
+            "https://rukminim2.flixcart.com/image/312/312/xif0q/washing-machine-new/z/o/1/-original-imahmf2zbqrsjzax.jpeg?q=70"
+          ],
+          "product_category": "washing-machines",
+          "feature_bullets": null,
+          "product_information": {
+            "Capacity": "8 kg",
+            "Energy Rating": "5 Star",
+            "Load Type": "Front Load",
+            "Washing Machine Type": "Fully Automatic"
+          },
+          "product_details": null,
+          "platform": "flipkart",
+          "product_url": "https://www.flipkart.com/haier-8-kg-ai-smart-wash-ai-dbt-puristeam-525mm-super-drum-fully-automatic-front-load-washing-machine-in-built-heater-black/p/itm5b001b74dc1cc?pid=WMNHHUCY5FWTHBAN",
+          "availability_status": null,
+          "in_stock": null,
+          "specifications": {
+            "Capacity": "8 kg",
+            "Energy Rating": "5 Star",
+            "Load Type": "Front Load",
+            "Washing Machine Type": "Fully Automatic"
+          },
+          "rank": 5,
+          "inStock": null,
+          "verified_retailer_id": "WMNHHUCY5FWTHBAN",
+          "price_source": "website_live_price_api",
+          "live_price_status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "slow",
+      "evidence": "SIMULATED retailer quotes; actual ranker/controller/frontend wrapper/transactional MongoDB",
+      "elapsedMS": 6829,
+      "count": 5,
+      "products": [
+        {
+          "id": "69f419329a622ea2d7ccb736",
+          "asin": "69f419329a622ea2d7ccb736",
+          "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+          "description": null,
+          "is_active": true,
+          "brand": "Godrej",
+          "price_inr": 20000,
+          "original_price_inr": null,
+          "price_usd": "$415.54",
+          "average_rating": "4.2",
+          "main_image": "https://rukminim2.flixcart.com/image/300/300/xif0q/washing-machine-new/t/r/k/-original-imahmjqskyzfjeys.jpeg?q=90",
+          "images": [
+            "https://rukminim2.flixcart.com/image/300/300/xif0q/washing-machine-new/t/r/k/-original-imahmjqskyzfjeys.jpeg?q=90"
+          ],
+          "product_category": "washing-machines",
+          "feature_bullets": null,
+          "product_information": {
+            "Capacity": "9 kg",
+            "Automation Type": "Fully Automatic",
+            "Load Type": "Front Load",
+            "Wash Features": "In-built Heater"
+          },
+          "product_details": null,
+          "platform": "flipkart",
+          "product_url": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U",
+          "availability_status": null,
+          "in_stock": null,
+          "specifications": {
+            "Capacity": "9 kg",
+            "Automation Type": "Fully Automatic",
+            "Load Type": "Front Load",
+            "Wash Features": "In-built Heater"
+          },
+          "rank": 1,
+          "inStock": null,
+          "verified_retailer_id": "WMNHBK4HNYBSDJ9U",
+          "price_source": "website_live_price_api",
+          "live_price_status": "ok"
+        },
+        {
+          "id": "6a080110fe6fd8dc386bbee3",
+          "asin": "B0D41L64NR",
+          "title": "Bosch 9 kg 5 Star Front Load Fully-Automatic Washing Machine, AI ActiveWater, 14 Wash Programs, Removes 99.9% Germs with Steam, No Tangle or Wrinkle, SoftCare Paddle,Zero Vibration, White, WGA14200IN",
+          "description": null,
+          "is_active": true,
+          "brand": "Bosch",
+          "price_inr": 20100,
+          "original_price_inr": null,
+          "price_usd": "$403.49",
+          "average_rating": "4",
+          "main_image": "https://m.media-amazon.com/images/I/61Krwhkk6uL.jpg",
+          "images": [
+            "https://m.media-amazon.com/images/I/61Krwhkk6uL.jpg"
+          ],
+          "product_category": "washing-machines",
+          "feature_bullets": null,
+          "product_information": {
+            "Capacity": "9 kg",
+            "Energy Rating": "5 Star",
+            "Load Type": "Front Load",
+            "Washing Machine Type": "Fully Automatic"
+          },
+          "product_details": null,
+          "platform": "amazon",
+          "product_url": "https://www.amazon.in/dp/B0D41L64NR",
+          "availability_status": null,
+          "in_stock": null,
+          "specifications": {
+            "Capacity": "9 kg",
+            "Energy Rating": "5 Star",
+            "Load Type": "Front Load",
+            "Washing Machine Type": "Fully Automatic"
+          },
+          "rank": 2,
+          "inStock": null,
+          "verified_retailer_id": "B0D41L64NR",
+          "price_source": "website_live_price_api",
+          "live_price_status": "ok"
+        },
+        {
+          "id": "6a1011ac0f397d1e1344d8d1",
+          "asin": "B0GX9P1BWT",
+          "title": "Samsung 7 kg, 5 Star, Hygiene Steam, Quick Wash, Digital Inverter Motor, Fully-Automatic Front Load Washing Machine (WW70FG4S02AXTL, Inox)",
+          "description": null,
+          "is_active": true,
+          "brand": "Samsung",
+          "price_inr": 20200,
+          "original_price_inr": null,
+          "price_usd": "$380.00",
+          "average_rating": "",
+          "main_image": "https://m.media-amazon.com/images/I/711E0NzVcUL._AC_UY218_.jpg",
+          "images": [
+            "https://m.media-amazon.com/images/I/711E0NzVcUL._AC_UY218_.jpg"
+          ],
+          "product_category": "washing-machines",
+          "feature_bullets": null,
+          "product_information": {
+            "Capacity": "7 kg",
+            "Energy Rating": "5 Star",
+            "Load Type": "Front Load",
+            "Washing Machine Type": "Fully Automatic"
+          },
+          "product_details": null,
+          "platform": "amazon",
+          "product_url": "https://www.amazon.in/dp/B0GX9P1BWT",
+          "availability_status": null,
+          "in_stock": null,
+          "specifications": {
+            "Capacity": "7 kg",
+            "Energy Rating": "5 Star",
+            "Load Type": "Front Load",
+            "Washing Machine Type": "Fully Automatic"
+          },
+          "rank": 3,
+          "inStock": null,
+          "verified_retailer_id": "B0GX9P1BWT",
+          "price_source": "website_live_price_api",
+          "live_price_status": "ok"
+        },
+        {
+          "id": "6a1013380f397d1e1344dd59",
+          "asin": "6a1013380f397d1e1344dd59",
+          "title": "Motorola 7 Kg 5 Star Rating Garment Sterilization Fully Automatic Front Load Washing Machine In Built Heater White",
+          "description": null,
+          "is_active": true,
+          "brand": "Motorola",
+          "price_inr": 20300,
+          "original_price_inr": null,
+          "price_usd": "$409.52",
+          "average_rating": "",
+          "main_image": "https://rukminim2.flixcart.com/image/312/312/ku1k4280/washing-machine-new/e/u/h/70flam5w-motorola-original-imag79cjzzzrgbsy.jpeg?q=70",
+          "images": [
+            "https://rukminim2.flixcart.com/image/312/312/ku1k4280/washing-machine-new/e/u/h/70flam5w-motorola-original-imag79cjzzzrgbsy.jpeg?q=70"
+          ],
+          "product_category": "washing-machines",
+          "feature_bullets": null,
+          "product_information": {
+            "Capacity": "7 kg",
+            "Automation Type": "Fully Automatic",
+            "Load Type": "Front Load",
+            "Energy Rating": "5 Star"
+          },
+          "product_details": null,
+          "platform": "flipkart",
+          "product_url": "https://www.flipkart.com/motorola-7-kg-5-star-rating-garment-sterilization-fully-automatic-front-load-washing-machine-in-built-heater-white/p/itm1ad6a5136676c?pid=WMNG4WGVXYSRYHJZ",
+          "availability_status": null,
+          "in_stock": null,
+          "specifications": {
+            "Capacity": "7 kg",
+            "Automation Type": "Fully Automatic",
+            "Load Type": "Front Load",
+            "Energy Rating": "5 Star"
+          },
+          "rank": 4,
+          "inStock": null,
+          "verified_retailer_id": "WMNG4WGVXYSRYHJZ",
+          "price_source": "website_live_price_api",
+          "live_price_status": "ok"
+        },
+        {
+          "id": "6a2c08a19665e4a0b177b34b",
+          "asin": "6a2c08a19665e4a0b177b34b",
+          "title": "Haier 8 kg AI Smart Wash (AI-DBT) , PuriSteam , 525mm Super Drum Fully Automatic Front Load Washing Ma",
+          "description": null,
+          "is_active": true,
+          "brand": "Haier",
+          "price_inr": 20400,
+          "original_price_inr": null,
+          "price_usd": "$404.94",
+          "average_rating": "",
+          "main_image": "https://rukminim2.flixcart.com/image/312/312/xif0q/washing-machine-new/z/o/1/-original-imahmf2zbqrsjzax.jpeg?q=70",
+          "images": [
+            "https://rukminim2.flixcart.com/image/312/312/xif0q/washing-machine-new/z/o/1/-original-imahmf2zbqrsjzax.jpeg?q=70"
+          ],
+          "product_category": "washing-machines",
+          "feature_bullets": null,
+          "product_information": {
+            "Capacity": "8 kg",
+            "Energy Rating": "5 Star",
+            "Load Type": "Front Load",
+            "Washing Machine Type": "Fully Automatic"
+          },
+          "product_details": null,
+          "platform": "flipkart",
+          "product_url": "https://www.flipkart.com/haier-8-kg-ai-smart-wash-ai-dbt-puristeam-525mm-super-drum-fully-automatic-front-load-washing-machine-in-built-heater-black/p/itm5b001b74dc1cc?pid=WMNHHUCY5FWTHBAN",
+          "availability_status": null,
+          "in_stock": null,
+          "specifications": {
+            "Capacity": "8 kg",
+            "Energy Rating": "5 Star",
+            "Load Type": "Front Load",
+            "Washing Machine Type": "Fully Automatic"
+          },
+          "rank": 5,
+          "inStock": null,
+          "verified_retailer_id": "WMNHHUCY5FWTHBAN",
+          "price_source": "website_live_price_api",
+          "live_price_status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "502_no_stale_fallback",
+      "elapsedMS": 20,
+      "count": 0
+    },
+    {
+      "name": "late_quote",
+      "responseMS": 100,
+      "postCompletionObservationMS": 500,
+      "aborted": true
+    },
+    {
+      "name": "transaction_expiry",
+      "totalWithObservationMS": 560,
+      "aborted": true
+    }
+  ],
+  "failures": [],
+  "patchSHA256": "d8a3fc58800f1adb1682a6cd50d4c064bc5171029448f8443c2c76d6e90c6016",
+  "candidateHashes": {
+    "controllers/ProductController.js": "838aea3940432617f73f5eeb1f56a85a4e07816bbe2b5e34e678d23dd957f03b",
+    "services/CatalogIdentityGuard.js": "1864d439a61929774502f0b955a6af26664711e29d67306b981d287402c13dbc",
+    "services/LiveBudgetRecommendationService.js": "7642396495c658cf8a6eb09a88fe275c62ac34ffd692c50d506fbfc1b9da5c73",
+    "services/LivePriceIdentity.js": "9d4a0383effc73d58f68ea67f62357c979398cd2f47dfa506f47d332d14cef1f",
+    "services/LivePriceService.js": "d7183c0c3e2cb2cdf76235d958ab8681fd826c0dfd5aa8c0499c200126b77cc7",
+    "services/ProductRecommendationService.js": "0d589d1d6ad37a709ae61e1355e7c15198ea653db918a7f15b3ef328e0ea27f3",
+    "services/CategoryService.js": "db79624a251b57a7c9044e74212af734b4245fccc598760517c57c4fa9d24645",
+    "services/LivePriceDeadline.js": "18368da9565b65c25a969488ccd6925e014281436c0488464122bd66e02f1ae7"
+  },
+  "frontendCandidateHash": "96e09dce023edb1bd67cc15ea12a35c7cf32df089a28a9e3e1d0c00703c96822",
+  "archiveCount": 0,
+  "genuineConnectedMS": 2392,
+  "genuineRows": [
+    {
+      "id": "69f4192b9a622ea2d7ccb68b",
+      "platform": "flipkart",
+      "supported": true,
+      "stored_price_inr": 16990,
+      "live": {
+        "unavailable_checks": 0,
+        "availability_signal": "none",
+        "availability_since": null,
+        "status": "ok",
+        "checked_at": "2026-11-03T06:03:41.119Z",
+        "verification_status": "ok",
+        "extraction_source": "jsonld_product_offer",
+        "retailer_product_id": "COMHCYMG83BGNQHH",
+        "retailer_url": "https://www.flipkart.com/lenovo-chromebook-11ijl9-intel-celeron-dual-core-n4500-4-gb-64-gb-emmc-storage-chrome-os/p/itmd2a376187074e?pid=COMHCYMG83BGNQHH",
+        "price_inr": 22911,
+        "priced_at": "2026-11-03T06:03:41.119Z",
+        "in_stock": true,
+        "availability": null,
+        "error": null,
+        "http_status": 200
+      },
+      "deleted": false
+    },
+    {
+      "id": "6a080110fe6fd8dc386bbee3",
+      "platform": "amazon",
+      "supported": true,
+      "stored_price_inr": 33490,
+      "live": {
+        "unavailable_checks": 0,
+        "availability_signal": "none",
+        "availability_since": null,
+        "status": "ok",
+        "checked_at": "2026-11-03T06:03:42.473Z",
+        "verification_status": "ok",
+        "extraction_source": "amazon_price_to_pay_parts",
+        "retailer_product_id": "B0D41L64NR",
+        "retailer_url": "https://www.amazon.in/dp/B0D41L64NR",
+        "price_inr": 33490,
+        "priced_at": "2026-11-03T06:03:42.473Z",
+        "in_stock": true,
+        "availability": null,
+        "error": null,
+        "http_status": 200
+      },
+      "deleted": false
+    }
+  ],
+  "genuineAcceptance": "PASS",
+  "nativeVPSFullTop5": "UNVERIFIED; no safe native isolated runtime",
+  "scope": "Two genuine new quotes; five-product timing/negative tests explicitly SIMULATED origin, actual business services and real disposable DB. Croma adapter and availability policy unchanged.",
+  "databaseDropped": true
+}

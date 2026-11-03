@@ -1,0 +1,77 @@
+function isAbortError(error: unknown) {
+  return error instanceof Error && error.name === 'AbortError';
+}
+
+/**
+ * Generic fetch wrapper with error handling
+ */
+async function fetchAPI<T>(
+  endpoint: string,
+  options?: RequestInit
+): Promise<ApiResponse<T>> {
+  const bases = getApiBaseCandidates();
+  const errors: string[] = [];
+
+  const isTopProducts = /^\/products\/top(?:[?]|$)/.test(endpoint);
+  const requestEndsAt = isTopProducts ? Date.now() + 20500 : null;
+  for (const base of bases) {
+    const requestTimeout = requestEndsAt == null ? API_TIMEOUT_MS : requestEndsAt - Date.now();
+    if (requestTimeout <= 0 || options?.signal?.aborted) break;
+    const url = `${base}${endpoint}`;
+    const controller = new AbortController();
+    const cleanupFns: Array<() => void> = [];
+    const timeoutId = setTimeout(() => controller.abort(), requestTimeout);
+    cleanupFns.push(() => clearTimeout(timeoutId));
+
+    if (options?.signal) {
+      const handleAbort = () => controller.abort();
+
+      if (options.signal.aborted) {
+        controller.abort();
+      } else {
+        options.signal.addEventListener('abort', handleAbort, { once: true });
+        cleanupFns.push(() => options.signal?.removeEventListener('abort', handleAbort));
+      }
+    }
+
+    try {
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal,
+        headers: {
+          'Content-Type': 'application/json',
+          ...options?.headers,
+        },
+      });
+
+      let data: ApiResponse<T>;
+      try {
+        data = await response.json();
+      } catch {
+        data = { success: false, message: `HTTP ${response.status}`, data: null as T };
+      }
+
+      if (!response.ok) {
+        const msg = typeof data?.message === 'string' ? data.message : `HTTP error! status: ${response.status}`;
+        throw new Error(msg);
+      }
+
+      return data;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      errors.push(`${base}: ${message}`);
+      const isNetworkError = message === 'Failed to fetch' || (error instanceof TypeError && message.includes('fetch'));
+      const isAbort = isAbortError(error);
+      if (isAbort) {
+        errors.push(`${base}: timed out after ${Math.round(requestTimeout / 1000)}s`);
+      }
+      // try next base
+    } finally {
+      // cleanup timeouts/listeners
+      // @ts-ignore
+      cleanupFns.forEach((cleanup) => cleanup());
+    }
+  }
+
+  throw new Error(`All API bases failed: ${errors.join(' | ')}`);
+}
