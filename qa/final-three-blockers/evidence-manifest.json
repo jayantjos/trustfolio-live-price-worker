@@ -1,0 +1,78 @@
+{
+  "qa/final-three-blockers/FINAL_PID_ALLOWLIST_INTEGRATION.md": {
+    "sha256": "000564a2e89cbd3f9e9ff1c081dd43e1643e0565b5c98fdd47266bacbae5b09c",
+    "bytes": 4121
+  },
+  "qa/final-three-blockers/FINAL_PRODUCTION_GO_NO_GO.md": {
+    "sha256": "08579f22bd0aee6e31de742e2a274dc89f6aee9a9667d532364547b2f00b7aec",
+    "bytes": 7315
+  },
+  "qa/final-three-blockers/FLIPKART_MODEL_VERIFICATION.md": {
+    "sha256": "6f17ea5df6371d7b6b45de1ac7df569261d27ca1e5e72d06810de4089d5a20de",
+    "bytes": 5067
+  },
+  "qa/final-three-blockers/NATIVE_VPS_FRONTEND_PERFORMANCE.md": {
+    "sha256": "6fa524ccf16cd44c07dbf7d02ed9dd6d2ba5dbe3a50b2f8b605dcced565cd948",
+    "bytes": 7099
+  },
+  "qa/final-three-blockers/allowlist-runner.cjs": {
+    "sha256": "5bffd2bb9ba23ca077584d5051d4f7d5edd4c98a76b8987af297650ebca51d02",
+    "bytes": 9024
+  },
+  "qa/final-three-blockers/cleanup-results.json": {
+    "sha256": "5942cb1e988d95e51f0ea6505363b91f456391946c87c89025c06bf747db2d51",
+    "bytes": 487
+  },
+  "qa/final-three-blockers/final-allowlist-results.json": {
+    "sha256": "591b5c26cd29d7cca01ad04fae1bec992c3c48dc3594583a6f9aa694cd6d8f63",
+    "bytes": 44714
+  },
+  "qa/final-three-blockers/focused-timeout-results.json": {
+    "sha256": "8fca837584d3f8dbc94be5739ccf063154930208539700057899780e96cadb45",
+    "bytes": 19790
+  },
+  "qa/final-three-blockers/frontend-deadline-results.json": {
+    "sha256": "526e4f566e90e639ced7031d05be51418e998a0b1b7e220c56cd38e770f1514e",
+    "bytes": 774
+  },
+  "qa/final-three-blockers/frontend-deadline-test.cjs": {
+    "sha256": "ffa1a780cd59a78e402209d595c5e4a330aa6312ec40dece5332e1efd1125fed",
+    "bytes": 1728
+  },
+  "qa/final-three-blockers/frontend-wrapper.ts.txt": {
+    "sha256": "bf1bea99e2e8e3b82d8d68bba32b95cb283cc6d3294ef0b05db5591795966aa1",
+    "bytes": 2230
+  },
+  "qa/final-three-blockers/initial-fixture-precondition-result.json": {
+    "sha256": "a5f57ed15a6a296133b20a22d5c0d8fe2170ef3da7a035faf2695d2d11da024f",
+    "bytes": 8948
+  },
+  "qa/final-three-blockers/model-binding-regression.cjs": {
+    "sha256": "0dabeed5bf5221f2b338675fa7bb71f277c0d671f09bc006c25b63892ff677e2",
+    "bytes": 1184
+  },
+  "qa/final-three-blockers/native-catalog-results.json": {
+    "sha256": "9a2904f31eae23934a189605af578942f117d5ee137c7e21eace62b7cdcafde6",
+    "bytes": 152795
+  },
+  "qa/final-three-blockers/numeric-timeout-options.json": {
+    "sha256": "94b3b241d24cfb2c1a21d735100fc28bf70186c89e0299637b7deadfa8245fd1",
+    "bytes": 658
+  },
+  "qa/final-three-blockers/primary-model-evidence.json": {
+    "sha256": "38b924e91fdf89ab48ff3916da1f6497a99f5c7b28c68b00f6c819dcc32a4183",
+    "bytes": 6399
+  },
+  "qa/final-three-blockers/read-native-contract.py": {
+    "sha256": "41ad847f04f27841ecbe4f497b7d7f6f262fe1f64b5917e251fc2e026b60ec7d",
+    "bytes": 4906
+  },
+  "qa/final-three-blockers/read-timeout-focus.py": {
+    "sha256": "1285cbede5117a32c2244d8bdea99634069f82099ab50fa1db929ef1a63757e0",
+    "bytes": 3063
+  },
+  "qa/final-three-blockers/resource-verification.json": {
+    "sha256": "51ca3e74faa15470aa24ecbe9e672f3c04cce11ce984f75859a19b05f4793074",
+    "bytes": 1168
+  }
+}

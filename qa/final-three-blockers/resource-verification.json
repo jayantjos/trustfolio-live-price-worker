@@ -1,0 +1,55 @@
+{
+  "status": "PASS",
+  "initialDatabaseDropped": true,
+  "finalDatabaseDropped": true,
+  "cleanupRun": 41580773011,
+  "cleanup": {
+    "status": "PASS",
+    "resources": [
+      {
+        "path": "qa/final-three-blockers/transport-public-cert.pem",
+        "status": "already_absent"
+      },
+      {
+        "path": "qa/final-three-blockers/worker-key-envelope.json",
+        "status": "already_absent"
+      },
+      {
+        "run": 41579209184,
+        "artifact": 13203948931,
+        "status": "deleted"
+      },
+      {
+        "run": 41579784025,
+        "artifact": 13204534996,
+        "status": "deleted"
+      }
+    ],
+    "productionChanges": 0
+  },
+  "artifacts": [
+    {
+      "run": 41579209184,
+      "remaining": [
+        {
+          "id": 13204233939,
+          "name": "final-canonical-allowlist-acceptance"
+        },
+        {
+          "id": 13204093724,
+          "name": "native-readonly-timeout-model-catalog"
+        }
+      ]
+    },
+    {
+      "run": 41579784025,
+      "remaining": [
+        {
+          "id": 13204319777,
+          "name": "final-canonical-allowlist-acceptance"
+        }
+      ]
+    }
+  ],
+  "productionChanges": 0
+}

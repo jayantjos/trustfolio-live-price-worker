@@ -1,0 +1,3532 @@
+{
+  "atUTC": "2026-11-03T04:37:34.077478+00:00",
+  "productionWrites": 0,
+  "pm2": [
+    {
+      "name": "trustfolio-backend",
+      "pid": 130603,
+      "status": "online",
+      "cwd": "/home/***/apps/trustfolio/node-backend",
+      "script": "/home/***/apps/trustfolio/node-backend/server.js",
+      "exec_mode": "fork_mode",
+      "NODE_ENV": "production"
+    },
+    {
+      "name": "trustfolio-web",
+      "pid": 175946,
+      "status": "online",
+      "cwd": "/home/***/apps/trustfolio/trustfolio-main",
+      "script": "/home/***/apps/trustfolio/trustfolio-main/node_modules/next/dist/bin/next",
+      "exec_mode": "fork_mode",
+      "NODE_ENV": "production"
+    },
+    {
+      "name": "trustfolio-admin",
+      "pid": 33509,
+      "status": "online",
+      "cwd": "/home/***/apps/trustfolio/trustfolio_admin",
+      "script": "/home/***/apps/trustfolio/trustfolio_admin/node_modules/next/dist/bin/next",
+      "exec_mode": "fork_mode",
+      "NODE_ENV": "production"
+    },
+    {
+      "name": "trustfolio-price-watcher",
+      "pid": 80454,
+      "status": "online",
+      "cwd": "/home/***/apps/trustfolio/node-backend",
+      "script": "/home/***/apps/trustfolio/node-backend/scripts/trustfolio-category-price-watcher.js",
+      "exec_mode": "fork_mode",
+      "instances": 1
+    }
+  ],
+  "nginx": [
+    {
+      "path": "/etc/nginx/nginx.conf",
+      "sha256": "48c6a4ec1e1fd28ccf968490f07e34a1d7f755793b2108a3ed8670b1ee2a0aa2",
+      "directives": [
+        {
+          "line": 5,
+          "text": "include /etc/nginx/modules-enabled/*.conf;"
+        },
+        {
+          "line": 26,
+          "text": "include /etc/nginx/mime.types;"
+        },
+        {
+          "line": 59,
+          "text": "include /etc/nginx/conf.d/*.conf;"
+        },
+        {
+          "line": 60,
+          "text": "include /etc/nginx/sites-enabled/*;"
+        }
+      ]
+    },
+    {
+      "path": "/etc/nginx/sites-enabled/trustfolio",
+      "sha256": "6d41ef232ffef06a013916bfc3570e5aee426e7211a550afe366cacf2cf4ec84",
+      "directives": [
+        {
+          "line": 3,
+          "text": "server_name api.trustfolio.in;"
+        },
+        {
+          "line": 7,
+          "text": "location / {"
+        },
+        {
+          "line": 8,
+          "text": "proxy_pass http://127.0.0.1:8081;"
+        },
+        {
+          "line": 16,
+          "text": "listen 443 ssl; # managed by Certbot"
+        },
+        {
+          "line": 19,
+          "text": "include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot"
+        },
+        {
+          "line": 26,
+          "text": "server_name trustfolio.in www.trustfolio.in;"
+        },
+        {
+          "line": 30,
+          "text": "location / {"
+        },
+        {
+          "line": 31,
+          "text": "proxy_pass http://127.0.0.1:3000;"
+        },
+        {
+          "line": 39,
+          "text": "listen 443 ssl; # managed by Certbot"
+        },
+        {
+          "line": 42,
+          "text": "include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot"
+        },
+        {
+          "line": 50,
+          "text": "server_name admin.trustfolio.in;"
+        },
+        {
+          "line": 54,
+          "text": "location / {"
+        },
+        {
+          "line": 55,
+          "text": "proxy_pass http://127.0.0.1:3013;"
+        },
+        {
+          "line": 63,
+          "text": "listen 443 ssl; # managed by Certbot"
+        },
+        {
+          "line": 66,
+          "text": "include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot"
+        },
+        {
+          "line": 82,
+          "text": "listen 80;"
+        },
+        {
+          "line": 83,
+          "text": "server_name trustfolio.in www.trustfolio.in;"
+        },
+        {
+          "line": 96,
+          "text": "listen 80;"
+        },
+        {
+          "line": 97,
+          "text": "server_name api.trustfolio.in;"
+        },
+        {
+          "line": 108,
+          "text": "listen 80;"
+        },
+        {
+          "line": 109,
+          "text": "server_name admin.trustfolio.in;"
+        }
+      ]
+    },
+    {
+      "path": "/etc/nginx/sites-enabled/media.trustfolio.in",
+      "sha256": "ecb0cd58f8cb5edcb5f83c44b5ff9dd898073f5991a7e8b9ad2072045c0308ff",
+      "directives": [
+        {
+          "line": 2,
+          "text": "server_name media.trustfolio.in;"
+        },
+        {
+          "line": 4,
+          "text": "location / {"
+        },
+        {
+          "line": 5,
+          "text": "proxy_pass http://127.0.0.1:8787;"
+        },
+        {
+          "line": 18,
+          "text": "listen [::]:443 ssl ipv6only=on; # managed by Certbot"
+        },
+        {
+          "line": 19,
+          "text": "listen 443 ssl; # managed by Certbot"
+        },
+        {
+          "line": 22,
+          "text": "include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot"
+        },
+        {
+          "line": 32,
+          "text": "listen 80;"
+        },
+        {
+          "line": 33,
+          "text": "listen [::]:80;"
+        },
+        {
+          "line": 34,
+          "text": "server_name media.trustfolio.in;"
+        }
+      ]
+    }
+  ],
+  "timeoutSources": [
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/standalone/server.js",
+      "sha256": "b787569b5d5fddb61073bf9f1f9235129c35100b96fa60af81dfa24e71499eca",
+      "matches": [
+        {
+          "line": 11,
+          "fragment": "keepAliveTimeout = parseInt(process.env.KEEP_ALIVE_TIMEOUT, 10)\nconst nextConfig = {\"env\":{\"NEXT_PUBLIC_API_URL\":\"https://api."
+        },
+        {
+          "line": 12,
+          "fragment": "Timeout\":60,\"output\":\"standalone\",\"modularizeImports\":{\"@mui/icons-material\":{\"transform\":\"@mui/icons-material/{{memb"
+        },
+        {
+          "line": 12,
+          "fragment": "TimeoutInSeconds\":7,\"imgOptMaxInputPixels\":268402689,\"imgOptSequentialRead\":null,\"imgOptSkipMetadata\":null,\"isrFlushT"
+        },
+        {
+          "line": 20,
+          "fragment": "keepAliveTimeout) ||\n  !Number.isFinite(keepAliveTimeout) ||\n  keepAliveTimeout < 0\n) {\n  keepAliveTimeout = undefined\n}\n\nstar"
+        },
+        {
+          "line": 34,
+          "fragment": "keepAliveTimeout,\n}).catch((err) => {\n  console.error(err);\n  process.exit(1);\n});"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/standalone/.next/server/pages/_error.js",
+      "sha256": "d7b1ac3d2630a9307bdb082ffe2bfe53e78c4396a9568569b52ad26360d1310b",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "AbortController:function(){return j},signalFromNodeResponse:function(){return k}});let d=c(35124),e=c(39833),f=c(41801),g=c(6"
+        },
+        {
+          "line": 1,
+          "fragment": "AbortController;return a.once(\"close\",()=>{a.writableFinished||b.abort(new i)}),b}function k(a){let{errored:b,destroyed:c}=a;"
+        },
+        {
+          "line": 19,
+          "fragment": "AbortController)(b),l=function(a,b){let c=!1,d=new e.DetachedPromise;function i(){d.resolve()}a.on(\"drain\",i),a.once(\"close\","
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/standalone/.next/server/chunks/611.js",
+      "sha256": "c5b585138c6d2650d2897c042b453dd06eb0090e40268d065debd32932053a6a",
+      "matches": [
+        {
+          "line": 6,
+          "fragment": "setTimeout(j,k)}return function(...a){e=a,f=this,i=Date.now(),void 0===d&&(h=i,d=setTimeout(j,b))}}},80092:(a,b,c)=>{\"us"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/standalone/.next/server/chunks/386.js",
+      "sha256": "d9ddc092c0782d49cf21e191fa141caa27d6edeb4c38e06d144853a40a2c68c9",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "Timeout(v),v=setTimeout(a,b)})(c.delayError)}else clearTimeout(v),b=null,N?o(d.errors,J,N):C(d.errors,J);if((N?!u(a,N"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(an);if(G.state.next({isSubmitted:!0,isSubmitting:!1,isSubmitSuccessful:y(d.errors)&&!f,submitCount:d.submitCo"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/standalone/.next/server/chunks/586.js",
+      "sha256": "dc7e04b5cbc1b7f3a4fae2bcf9a818b7430b72d0edf809d2520f98565f15b4e6",
+      "matches": [
+        {
+          "line": 2,
+          "fragment": "AbortController;return a.abort(Object.defineProperty(new l.BailoutToCSRError(\"Render in Browser\"),\"__NEXT_ERROR_CODE\",{value:"
+        },
+        {
+          "line": 2,
+          "fragment": "AbortController;if(a.cacheSignal)a.cacheSignal.inputReady().then(()=>{b.abort()});else{let c=(0,g.getRuntimeStagePromise)(a);"
+        },
+        {
+          "line": 22,
+          "fragment": "AbortController)(b),l=function(a,b){let c=!1,d=new e.DetachedPromise;function i(){d.resolve()}a.on(\"drain\",i),a.once(\"close\","
+        },
+        {
+          "line": 22,
+          "fragment": "setTimeout\\`, \\`after\\`, or similar functions you may observe this error and you should handle it in that context. This "
+        },
+        {
+          "line": 22,
+          "fragment": "setTimeout(()=>{b(a)},0)})}},84226:(a,b)=>{\"use strict\";Object.defineProperty(b,\"__esModule\",{value:!0}),!function(a,b){"
+        },
+        {
+          "line": 22,
+          "fragment": "AbortController:function(){return j},signalFromNodeResponse:function(){return k}});let d=c(39326),e=c(17679),f=c(87129),g=c(7"
+        },
+        {
+          "line": 22,
+          "fragment": "AbortController;return a.once(\"close\",()=>{a.writableFinished||b.abort(new i)}),b}function k(a){let{errored:b,destroyed:c}=a;"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/standalone/.next/server/chunks/748.js",
+      "sha256": "d4e5ee2c641ad2a69541d07cd19a4d9d87b9c2287506468b805c23c7ad6e2204",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "timeout:Z,children:(0,x.jsx)(ag,{...ah,children:r})})})});var F=c(59816);function G(a){return(0,t.Ay)(\"MuiMenu\",a)}(0"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:z=\"auto\",TransitionComponent:A=g.Ay,...B}=a,C=(0,e.A)(),D=d.useRef(),E=(0,h.A)(),F=d.useRef(null),G=(0,j.A)(F"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:z,easing:q},{mode:\"enter\"});\"auto\"===z?D.current=c=E.transitions.getAutoHeightDuration(a.clientHeight):c=d,a."
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:z,easing:q},{mode:\"exit\"});\"auto\"===z?D.current=b=E.transitions.getAutoHeightDuration(a.clientHeight):b=c,a.s"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:\"auto\"===z?null:z,...B,children:(a,{ownerState:b,...c})=>d.cloneElement(p,{style:{opacity:0,transform:l(.75),"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/standalone/.next/server/chunks/806.js",
+      "sha256": "1a82217483a5ecd39638a665e4f9c981b0670415dddb7931cdc04a000953b255",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "timeout:af.transitions.duration.shorter,...a,...aU,children:(0,A.jsxs)(aV,{...aW,children:[aa,k?(0,A.jsx)(aX,{...aY})"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:Q,role:\"presentation\"}});return(0,w.jsx)(Z,{closeAfterTransition:!0,slots:{backdrop:_},slotProps:{backdrop:{t"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/standalone/.next/server/chunks/34.js",
+      "sha256": "cc99c4d81ca87037e3ff2a6c3fa505f3d5c6f6526b776846ddda5108a81eefee",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "timeout:D=f,TransitionComponent:E=i.Ay,...F}=a,G=d.useRef(null),H=(0,l.A)((0,j.A)(r),G,b),I=a=>b=>{a&&(void 0===b?a(G"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:D,style:C,easing:u},{mode:\"enter\"});a.style.webkitTransition=c.transitions.create(\"-webkit-transform\",{...d})"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:D,style:C,easing:u},{mode:\"exit\"});a.style.webkitTransition=c.transitions.create(\"-webkit-transform\",b),a.sty"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:D,...F,children:(a,{ownerState:b,...c})=>d.cloneElement(r,{ref:H,style:{visibility:\"exited\"!==a||v?void 0:\"hi"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:J,appear:O.current}}),_=(0,p.jsx)(V,{...W,children:n});if(\"permanent\"===K)return(0,p.jsx)(X,{...Y,children:_}"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/standalone/.next/server/chunks/448.js",
+      "sha256": "d8950883fa9456635d113c7a319a1b688b1313d38c9c5f4f2ff64c0cdae57a90",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(a)),T=\"undefined\"!=typeof queueMicrotask?queueMicrotask.bind(K):\"undefined\"!=typeof process&&process.nextTick"
+        },
+        {
+          "line": 1,
+          "fragment": "TimeoutError:!1};var aj=c(55511);let ak=c(79551).URLSearchParams,al=\"abcdefghijklmnopqrstuvwxyz\",am=\"0123456789\",an={"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:0,xsrfCookieName:\"XSRF-TOKEN\",xsrfHeaderName:\"X-XSRF-TOKEN\",maxContentLength:-1,maxBodyLength:-1,env:{FormDat"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{b(null,a)},g-n);c<m&&(m=c)}m&&k>m&&k-m>i&&(l=a.subarray(m),a=a.subarray(0,m)),j(a,l?()=>{process.nextTic"
+        },
+        {
+          "line": 3,
+          "fragment": "Timeout(d),d=null),a(...b)};return[(...a)=>{let b=Date.now(),h=b-e;h>=f?g(a,b):(c=a,d||(d=setTimeout(()=>{d=null,g(c)"
+        },
+        {
+          "line": 3,
+          "fragment": "timeout){let b=parseInt(a.timeout,10);if(Number.isNaN(b))return void c(new V(\"error trying to parse `config.timeout` "
+        },
+        {
+          "line": 3,
+          "fragment": "setTimeout(b,function(){if(h)return;let b=a.timeout?\"timeout of \"+a.timeout+\"ms exceeded\":\"timeout exceeded\",d=a.transit"
+        },
+        {
+          "line": 3,
+          "fragment": "timeoutErrorMessage&&(b=a.timeoutErrorMessage),c(new V(b,d.clarifyTimeoutError?V.ETIMEDOUT:V.ECONNABORTED,a,i)),u()})"
+        },
+        {
+          "line": 3,
+          "fragment": "timeout:g,timeoutMessage:g,withCredentials:g,withXSRFToken:[REDACTED],adapter:g,responseType:g,xsrfCookieName:g,xsrfHeaderName"
+        },
+        {
+          "line": 3,
+          "fragment": "timeout=i.timeout,\"onloadend\"in p?p.onloadend=q:p.onreadystatechange=function(){p&&4===p.readyState&&(0!==p.status||p"
+        },
+        {
+          "line": 3,
+          "fragment": "setTimeout(q)},p.onabort=function(){p&&(c(new V(\"Request aborted\",V.ECONNABORTED,a,p)),p=null)},p.onerror=function(){c(n"
+        },
+        {
+          "line": 3,
+          "fragment": "timeout=function(){let b=i.timeout?\"timeout of \"+i.timeout+\"ms exceeded\":\"timeout exceeded\",d=i.transitional||ai;i.ti"
+        },
+        {
+          "line": 3,
+          "fragment": "timeoutErrorMessage),c(new V(b,d.clarifyTimeoutError?V.ETIMEDOUT:V.ECONNABORTED,a,p)),p=null},void 0===j&&k.setConten"
+        },
+        {
+          "line": 3,
+          "fragment": "timeout:i,onDownloadProgress:j,onUploadProgress:k,responseType:l,headers:m,withCredentials:n=\"same-origin\",fetchOptio"
+        },
+        {
+          "line": 3,
+          "fragment": "AbortController,e=function(a){if(!c){c=!0,g();let b=a instanceof Error?a:this.reason;d.abort(b instanceof V?b:new aF(b instan"
+        },
+        {
+          "line": 3,
+          "fragment": "setTimeout(()=>{f=null,e(new V(`timeout ${b} of ms exceeded`,V.ETIMEDOUT))},b),g=()=>{a&&(f&&clearTimeout(f),f=null,a.fo"
+        },
+        {
+          "line": 3,
+          "fragment": "TimeoutError:bJ.transitional(bJ.boolean)},!1),null!=f&&(U.isFunction(f)?b.paramsSerializer={serialize:f}:bI.assertOpt"
+        },
+        {
+          "line": 3,
+          "fragment": "AbortController,b=b=>{a.abort(b)};return this.subscribe(b),a.signal.unsubscribe=()=>this.unsubscribe(b),a.signal}static sourc"
+        },
+        {
+          "line": 3,
+          "fragment": "RequestTimeout:408,Conflict:409,Gone:410,LengthRequired:411,PreconditionFailed:412,PayloadTooLarge:413,UriTooLong:414,Unsupp"
+        },
+        {
+          "line": 3,
+          "fragment": "Timeout:504,HttpVersionNotSupported:505,VariantAlsoNegotiates:506,InsufficientStorage:507,LoopDetected:508,NotExtende"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/standalone/.next/server/chunks/925.js",
+      "sha256": "d050078aa22ea2985a16f677de0aba752c751f21bbeb239ea5a92f874fae1650",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{o.current=!0},0),()=>{o.current=!1}),[]);let q=(0,f.A)((0,h.A)(b),n),r=(0,g.A)(a=>{let b=p.current;p.cur"
+        },
+        {
+          "line": 16,
+          "fragment": "timeouts=new Map;cleanupTimeout=1e3;constructor(a=1e3){this.cleanupTimeout=a}register(a,b,c){this.timeouts||(this.tim"
+        },
+        {
+          "line": 16,
+          "fragment": "setTimeout(()=>{\"function\"==typeof b&&b(),this.timeouts.delete(c.cleanupToken)},this.cleanupTimeout);this.timeouts.set(c"
+        },
+        {
+          "line": 16,
+          "fragment": "timeouts.get(a.cleanupToken);b&&(this.timeouts.delete(a.cleanupToken),clearTimeout(b))}reset(){this.timeouts&&(this.t"
+        },
+        {
+          "line": 16,
+          "fragment": "timeouts=void 0)}}class bi{registry=new FinalizationRegistry(a=>{\"function\"==typeof a&&a()});register(a,b,c){this.reg"
+        },
+        {
+          "line": 18,
+          "fragment": "setTimeout(e,b))}return f.clear=()=>{clearTimeout(c),c=void 0},f}(q,p):void 0,[p,q]);k.useEffect(()=>r?.clear,[r]);let s"
+        },
+        {
+          "line": 104,
+          "fragment": "setTimeout(()=>{if(i.current?.id!==b.id){if(!a.current.getRow(b.id)||a.current.getRowMode(b.id)===cH.View||t(b.id))retur"
+        },
+        {
+          "line": 104,
+          "fragment": "Timeout(h.current)},[]);let x=k.useCallback((b,c)=>{if(b.cellMode===cH.Edit){let d;if(229!==c.which){if(\"Escape\"===c."
+        },
+        {
+          "line": 104,
+          "fragment": "Timeout(d),delete a[b][c]})})}},[]);let f=k.useCallback((a,b)=>{if(c.current[a])if(b){if(c.current[a][b]){let[,d]=c.c"
+        },
+        {
+          "line": 104,
+          "fragment": "Timeout(d)}let f=setTimeout(()=>{e(),delete c.current[a][b]},d);c.current[a][b]=[f,()=>{let[d]=c.current[a][b];clearT"
+        },
+        {
+          "line": 111,
+          "fragment": "setTimeout(()=>{b.removeEventListener(\"click\",hd,!0)},100),e.columnHeaderElement&&(e.columnHeaderElement.style.pointerEv"
+        },
+        {
+          "line": 113,
+          "fragment": "setTimeout(()=>{URL.revokeObjectURL(b)});return}throw Error(\"MUI X: exportAs not supported.\")}(new Blob([a?.utf8WithBom?"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/standalone/.next/server/chunks/674.js",
+      "sha256": "e75063fb4f352b8a1206cdf33b5d942ceffb0748e3b92ad800f219d291155d24",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "abortController.abort(Object.defineProperty(Error(\"Accessed fallback `params` during prerendering.\"),\"__NEXT_ERROR_CODE\",{val"
+        },
+        {
+          "line": 2,
+          "fragment": "AbortController;return a.abort(Object.defineProperty(new l.BailoutToCSRError(\"Render in Browser\"),\"__NEXT_ERROR_CODE\",{value:"
+        },
+        {
+          "line": 2,
+          "fragment": "AbortController;if(a.cacheSignal)a.cacheSignal.inputReady().then(()=>{b.abort()});else{let c=(0,g.getRuntimeStagePromise)(a);"
+        },
+        {
+          "line": 4,
+          "fragment": "AbortController,q=async()=>{await (0,h.waitAtLeastOneReactRenderTask)(),p.abort()},r=[],{prelude:s}=await (0,f.unstable_prere"
+        },
+        {
+          "line": 4,
+          "fragment": "AbortController;(0,h.waitAtLeastOneReactRenderTask)().then(()=>l.abort());let{prelude:n}=await (0,f.unstable_prerender)(j,d,{"
+        },
+        {
+          "line": 4,
+          "fragment": "AbortController;return(0,h.waitAtLeastOneReactRenderTask)().then(()=>{c=!0,d.abort()}),await (0,f.unstable_prerender)(a,b,{fi"
+        },
+        {
+          "line": 4,
+          "fragment": "setTimeout(()=>{E.head.removeChild(b)},1)}return()=>{clearTimeout(a)}},[ag,u,E]),d.useEffect(()=>(L.current=!0,()=>{L.cu"
+        },
+        {
+          "line": 39,
+          "fragment": "AbortController;async function p(a,b){let{flightRouterState:c,nextUrl:d,prefetchKind:f}=b,g={[e.RSC_HEADER]:\"1\",[e.NEXT_ROUTE"
+        },
+        {
+          "line": 42,
+          "fragment": "setTimeout\\`, \\`after\\`, or similar functions you may observe this error and you should handle it in that context. This "
+        },
+        {
+          "line": 42,
+          "fragment": "setTimeout(()=>{b(a)},0)})}},71791:(a,b,c)=>{\"use strict\";Object.defineProperty(b,\"__esModule\",{value:!0}),!function(a,b"
+        },
+        {
+          "line": 42,
+          "fragment": "abortController.abort(Object.defineProperty(Error(\"Accessed fallback `params` during prerendering.\"),\"__NEXT_ERROR_CODE\",{val"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/standalone/.next/server/chunks/563.js",
+      "sha256": "af1281679db0072cefed8368fdaf12ff2cb10a9d1c9bbc6d3449d7187f842b3b",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "Timeout(c),c=setTimeout(f,b)}return e.clear=()=>{clearTimeout(c)},e}},26667:(a,b,c)=>{c.d(b,{A:()=>g});var d=c(38301)"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:v,...w,...D,children:(0,n.jsx)(A,{\"aria-hidden\":!0,...B,classes:y,ref:b,children:d})})})},35035:(a,b,c)=>{c.d"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:y=l,TransitionComponent:z=e.Ay,...A}=a,B=d.useRef(null),C=(0,i.A)(B,(0,f.A)(o),b),D=a=>b=>{if(a){let c=B.curr"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:y,easing:p},{mode:\"enter\"});a.style.webkitTransition=c.transitions.create(\"opacity\",d),a.style.transition=c.t"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:y,easing:p},{mode:\"exit\"});a.style.webkitTransition=c.transitions.create(\"opacity\",b),a.style.transition=c.tr"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:y,...A,children:(a,{ownerState:b,...c})=>d.cloneElement(o,{style:{opacity:0,visibility:\"exited\"!==a||q?void 0"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeouts=function(){var a,b,c,d=this.props.timeout;return a=b=c=d,null!=d&&\"number\"!=typeof d&&(a=d.exit,b=d.enter,c="
+        },
+        {
+          "line": 1,
+          "fragment": "Timeouts(),k=d?h.appear:h.enter;if(!a&&!c||j.disabled)return void this.safeSetState({status:o},function(){b.props.onE"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeouts(),d=this.props.nodeRef?void 0:i().findDOMNode(this);if(!b||j.disabled)return void this.safeSetState({status:"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(this.nextCallback,0);if(this.props.addEndListener){var e=this.props.nodeRef?[this.nextCallback]:[c,this.nextC"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(this.nextCallback,a)},c.render=function(){var a=this.state.status;if(a===l)return null;var b=this.props,c=b.c"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout,b.addEndListener,b.onEnter,b.onEntering,b.onEntered,b.onExit,b.onExiting,b.onExited,b.nodeRef,(0,d.A)(b,[\"chi"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout\",\"addEndListener\",\"onEnter\",\"onEntering\",\"onEntered\",\"onExit\",\"onExiting\",\"onExited\",\"nodeRef\"]));return g()."
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:c,easing:d,style:e={}}=a;return{duration:e.transitionDuration??(\"number\"==typeof c?c:c[b.mode]||0),easing:e.t"
+        },
+        {
+          "line": 31,
+          "fragment": "timeout:l}=a,[m,n]=d.useState(!1),o=(0,f.A)(b,c.ripple,c.rippleVisible,e&&c.ripplePulsate),p=(0,f.A)(c.child,m&&c.chi"
+        },
+        {
+          "line": 31,
+          "fragment": "setTimeout(k,l);return()=>{clearTimeout(a)}}},[k,j,l]),(0,y.jsx)(\"span\",{className:o,style:{width:i,height:i,top:-(i/2)+"
+        },
+        {
+          "line": 74,
+          "fragment": "timeout:550,pulsate:b,rippleX:c,rippleY:d,rippleSize:g},l.current)]),l.current+=1,m.current=h},[e]),s=d.useCallback(("
+        },
+        {
+          "line": 74,
+          "fragment": "setTimeout(()=>{this.currentId=null,b()},a)}constructor(){this.currentId=null,this.clear=()=>{null!==this.currentId&&(cl"
+        },
+        {
+          "line": 74,
+          "fragment": "Timeout(this.currentId),this.currentId=null)},this.disposeEffect=()=>this.clear}}function g(){let a=(0,d.A)(f.create)"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/976-92236bfd1525abb6.js",
+      "sha256": "410e3721d2ec7d760a02f94fcc8189ed4bc62ba999a444ca1fb8f4fb44b12091",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "Timeout(_),_=setTimeout(e,t)})(r.delayError)}else clearTimeout(_),t=null,R?p(s.errors,N,R):S(s.errors,N);if((R?!x(e,R"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(eh);if(D.state.next({isSubmitted:!0,isSubmitting:!1,isSubmitSuccessful:k(s.errors)&&!n,submitCount:s.submitCo"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/537-527c85812cc068b2.js",
+      "sha256": "9d7e483baf603f7ed6dda18a97bd983cb1d6893cfef060d0116ad9877c359e62",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "timeout:J,children:(0,S.jsx)(ei,{...ea,children:b})})})});var O=r(35934);function z(e){return(0,g.Ay)(\"MuiMenu\",e)}(0"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:C=\"auto\",TransitionComponent:R=i.Ay,...M}=e,E=(0,n.A)(),P=o.useRef(),I=(0,a.A)(),O=o.useRef(null),z=(0,d.A)(O"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:C,easing:v},{mode:\"enter\"});\"auto\"===C?P.current=r=I.transitions.getAutoHeightDuration(e.clientHeight):r=o,e."
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:C,easing:v},{mode:\"exit\"});\"auto\"===C?P.current=t=I.transitions.getAutoHeightDuration(e.clientHeight):t=r,e.s"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:\"auto\"===C?null:C,...M,children:(e,t)=>{let{ownerState:r,...n}=t;return o.cloneElement(h,{style:{opacity:0,tr"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/481-f8337ecbff7cc954.js",
+      "sha256": "e866681896981806f063d8a0f4e97e1b3bded94317704ab8c7c0fe6e91703551",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "Timeouts=function(){var e,t,n,r=this.props.timeout;return e=t=n=r,null!=r&&\"number\"!=typeof r&&(e=r.exit,t=r.enter,n="
+        },
+        {
+          "line": 1,
+          "fragment": "Timeouts(),c=r?u.appear:u.enter;if(!e&&!n||l.disabled)return void this.safeSetState({status:p},function(){t.props.onE"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeouts(),r=this.props.nodeRef?void 0:a.findDOMNode(this);if(!t||l.disabled)return void this.safeSetState({status:c}"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(this.nextCallback,0);if(this.props.addEndListener){var o=this.props.nodeRef?[this.nextCallback]:[n,this.nextC"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(this.nextCallback,e)},n.render=function(){var e=this.state.status;if(e===u)return null;var t=this.props,n=t.c"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout,t.addEndListener,t.onEnter,t.onEntering,t.onEntered,t.onExit,t.onExiting,t.onExited,t.nodeRef,(0,r.A)(t,[\"chi"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout\",\"addEndListener\",\"onEnter\",\"onEntering\",\"onEntered\",\"onExit\",\"onExiting\",\"onExited\",\"nodeRef\"]));return i.cr"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:b,...E,...k,children:(0,f.jsx)(C,{\"aria-hidden\":!0,...I,classes:R,ref:t,children:r})})})},20039:(e,t,n)=>{n.d"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(n),n=setTimeout(i,t)}return o.clear=()=>{clearTimeout(n)},o}},31643:(e,t,n)=>{n.d(t,{A:()=>r});let r=n(46189)"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:d}=e,[p,f]=r.useState(!1),h=(0,o.A)(t,n.ripple,n.rippleVisible,i&&n.ripplePulsate),v=(0,o.A)(n.child,p&&n.chi"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(c,d);return()=>{clearTimeout(e)}}},[c,u,d]),(0,R.jsx)(\"span\",{className:h,style:{width:s,height:s,top:-(s/2)+"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:550,pulsate:t,rippleX:n,rippleY:r,rippleSize:a},d.current)]),d.current+=1,p.current=l},[i]),g=r.useCallback(f"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{this.currentId=null,t()},e)}constructor(){this.currentId=null,this.clear=()=>{null!==this.currentId&&(cl"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(this.currentId),this.currentId=null)},this.disposeEffect=()=>this.clear}}function a(){let e=(0,r.A)(i.create)"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:o,easing:i,style:a={}}=e;return{duration:null!=(n=a.transitionDuration)?n:\"number\"==typeof o?o:o[t.mode]||0,e"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:R=d,TransitionComponent:M=o.Ay,...C}=e,I=r.useRef(null),w=(0,s.A)(I,(0,i.A)(h),t),k=e=>t=>{if(e){let n=I.curr"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:R,easing:v},{mode:\"enter\"});e.style.webkitTransition=n.transitions.create(\"opacity\",r),e.style.transition=n.t"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:R,easing:v},{mode:\"exit\"});e.style.webkitTransition=n.transitions.create(\"opacity\",t),e.style.transition=n.tr"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:R,...C,children:(e,t)=>{let{ownerState:n,...o}=t;return r.cloneElement(h,{style:{opacity:0,visibility:\"exited"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/main-e8ac630667d33d22.js",
+      "sha256": "f69fdcdb2d61d0411719e58d1820f0fae94d18b176491e6df66a323b1d7a26bf",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout has not been defined\")}function i(){throw Error(\"clearTimeout has not been defined\")}try{t=\"function\"==typeof"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout?setTimeout:a}catch(e){t=a}try{r=\"function\"==typeof clearTimeout?clearTimeout:i}catch(e){r=i}function u(e){if("
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout)return setTimeout(e,0);if((t===a||!t)&&setTimeout)return t=setTimeout,setTimeout(e,0);try{return t(e,0)}catch"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout)return clearTimeout(e);if((r===i||!r)&&clearTimeout)return r=clearTimeout,clearTimeout(e);try{r(e)}catch(t){t"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>t.scrollIntoView(),0)}render(){return this.props.children}}async function z(e){void 0===e&&(e={}),o=JSON."
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>s(e),0)),window.__NEXT_P=[],window.__NEXT_P.push=s,(l=(0,x.default)()).getIsSsr=()=>n.isSsr,u=document.ge"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){e({didTimeout:!1,timeRemaining:function(){return Math.max(0,50-(Date.now()-t))}})},1)},n=\"undefine"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(e)};(\"function\"==typeof t.default||\"object\"==typeof t.default&&null!==t.default)&&void 0===t.default.__esModu"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{i||a(r)},t))})}function h(){return self.__BUILD_MANIFEST?Promise.resolve(self.__BUILD_MANIFEST):p(new Pr"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/255-dc5f45a243dc3a80.js",
+      "sha256": "0ce304948789a2e44b3b9f3493ea62a36ffb4bec8cc6dcd6086a45f51587e5d8",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "AbortController;async function _(e,t){let{flightRouterState:r,nextUrl:n,prefetchKind:o}=t,l={[u.RSC_HEADER]:\"1\",[u.NEXT_ROUTE"
+        },
+        {
+          "line": 1,
+          "fragment": "AbortController}),(\"function\"==typeof t.default||\"object\"==typeof t.default&&null!==t.default)&&void 0===t.default.__esModule"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout?setTimeout:null,m=\"function\"==typeof clearTimeout?clearTimeout:null,R=\"undefined\"!=typeof setImmediate?setImm"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(S);let M=self.__next_f=self.__next_f||[];M.forEach(T),M.push=T;let w=m(new ReadableStream({start(e){n&&(n.for"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(e)),document.head.appendChild(o)}))},Promise.resolve()).catch(e=>{console.error(e)}).then(()=>{r()}):r()}wind"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout has not been defined\")}function l(){throw Error(\"clearTimeout has not been defined\")}try{t=\"function\"==typeof"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout?setTimeout:o}catch(e){t=o}try{r=\"function\"==typeof clearTimeout?clearTimeout:l}catch(e){r=l}function a(e){if("
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout)return setTimeout(e,0);if((t===o||!t)&&setTimeout)return t=setTimeout,setTimeout(e,0);try{return t(e,0)}catch"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout)return clearTimeout(e);if((r===l||!r)&&clearTimeout)return r=clearTimeout,clearTimeout(e);try{r(e)}catch(t){t"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/4bd1b696-409494caf8c83275.js",
+      "sha256": "d7fd4b1b9d7f818cc97ddd7b672944e523f23d36a2963d5769caf809141fb9e6",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "AbortController?AbortController:function(){var e=[],n=this.signal={aborted:!1,addEventListener:function(n,t){e.push(t)}};this"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){throw e})}}function oh(e,n,t){try{(0,e.onCaughtError)(t.value,{componentStack:t.stack,errorBoundar"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){throw e})}}function og(e,n,t){return(t=lC(t)).tag=3,t.payload={element:null},t.callback=function()"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle=sk(ii.bind(null,r,t,uZ,u2,uJ,n,uY,uq,uX,uj,a,2,-0,0),l);break e}ii(r,t,uZ,u2,uJ,n,uY,uq,uX,uj,a,0,-0,0)"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle=-1,(8192&(d=n.subtreeFlags)||0x1002000==(0x1002000&d))&&(s4={stylesheets:null,count:0,unsuspend:nv},uN("
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){if(e.stylesheets&&s5(e,e.stylesheets),e.unsuspend){var n=e.unsuspend;e.unsuspend=null,n()}},6e4);r"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(t)}}:null}()))){e.cancelPendingCommit=d(iz.bind(null,e,n,a,t,r,l,o,u,s,f,1,p,m)),is(e,a,o,!c);return}iz(e,n,a"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle;-1!==t&&(e.timeoutHandle=-1,sw(t)),null!==(t=e.cancelPendingCommit)&&(e.cancelPendingCommit=null,t()),i"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle)))||eE(r,a)||(t=!0,iG(r,a));r=r.next}while(t);iH=!1}}function iq(){iK()}function iK(){iV=ij=!1;var e,n="
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle),r=e.callbackNode,0===t||e===n&&(2===uU||9===uU)||null!==e.cancelPendingCommit)return null!==r&&null!=="
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle))?null:(iu(e,r,n),iY(e,ea()),null!=e.callbackNode&&e.callbackNode===t?iX.bind(null,e):null)}function iG"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout?setTimeout:void 0,sw=\"function\"==typeof clearTimeout?clearTimeout:void 0,sS=\"function\"==typeof Promise?Promis"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){throw e})}function sz(e){return\"head\"===e}function sC(e,n){var t=n,r=0;do{var l=t.nextSibling;if(e"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle=-1,this.callbackNode=this.next=this.pendingContext=this.context=this.cancelPendingCommit=null,this.call"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(t,20)}function t(){if(!r&&!navigation.transition){var e=navigation.currentEntry;e&&null!=e.url&&navigation.na"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(t,100),function(){r=!0,navigation.removeEventListener(\"navigate\",e),navigation.removeEventListener(\"navigates"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/89-2f0f3e704edf729a.js",
+      "sha256": "ebcfb1acd46803c1923597b3a0145ff068222e1497c9d0dabcd41cbb9985db37",
+      "matches": [
+        {
+          "line": 10,
+          "fragment": "setTimeout(t,17)};function x(){return f||(v(y),f=m.now()+g)}function y(){f=0}function A(){this._call=this._time=this._ne"
+        },
+        {
+          "line": 10,
+          "fragment": "Timeout(d)),t-f>24?(t<1/0&&(d=setTimeout(M,t-m.now()-g)),h&&(h=clearInterval(h))):(h||(p=m.now(),h=setInterval(w,1e3)"
+        },
+        {
+          "line": 10,
+          "fragment": "setTimeout(()=>{this.state&&this.state.currentTapCount>0&&this.state.currentTapCount<this.taps&&(this.state.currentTapCo"
+        },
+        {
+          "line": 10,
+          "fragment": "Timeout(this.state.timerId),this.state.timerId=null)}handlePointerEvent=(t,e)=>{let i=Array.from(t.values());if(\"forc"
+        },
+        {
+          "line": 10,
+          "fragment": "setTimeout(()=>{if(this.isActive&&this.state.startCentroid){this.state.pressThresholdReached=!0;let t=this.state.lastPos"
+        },
+        {
+          "line": 10,
+          "fragment": "TimeoutId:null};constructor(t){super(t),this.tapMaxDistance=t.tapMaxDistance??10,this.dragTimeout=t.dragTimeout??1e3,"
+        },
+        {
+          "line": 10,
+          "fragment": "Timeout:this.dragTimeout,dragThreshold:this.dragThreshold,dragDirection:[...this.dragDirection],requiredKeys:[...this"
+        },
+        {
+          "line": 10,
+          "fragment": "Timeout=t.dragTimeout??this.dragTimeout,this.dragThreshold=t.dragThreshold??this.dragThreshold,this.dragDirection=t.d"
+        },
+        {
+          "line": 10,
+          "fragment": "TimeoutId&&clearTimeout(this.state.dragTimeoutId),this.restoreTouchAction(),this.isActive=!1,this.state={phase:\"waiti"
+        },
+        {
+          "line": 10,
+          "fragment": "TimeoutId:null}}handlePointerEvent(){}tapHandler=()=>{\"waitingForTap\"===this.state.phase&&(this.state.phase=\"tapDetec"
+        },
+        {
+          "line": 10,
+          "fragment": "TimeoutId=setTimeout(()=>{this.resetState()},this.dragTimeout))};dragStartHandler=t=>{\"tapDetected\"===this.state.phas"
+        },
+        {
+          "line": 10,
+          "fragment": "TimeoutId&&(clearTimeout(this.state.dragTimeoutId),this.state.dragTimeoutId=null),this.restoreTouchAction(),this.stat"
+        },
+        {
+          "line": 10,
+          "fragment": "TimeoutId:null};constructor(t){super(t),this.pressDuration=t.pressDuration??500,this.pressMaxDistance=t.pressMaxDista"
+        },
+        {
+          "line": 10,
+          "fragment": "Timeout=t.dragTimeout??1e3,this.dragThreshold=t.dragThreshold??0,this.dragDirection=t.dragDirection||[\"up\",\"down\",\"le"
+        },
+        {
+          "line": 10,
+          "fragment": "Timeout:this.dragTimeout,dragThreshold:this.dragThreshold,dragDirection:[...this.dragDirection],requiredKeys:[...this"
+        },
+        {
+          "line": 10,
+          "fragment": "Timeout=t.dragTimeout??this.dragTimeout,this.dragThreshold=t.dragThreshold??this.dragThreshold,this.dragDirection=t.d"
+        },
+        {
+          "line": 10,
+          "fragment": "TimeoutId&&clearTimeout(this.state.dragTimeoutId),this.restoreTouchAction(),this.isActive=!1,this.state={phase:\"waiti"
+        },
+        {
+          "line": 10,
+          "fragment": "TimeoutId:null}}handlePointerEvent(){}pressHandler=()=>{\"waitingForPress\"===this.state.phase&&(this.state.phase=\"pres"
+        },
+        {
+          "line": 10,
+          "fragment": "TimeoutId=setTimeout(()=>{this.resetState()},this.dragTimeout))};dragStartHandler=t=>{\"pressDetected\"===this.state.ph"
+        },
+        {
+          "line": 10,
+          "fragment": "TimeoutId&&(clearTimeout(this.state.dragTimeoutId),this.state.dragTimeoutId=null),this.restoreTouchAction(),this.stat"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/519-f60aa63db6e40067.js",
+      "sha256": "4a26b1de6ff10f3f262ea92d64c06d32d3b4d47cb0a3063062422fecc0f6b277",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(e)),V=\"undefined\"!=typeof queueMicrotask?queueMicrotask.bind(F):void 0!==f&&f.nextTick||H,K={isArray:m,isArra"
+        },
+        {
+          "line": 1,
+          "fragment": "TimeoutError:!1},el=\"undefined\"!=typeof URLSearchParams?URLSearchParams:eo,ec=\"undefined\"!=typeof FormData?FormData:n"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:0,xsrfCookieName:\"XSRF-TOKEN\",xsrfHeaderName:\"X-XSRF-TOKEN\",maxContentLength:-1,maxBodyLength:-1,env:{FormDat"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(n),n=null),e(...t)};return[(...e)=>{let t=Date.now(),a=t-o;a>=i?s(e,t):(r=e,n||(n=setTimeout(()=>{n=null,s(r)"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:s,timeoutMessage:s,withCredentials:s,withXSRFToken:[REDACTED],adapter:s,responseType:s,xsrfCookieName:s,xsrfHeaderName"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout=u.timeout,\"onloadend\"in y?y.onloadend=g:y.onreadystatechange=function(){y&&4===y.readyState&&(0!==y.status||y"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(g)},y.onabort=function(){y&&(r(new $(\"Request aborted\",$.ECONNABORTED,e,y)),y=null)},y.onerror=function(){r(n"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout=function(){let t=u.timeout?\"timeout of \"+u.timeout+\"ms exceeded\":\"timeout exceeded\",n=u.transitional||ef;u.ti"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutErrorMessage),r(new $(t,n.clarifyTimeoutError?$.ETIMEDOUT:$.ECONNABORTED,e,y)),y=null},void 0===f&&l.setConten"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:u,onDownloadProgress:f,onUploadProgress:l,responseType:c,headers:h,withCredentials:p=\"same-origin\",fetchOptio"
+        },
+        {
+          "line": 1,
+          "fragment": "AbortController,o=function(e){if(!r){r=!0,s();let t=e instanceof Error?e:this.reason;n.abort(t instanceof $?t:new eC(t instan"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{i=null,o(new $(`timeout ${t} of ms exceeded`,$.ETIMEDOUT))},t),s=()=>{e&&(i&&clearTimeout(i),i=null,e.fo"
+        },
+        {
+          "line": 1,
+          "fragment": "TimeoutError:tr.transitional(tr.boolean)},!1),null!=i&&(K.isFunction(i)?t.paramsSerializer={serialize:i}:tt.assertOpt"
+        },
+        {
+          "line": 1,
+          "fragment": "AbortController,t=t=>{e.abort(t)};return this.subscribe(t),e.signal.unsubscribe=()=>this.unsubscribe(t),e.signal}static sourc"
+        },
+        {
+          "line": 1,
+          "fragment": "RequestTimeout:408,Conflict:409,Gone:410,LengthRequired:411,PreconditionFailed:412,PayloadTooLarge:413,UriTooLong:414,Unsupp"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout:504,HttpVersionNotSupported:505,VariantAlsoNegotiates:506,InsufficientStorage:507,LoopDetected:508,NotExtende"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/webpack-2eb758dea75faf50.js",
+      "sha256": "833567d505fed696beed49ecf5ff70ea1f2b838f0c8f64c1b8d2b5564a68e343",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "timeout=120,r.nc&&u.setAttribute(\"nonce\",r.nc),u.setAttribute(\"data-webpack\",t+a),u.src=r.tu(o)),e[o]=[n];var s=(t,r)"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(p);var n=e[o];if(delete e[o],u.parentNode&&u.parentNode.removeChild(u),n&&n.forEach(e=>e(r)),t)return t(r)},p"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(s.bind(null,void 0,{type:\"timeout\",target:u}),12e4);u.onerror=s.bind(null,u.onerror),u.onload=s.bind(null,u.o"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/91-cebb05d263c13a63.js",
+      "sha256": "fff03e93e62df6baf697d2b9850d0184a2d394dcea4a93499c12c4179c04fc23",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "timeout:R=a,TransitionComponent:L=l.Ay,...z}=e,j=o.useRef(null),T=(0,d.A)((0,c.A)(A),j,t),P=e=>t=>{e&&(void 0===t?e(j"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:R,style:B,easing:x},{mode:\"enter\"});e.style.webkitTransition=r.transitions.create(\"-webkit-transform\",{...o})"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:R,style:B,easing:x},{mode:\"exit\"});e.style.webkitTransition=r.transitions.create(\"-webkit-transform\",t),e.sty"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:R,...z,children:(e,t)=>{let{ownerState:r,...n}=t;return o.cloneElement(A,{ref:T,style:{visibility:\"exited\"!=="
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:H,appear:F.current}}),$=(0,v.jsx)(X,{..._,children:m});if(\"permanent\"===D)return(0,v.jsx)(Q,{...J,children:$}"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/framework-e2c84bf8dbc6c531.js",
+      "sha256": "4a1b0d89a8b2fc4eab86ee4af9105fcf769e9aebc8a32e2df4d53376e016080c",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "AbortController?AbortController:function(){var e=[],t=this.signal={aborted:!1,addEventListener:function(t,n){e.push(n)}};this"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){throw e})}}function of(e,t,n){try{(0,e.onCaughtError)(n.value,{componentStack:n.stack,errorBoundar"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){throw e})}}function od(e,t,n){return(n=ld(n)).tag=3,n.payload={element:null},n.callback=function()"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle=sf(ue.bind(null,r,n,iQ,iY,iW,t,i$,ij,iV,iD,a,2,-0,0),l);break e}ue(r,n,iQ,iY,iW,t,i$,ij,iV,iD,a,0,-0,0)"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle=-1,(8192&(d=t.subtreeFlags)||0x1002000==(0x1002000&d))&&(sQ={stylesheets:null,count:0,unsuspend:sW},iw("
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){if(e.stylesheets&&sY(e,e.stylesheets),e.unsuspend){var t=e.unsuspend;e.unsuspend=null,t()}},6e4);r"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(n)}}:null}()))){e.cancelPendingCommit=d(uh.bind(null,e,t,a,n,r,l,o,i,s,f,1,p,m)),ut(e,a,o,!c);return}uh(e,t,a"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle;-1!==n&&(e.timeoutHandle=-1,sd(n)),null!==(n=e.cancelPendingCommit)&&(e.cancelPendingCommit=null,n()),u"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle)))||ek(r,a)||(n=!0,uH(r,a));r=r.next}while(n);uR=!1}}function uM(){uI()}function uI(){uO=uL=!1;var e,t="
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle),r=e.callbackNode,0===n||e===t&&(2===iO||9===iO)||null!==e.cancelPendingCommit)return null!==r&&null!=="
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle))?null:(i7(e,r,t),uU(e,et()),null!=e.callbackNode&&e.callbackNode===n?uj.bind(null,e):null)}function uH"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout?setTimeout:void 0,sd=\"function\"==typeof clearTimeout?clearTimeout:void 0,sp=\"function\"==typeof Promise?Promis"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){throw e})}function sg(e){return\"head\"===e}function sy(e,t){var n=t,r=0,l=0;do{var a=n.nextSibling;"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle=-1,this.callbackNode=this.next=this.pendingContext=this.context=this.cancelPendingCommit=null,this.call"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout?setTimeout:null,k=\"function\"==typeof clearTimeout?clearTimeout:null,w=\"undefined\"!=typeof setImmediate?setImm"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/872-073ef004fbc52a71.js",
+      "sha256": "290b626f75c684b54f9995f87f03ca33ef7b60a8d8be188ad1a6efd2fecbd309",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "timeout:es.transitions.duration.shorter,...t,...eK,children:(0,k.jsxs)(eJ,{...eQ,children:[er,O?(0,k.jsx)(eZ,{...e$})"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:z,role:\"presentation\"}});return(0,A.jsx)(Q,{closeAfterTransition:!0,slots:{backdrop:$},slotProps:{backdrop:{t"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/polyfills-42372ed130431b0a.js",
+      "sha256": "0973c1d64c88adc8e3c950410cb58b288f72118d5965b78049438deb8f2f9683",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(Ry(t),0)});var jy={set:vy,clear:dy},ky=function(){this.head=null,this.tail=null};ky.prototype={add:function(t"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout=function(){n(new TypeError(\"Network request failed\"))},i.onabort=function(){n(new lb(\"Aborted\",\"AbortError\"))"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/355-923dc704b2e9ab98.js",
+      "sha256": "f494630a09bbf44bb7e095a44bfd8f554f6e37315306e0ed4f3cd74d66c546f0",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{K.head.removeChild(t)},1)}return()=>{clearTimeout(e)}},[eu,L,K]),r.useEffect(()=>(N.current=!0,()=>{N.cu"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/26-a332463e558d3c92.js",
+      "sha256": "e3b3ce4e84d039b4113882dcfb76d3b36692392c97209f2137e23529c09b403f",
+      "matches": [
+        {
+          "line": 15,
+          "fragment": "timeouts=new Map;cleanupTimeout=1e3;constructor(e=1e3){this.cleanupTimeout=e}register(e,t,r){this.timeouts||(this.tim"
+        },
+        {
+          "line": 15,
+          "fragment": "setTimeout(()=>{\"function\"==typeof t&&t(),this.timeouts.delete(r.cleanupToken)},this.cleanupTimeout);this.timeouts.set(r"
+        },
+        {
+          "line": 15,
+          "fragment": "timeouts.get(e.cleanupToken);t&&(this.timeouts.delete(e.cleanupToken),clearTimeout(t))}reset(){this.timeouts&&(this.t"
+        },
+        {
+          "line": 15,
+          "fragment": "timeouts=void 0)}}class ts{registry=new FinalizationRegistry(e=>{\"function\"==typeof e&&e()});register(e,t,r){this.reg"
+        },
+        {
+          "line": 17,
+          "fragment": "setTimeout(n,t))}return o.clear=()=>{clearTimeout(r),r=void 0},o}(m,h):void 0,[h,m]);c.useEffect(()=>null==b?void 0:b.cl"
+        },
+        {
+          "line": 64,
+          "fragment": "setTimeout(()=>{var l;if((null==(l=s.current)?void 0:l.id)!==t.id){if(!e.current.getRow(t.id)||e.current.getRowMode(t.id"
+        },
+        {
+          "line": 64,
+          "fragment": "Timeout(a.current)},[]);let A=c.useCallback((t,r)=>{if(t.cellMode===rT.Edit){let l;if(229!==r.which){if(\"Escape\"===r."
+        },
+        {
+          "line": 64,
+          "fragment": "Timeout(l),delete e[r][t]})})}},[]);let o=c.useCallback((e,t)=>{if(r.current[e])if(t){if(r.current[e][t]){let[,l]=r.c"
+        },
+        {
+          "line": 64,
+          "fragment": "Timeout(l)}let o=setTimeout(()=>{n(),delete r.current[e][t]},l);r.current[e][t]=[o,()=>{let[l]=r.current[e][t];clearT"
+        },
+        {
+          "line": 71,
+          "fragment": "setTimeout(()=>{t.removeEventListener(\"click\",an,!0)},100),n.columnHeaderElement&&(n.columnHeaderElement.style.pointerEv"
+        },
+        {
+          "line": 73,
+          "fragment": "setTimeout(()=>{URL.revokeObjectURL(t)});return}throw Error(\"MUI X: exportAs not supported.\")}(new Blob([e?.utf8WithBom?"
+        },
+        {
+          "line": 74,
+          "fragment": "setTimeout(()=>{g.current=!0},0),()=>{g.current=!1}),[]);let m=(0,o.A)((0,a.A)(t),f),b=(0,i.A)(e=>{let t=h.current;h.cur"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/666-3f8849dc7141a81e.js",
+      "sha256": "3ecc12d1f6836f6d63546eea49518b82ec3267a2399ffb43b597033ad90a0470",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "timeout\")})});a.useEffect(()=>(s&&u(t),d.clear),[s,t,u,d]);let v=d.clear,m=a.useCallback(()=>{null!=t&&u(null!=c?c:.5"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:I,direction:\"top\"===d?\"down\":\"up\"},ownerState:X});return!T&&U?null:(0,k.jsx)(Q,{...ee,...F.clickAwayListener&"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{m.current=!0},0),()=>{m.current=!1}),[]);let h=(0,n.A)((0,l.A)(t),v),f=(0,i.A)(e=>{let t=g.current;g.cur"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/app/site-settings/page-9727643aed876a19.js",
+      "sha256": "60105ecde0fdca740e74caa5f01a2331cb3e5737315d83a650cf2951e7ff198c",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>P(null),3e3)):T(i.message||\"Failed to save settings\")}catch(e){T(\"Failed to save settings\"),console.error"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/app/app-update/page-4f2877055ac1c500.js",
+      "sha256": "db22be3c36e91c8c32f79aebd21b547bf12479417b1ec96d2f946775f8967891",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>E(null),3e3)):C(t.message||\"Failed to save settings\")}catch(e){C(\"Failed to save settings\"),console.error"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/app/setup/page-f04bc95fc1fe1721.js",
+      "sha256": "4afe7c158d5ca60ae2ea6766864a8d83ee46dcdd83a66646650d71529e396a96",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{C.push(\"/login\")},2e3)):j(a.data.message||\"Failed to create admin account\")}catch(e){var a,n,i,s,r,o;(nu"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/static/chunks/app/products/page-d648b5f6aaa40c0f.js",
+      "sha256": "2672a7359e59c861ba503efe23ee722d136e349ef7b47dfea545a7ed2622b36b",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "Timeout(el.current),el.current=setTimeout(()=>{U(e=>({...e,search:J})),H(1)},350),()=>{el.current&&clearTimeout(el.cu"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/server/pages/_error.js",
+      "sha256": "d7b1ac3d2630a9307bdb082ffe2bfe53e78c4396a9568569b52ad26360d1310b",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "AbortController:function(){return j},signalFromNodeResponse:function(){return k}});let d=c(35124),e=c(39833),f=c(41801),g=c(6"
+        },
+        {
+          "line": 1,
+          "fragment": "AbortController;return a.once(\"close\",()=>{a.writableFinished||b.abort(new i)}),b}function k(a){let{errored:b,destroyed:c}=a;"
+        },
+        {
+          "line": 19,
+          "fragment": "AbortController)(b),l=function(a,b){let c=!1,d=new e.DetachedPromise;function i(){d.resolve()}a.on(\"drain\",i),a.once(\"close\","
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/server/chunks/611.js",
+      "sha256": "c5b585138c6d2650d2897c042b453dd06eb0090e40268d065debd32932053a6a",
+      "matches": [
+        {
+          "line": 6,
+          "fragment": "setTimeout(j,k)}return function(...a){e=a,f=this,i=Date.now(),void 0===d&&(h=i,d=setTimeout(j,b))}}},80092:(a,b,c)=>{\"us"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/server/chunks/386.js",
+      "sha256": "d9ddc092c0782d49cf21e191fa141caa27d6edeb4c38e06d144853a40a2c68c9",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "Timeout(v),v=setTimeout(a,b)})(c.delayError)}else clearTimeout(v),b=null,N?o(d.errors,J,N):C(d.errors,J);if((N?!u(a,N"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(an);if(G.state.next({isSubmitted:!0,isSubmitting:!1,isSubmitSuccessful:y(d.errors)&&!f,submitCount:d.submitCo"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/server/chunks/586.js",
+      "sha256": "dc7e04b5cbc1b7f3a4fae2bcf9a818b7430b72d0edf809d2520f98565f15b4e6",
+      "matches": [
+        {
+          "line": 2,
+          "fragment": "AbortController;return a.abort(Object.defineProperty(new l.BailoutToCSRError(\"Render in Browser\"),\"__NEXT_ERROR_CODE\",{value:"
+        },
+        {
+          "line": 2,
+          "fragment": "AbortController;if(a.cacheSignal)a.cacheSignal.inputReady().then(()=>{b.abort()});else{let c=(0,g.getRuntimeStagePromise)(a);"
+        },
+        {
+          "line": 22,
+          "fragment": "AbortController)(b),l=function(a,b){let c=!1,d=new e.DetachedPromise;function i(){d.resolve()}a.on(\"drain\",i),a.once(\"close\","
+        },
+        {
+          "line": 22,
+          "fragment": "setTimeout\\`, \\`after\\`, or similar functions you may observe this error and you should handle it in that context. This "
+        },
+        {
+          "line": 22,
+          "fragment": "setTimeout(()=>{b(a)},0)})}},84226:(a,b)=>{\"use strict\";Object.defineProperty(b,\"__esModule\",{value:!0}),!function(a,b){"
+        },
+        {
+          "line": 22,
+          "fragment": "AbortController:function(){return j},signalFromNodeResponse:function(){return k}});let d=c(39326),e=c(17679),f=c(87129),g=c(7"
+        },
+        {
+          "line": 22,
+          "fragment": "AbortController;return a.once(\"close\",()=>{a.writableFinished||b.abort(new i)}),b}function k(a){let{errored:b,destroyed:c}=a;"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/server/chunks/748.js",
+      "sha256": "d4e5ee2c641ad2a69541d07cd19a4d9d87b9c2287506468b805c23c7ad6e2204",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "timeout:Z,children:(0,x.jsx)(ag,{...ah,children:r})})})});var F=c(59816);function G(a){return(0,t.Ay)(\"MuiMenu\",a)}(0"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:z=\"auto\",TransitionComponent:A=g.Ay,...B}=a,C=(0,e.A)(),D=d.useRef(),E=(0,h.A)(),F=d.useRef(null),G=(0,j.A)(F"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:z,easing:q},{mode:\"enter\"});\"auto\"===z?D.current=c=E.transitions.getAutoHeightDuration(a.clientHeight):c=d,a."
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:z,easing:q},{mode:\"exit\"});\"auto\"===z?D.current=b=E.transitions.getAutoHeightDuration(a.clientHeight):b=c,a.s"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:\"auto\"===z?null:z,...B,children:(a,{ownerState:b,...c})=>d.cloneElement(p,{style:{opacity:0,transform:l(.75),"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/server/chunks/806.js",
+      "sha256": "1a82217483a5ecd39638a665e4f9c981b0670415dddb7931cdc04a000953b255",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "timeout:af.transitions.duration.shorter,...a,...aU,children:(0,A.jsxs)(aV,{...aW,children:[aa,k?(0,A.jsx)(aX,{...aY})"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:Q,role:\"presentation\"}});return(0,w.jsx)(Z,{closeAfterTransition:!0,slots:{backdrop:_},slotProps:{backdrop:{t"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/server/chunks/34.js",
+      "sha256": "cc99c4d81ca87037e3ff2a6c3fa505f3d5c6f6526b776846ddda5108a81eefee",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "timeout:D=f,TransitionComponent:E=i.Ay,...F}=a,G=d.useRef(null),H=(0,l.A)((0,j.A)(r),G,b),I=a=>b=>{a&&(void 0===b?a(G"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:D,style:C,easing:u},{mode:\"enter\"});a.style.webkitTransition=c.transitions.create(\"-webkit-transform\",{...d})"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:D,style:C,easing:u},{mode:\"exit\"});a.style.webkitTransition=c.transitions.create(\"-webkit-transform\",b),a.sty"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:D,...F,children:(a,{ownerState:b,...c})=>d.cloneElement(r,{ref:H,style:{visibility:\"exited\"!==a||v?void 0:\"hi"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:J,appear:O.current}}),_=(0,p.jsx)(V,{...W,children:n});if(\"permanent\"===K)return(0,p.jsx)(X,{...Y,children:_}"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/server/chunks/448.js",
+      "sha256": "d8950883fa9456635d113c7a319a1b688b1313d38c9c5f4f2ff64c0cdae57a90",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(a)),T=\"undefined\"!=typeof queueMicrotask?queueMicrotask.bind(K):\"undefined\"!=typeof process&&process.nextTick"
+        },
+        {
+          "line": 1,
+          "fragment": "TimeoutError:!1};var aj=c(55511);let ak=c(79551).URLSearchParams,al=\"abcdefghijklmnopqrstuvwxyz\",am=\"0123456789\",an={"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:0,xsrfCookieName:\"XSRF-TOKEN\",xsrfHeaderName:\"X-XSRF-TOKEN\",maxContentLength:-1,maxBodyLength:-1,env:{FormDat"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{b(null,a)},g-n);c<m&&(m=c)}m&&k>m&&k-m>i&&(l=a.subarray(m),a=a.subarray(0,m)),j(a,l?()=>{process.nextTic"
+        },
+        {
+          "line": 3,
+          "fragment": "Timeout(d),d=null),a(...b)};return[(...a)=>{let b=Date.now(),h=b-e;h>=f?g(a,b):(c=a,d||(d=setTimeout(()=>{d=null,g(c)"
+        },
+        {
+          "line": 3,
+          "fragment": "timeout){let b=parseInt(a.timeout,10);if(Number.isNaN(b))return void c(new V(\"error trying to parse `config.timeout` "
+        },
+        {
+          "line": 3,
+          "fragment": "setTimeout(b,function(){if(h)return;let b=a.timeout?\"timeout of \"+a.timeout+\"ms exceeded\":\"timeout exceeded\",d=a.transit"
+        },
+        {
+          "line": 3,
+          "fragment": "timeoutErrorMessage&&(b=a.timeoutErrorMessage),c(new V(b,d.clarifyTimeoutError?V.ETIMEDOUT:V.ECONNABORTED,a,i)),u()})"
+        },
+        {
+          "line": 3,
+          "fragment": "timeout:g,timeoutMessage:g,withCredentials:g,withXSRFToken:[REDACTED],adapter:g,responseType:g,xsrfCookieName:g,xsrfHeaderName"
+        },
+        {
+          "line": 3,
+          "fragment": "timeout=i.timeout,\"onloadend\"in p?p.onloadend=q:p.onreadystatechange=function(){p&&4===p.readyState&&(0!==p.status||p"
+        },
+        {
+          "line": 3,
+          "fragment": "setTimeout(q)},p.onabort=function(){p&&(c(new V(\"Request aborted\",V.ECONNABORTED,a,p)),p=null)},p.onerror=function(){c(n"
+        },
+        {
+          "line": 3,
+          "fragment": "timeout=function(){let b=i.timeout?\"timeout of \"+i.timeout+\"ms exceeded\":\"timeout exceeded\",d=i.transitional||ai;i.ti"
+        },
+        {
+          "line": 3,
+          "fragment": "timeoutErrorMessage),c(new V(b,d.clarifyTimeoutError?V.ETIMEDOUT:V.ECONNABORTED,a,p)),p=null},void 0===j&&k.setConten"
+        },
+        {
+          "line": 3,
+          "fragment": "timeout:i,onDownloadProgress:j,onUploadProgress:k,responseType:l,headers:m,withCredentials:n=\"same-origin\",fetchOptio"
+        },
+        {
+          "line": 3,
+          "fragment": "AbortController,e=function(a){if(!c){c=!0,g();let b=a instanceof Error?a:this.reason;d.abort(b instanceof V?b:new aF(b instan"
+        },
+        {
+          "line": 3,
+          "fragment": "setTimeout(()=>{f=null,e(new V(`timeout ${b} of ms exceeded`,V.ETIMEDOUT))},b),g=()=>{a&&(f&&clearTimeout(f),f=null,a.fo"
+        },
+        {
+          "line": 3,
+          "fragment": "TimeoutError:bJ.transitional(bJ.boolean)},!1),null!=f&&(U.isFunction(f)?b.paramsSerializer={serialize:f}:bI.assertOpt"
+        },
+        {
+          "line": 3,
+          "fragment": "AbortController,b=b=>{a.abort(b)};return this.subscribe(b),a.signal.unsubscribe=()=>this.unsubscribe(b),a.signal}static sourc"
+        },
+        {
+          "line": 3,
+          "fragment": "RequestTimeout:408,Conflict:409,Gone:410,LengthRequired:411,PreconditionFailed:412,PayloadTooLarge:413,UriTooLong:414,Unsupp"
+        },
+        {
+          "line": 3,
+          "fragment": "Timeout:504,HttpVersionNotSupported:505,VariantAlsoNegotiates:506,InsufficientStorage:507,LoopDetected:508,NotExtende"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/server/chunks/925.js",
+      "sha256": "d050078aa22ea2985a16f677de0aba752c751f21bbeb239ea5a92f874fae1650",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{o.current=!0},0),()=>{o.current=!1}),[]);let q=(0,f.A)((0,h.A)(b),n),r=(0,g.A)(a=>{let b=p.current;p.cur"
+        },
+        {
+          "line": 16,
+          "fragment": "timeouts=new Map;cleanupTimeout=1e3;constructor(a=1e3){this.cleanupTimeout=a}register(a,b,c){this.timeouts||(this.tim"
+        },
+        {
+          "line": 16,
+          "fragment": "setTimeout(()=>{\"function\"==typeof b&&b(),this.timeouts.delete(c.cleanupToken)},this.cleanupTimeout);this.timeouts.set(c"
+        },
+        {
+          "line": 16,
+          "fragment": "timeouts.get(a.cleanupToken);b&&(this.timeouts.delete(a.cleanupToken),clearTimeout(b))}reset(){this.timeouts&&(this.t"
+        },
+        {
+          "line": 16,
+          "fragment": "timeouts=void 0)}}class bi{registry=new FinalizationRegistry(a=>{\"function\"==typeof a&&a()});register(a,b,c){this.reg"
+        },
+        {
+          "line": 18,
+          "fragment": "setTimeout(e,b))}return f.clear=()=>{clearTimeout(c),c=void 0},f}(q,p):void 0,[p,q]);k.useEffect(()=>r?.clear,[r]);let s"
+        },
+        {
+          "line": 104,
+          "fragment": "setTimeout(()=>{if(i.current?.id!==b.id){if(!a.current.getRow(b.id)||a.current.getRowMode(b.id)===cH.View||t(b.id))retur"
+        },
+        {
+          "line": 104,
+          "fragment": "Timeout(h.current)},[]);let x=k.useCallback((b,c)=>{if(b.cellMode===cH.Edit){let d;if(229!==c.which){if(\"Escape\"===c."
+        },
+        {
+          "line": 104,
+          "fragment": "Timeout(d),delete a[b][c]})})}},[]);let f=k.useCallback((a,b)=>{if(c.current[a])if(b){if(c.current[a][b]){let[,d]=c.c"
+        },
+        {
+          "line": 104,
+          "fragment": "Timeout(d)}let f=setTimeout(()=>{e(),delete c.current[a][b]},d);c.current[a][b]=[f,()=>{let[d]=c.current[a][b];clearT"
+        },
+        {
+          "line": 111,
+          "fragment": "setTimeout(()=>{b.removeEventListener(\"click\",hd,!0)},100),e.columnHeaderElement&&(e.columnHeaderElement.style.pointerEv"
+        },
+        {
+          "line": 113,
+          "fragment": "setTimeout(()=>{URL.revokeObjectURL(b)});return}throw Error(\"MUI X: exportAs not supported.\")}(new Blob([a?.utf8WithBom?"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/server/chunks/674.js",
+      "sha256": "e75063fb4f352b8a1206cdf33b5d942ceffb0748e3b92ad800f219d291155d24",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "abortController.abort(Object.defineProperty(Error(\"Accessed fallback `params` during prerendering.\"),\"__NEXT_ERROR_CODE\",{val"
+        },
+        {
+          "line": 2,
+          "fragment": "AbortController;return a.abort(Object.defineProperty(new l.BailoutToCSRError(\"Render in Browser\"),\"__NEXT_ERROR_CODE\",{value:"
+        },
+        {
+          "line": 2,
+          "fragment": "AbortController;if(a.cacheSignal)a.cacheSignal.inputReady().then(()=>{b.abort()});else{let c=(0,g.getRuntimeStagePromise)(a);"
+        },
+        {
+          "line": 4,
+          "fragment": "AbortController,q=async()=>{await (0,h.waitAtLeastOneReactRenderTask)(),p.abort()},r=[],{prelude:s}=await (0,f.unstable_prere"
+        },
+        {
+          "line": 4,
+          "fragment": "AbortController;(0,h.waitAtLeastOneReactRenderTask)().then(()=>l.abort());let{prelude:n}=await (0,f.unstable_prerender)(j,d,{"
+        },
+        {
+          "line": 4,
+          "fragment": "AbortController;return(0,h.waitAtLeastOneReactRenderTask)().then(()=>{c=!0,d.abort()}),await (0,f.unstable_prerender)(a,b,{fi"
+        },
+        {
+          "line": 4,
+          "fragment": "setTimeout(()=>{E.head.removeChild(b)},1)}return()=>{clearTimeout(a)}},[ag,u,E]),d.useEffect(()=>(L.current=!0,()=>{L.cu"
+        },
+        {
+          "line": 39,
+          "fragment": "AbortController;async function p(a,b){let{flightRouterState:c,nextUrl:d,prefetchKind:f}=b,g={[e.RSC_HEADER]:\"1\",[e.NEXT_ROUTE"
+        },
+        {
+          "line": 42,
+          "fragment": "setTimeout\\`, \\`after\\`, or similar functions you may observe this error and you should handle it in that context. This "
+        },
+        {
+          "line": 42,
+          "fragment": "setTimeout(()=>{b(a)},0)})}},71791:(a,b,c)=>{\"use strict\";Object.defineProperty(b,\"__esModule\",{value:!0}),!function(a,b"
+        },
+        {
+          "line": 42,
+          "fragment": "abortController.abort(Object.defineProperty(Error(\"Accessed fallback `params` during prerendering.\"),\"__NEXT_ERROR_CODE\",{val"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/server/chunks/563.js",
+      "sha256": "af1281679db0072cefed8368fdaf12ff2cb10a9d1c9bbc6d3449d7187f842b3b",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "Timeout(c),c=setTimeout(f,b)}return e.clear=()=>{clearTimeout(c)},e}},26667:(a,b,c)=>{c.d(b,{A:()=>g});var d=c(38301)"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:v,...w,...D,children:(0,n.jsx)(A,{\"aria-hidden\":!0,...B,classes:y,ref:b,children:d})})})},35035:(a,b,c)=>{c.d"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:y=l,TransitionComponent:z=e.Ay,...A}=a,B=d.useRef(null),C=(0,i.A)(B,(0,f.A)(o),b),D=a=>b=>{if(a){let c=B.curr"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:y,easing:p},{mode:\"enter\"});a.style.webkitTransition=c.transitions.create(\"opacity\",d),a.style.transition=c.t"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:y,easing:p},{mode:\"exit\"});a.style.webkitTransition=c.transitions.create(\"opacity\",b),a.style.transition=c.tr"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:y,...A,children:(a,{ownerState:b,...c})=>d.cloneElement(o,{style:{opacity:0,visibility:\"exited\"!==a||q?void 0"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeouts=function(){var a,b,c,d=this.props.timeout;return a=b=c=d,null!=d&&\"number\"!=typeof d&&(a=d.exit,b=d.enter,c="
+        },
+        {
+          "line": 1,
+          "fragment": "Timeouts(),k=d?h.appear:h.enter;if(!a&&!c||j.disabled)return void this.safeSetState({status:o},function(){b.props.onE"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeouts(),d=this.props.nodeRef?void 0:i().findDOMNode(this);if(!b||j.disabled)return void this.safeSetState({status:"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(this.nextCallback,0);if(this.props.addEndListener){var e=this.props.nodeRef?[this.nextCallback]:[c,this.nextC"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(this.nextCallback,a)},c.render=function(){var a=this.state.status;if(a===l)return null;var b=this.props,c=b.c"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout,b.addEndListener,b.onEnter,b.onEntering,b.onEntered,b.onExit,b.onExiting,b.onExited,b.nodeRef,(0,d.A)(b,[\"chi"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout\",\"addEndListener\",\"onEnter\",\"onEntering\",\"onEntered\",\"onExit\",\"onExiting\",\"onExited\",\"nodeRef\"]));return g()."
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:c,easing:d,style:e={}}=a;return{duration:e.transitionDuration??(\"number\"==typeof c?c:c[b.mode]||0),easing:e.t"
+        },
+        {
+          "line": 31,
+          "fragment": "timeout:l}=a,[m,n]=d.useState(!1),o=(0,f.A)(b,c.ripple,c.rippleVisible,e&&c.ripplePulsate),p=(0,f.A)(c.child,m&&c.chi"
+        },
+        {
+          "line": 31,
+          "fragment": "setTimeout(k,l);return()=>{clearTimeout(a)}}},[k,j,l]),(0,y.jsx)(\"span\",{className:o,style:{width:i,height:i,top:-(i/2)+"
+        },
+        {
+          "line": 74,
+          "fragment": "timeout:550,pulsate:b,rippleX:c,rippleY:d,rippleSize:g},l.current)]),l.current+=1,m.current=h},[e]),s=d.useCallback(("
+        },
+        {
+          "line": 74,
+          "fragment": "setTimeout(()=>{this.currentId=null,b()},a)}constructor(){this.currentId=null,this.clear=()=>{null!==this.currentId&&(cl"
+        },
+        {
+          "line": 74,
+          "fragment": "Timeout(this.currentId),this.currentId=null)},this.disposeEffect=()=>this.clear}}function g(){let a=(0,d.A)(f.create)"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/server/app/site-settings/page.js",
+      "sha256": "03016f1bfb6fc8a28964f77969a4ccefad50808d769f47fee91da08cabefca91",
+      "matches": [
+        {
+          "line": 53,
+          "fragment": "setTimeout(()=>B(null),3e3)):z(e.message||\"Failed to save settings\")}catch(a){z(\"Failed to save settings\"),console.error"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/server/app/app-update/page.js",
+      "sha256": "b13f8f16a9120c0549a27a37d12944029a6811ca0a75cdd89578ea6040fe2d56",
+      "matches": [
+        {
+          "line": 2,
+          "fragment": "setTimeout(()=>A(null),3e3)):y(b.message||\"Failed to save settings\")}catch(a){y(\"Failed to save settings\"),console.error"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/server/app/setup/page.js",
+      "sha256": "610067bb48db1026847928fbf62cbba13430513889dbdbb93ca45d64eccca0b6",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{u.push(\"/login\")},2e3)):p(c.data.message||\"Failed to create admin account\")}catch(a){a?.code===\"ECONNREF"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/server/app/products/page.js",
+      "sha256": "038b1cb0cf580cb65eab8616dcaaf7ed21212a0ea177c9310a7745c61e326972",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{o.current=!0},0),()=>{o.current=!1}),[]);let q=(0,f.A)((0,h.A)(b),n),r=(0,g.A)(a=>{let b=p.current;p.cur"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout\")})});e.useEffect(()=>(f&&j(b),h.clear),[f,b,j,h]);let k=h.clear,l=e.useCallback(()=>{null!=b&&j(null!=g?g:.5"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:D,direction:\"top\"===i?\"down\":\"up\"},ownerState:J});return!x&&O?null:(0,d.jsx)(T,{...V,...z.clickAwayListener&&"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(O.current),O.current=setTimeout(()=>{H(a=>({...a,search:I})),B(1)},350),()=>{O.current&&clearTimeout(O.curren"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/server/app/survey/page.js",
+      "sha256": "14d362544fcef3e6dfa4d91dac39289213a573e29b4149ed2a0db2732edfdd6c",
+      "matches": [
+        {
+          "line": 2,
+          "fragment": "setTimeout(a,17)};function fx(){return ft||(fw(fy),ft=fv.now()+fu)}function fy(){ft=0}function fz(){this._call=this._tim"
+        },
+        {
+          "line": 2,
+          "fragment": "Timeout(fq)),a-ft>24?(a<1/0&&(fq=setTimeout(fB,a-fv.now()-fu)),fr&&(fr=clearInterval(fr))):(fr||(fs=fv.now(),fr=setIn"
+        },
+        {
+          "line": 11,
+          "fragment": "setTimeout(()=>{this.state&&this.state.currentTapCount>0&&this.state.currentTapCount<this.taps&&(this.state.currentTapCo"
+        },
+        {
+          "line": 11,
+          "fragment": "Timeout(this.state.timerId),this.state.timerId=null)}handlePointerEvent=(a,b)=>{let c=Array.from(a.values());if(\"forc"
+        },
+        {
+          "line": 11,
+          "fragment": "setTimeout(()=>{if(this.isActive&&this.state.startCentroid){this.state.pressThresholdReached=!0;let a=this.state.lastPos"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId:null};constructor(a){super(a),this.tapMaxDistance=a.tapMaxDistance??10,this.dragTimeout=a.dragTimeout??1e3,"
+        },
+        {
+          "line": 11,
+          "fragment": "Timeout:this.dragTimeout,dragThreshold:this.dragThreshold,dragDirection:[...this.dragDirection],requiredKeys:[...this"
+        },
+        {
+          "line": 11,
+          "fragment": "Timeout=a.dragTimeout??this.dragTimeout,this.dragThreshold=a.dragThreshold??this.dragThreshold,this.dragDirection=a.d"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId&&clearTimeout(this.state.dragTimeoutId),this.restoreTouchAction(),this.isActive=!1,this.state={phase:\"waiti"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId:null}}handlePointerEvent(){}tapHandler=()=>{\"waitingForTap\"===this.state.phase&&(this.state.phase=\"tapDetec"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId=setTimeout(()=>{this.resetState()},this.dragTimeout))};dragStartHandler=a=>{\"tapDetected\"===this.state.phas"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId&&(clearTimeout(this.state.dragTimeoutId),this.state.dragTimeoutId=null),this.restoreTouchAction(),this.stat"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId:null};constructor(a){super(a),this.pressDuration=a.pressDuration??500,this.pressMaxDistance=a.pressMaxDista"
+        },
+        {
+          "line": 11,
+          "fragment": "Timeout=a.dragTimeout??1e3,this.dragThreshold=a.dragThreshold??0,this.dragDirection=a.dragDirection||[\"up\",\"down\",\"le"
+        },
+        {
+          "line": 11,
+          "fragment": "Timeout:this.dragTimeout,dragThreshold:this.dragThreshold,dragDirection:[...this.dragDirection],requiredKeys:[...this"
+        },
+        {
+          "line": 11,
+          "fragment": "Timeout=a.dragTimeout??this.dragTimeout,this.dragThreshold=a.dragThreshold??this.dragThreshold,this.dragDirection=a.d"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId&&clearTimeout(this.state.dragTimeoutId),this.restoreTouchAction(),this.isActive=!1,this.state={phase:\"waiti"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId:null}}handlePointerEvent(){}pressHandler=()=>{\"waitingForPress\"===this.state.phase&&(this.state.phase=\"pres"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId=setTimeout(()=>{this.resetState()},this.dragTimeout))};dragStartHandler=a=>{\"pressDetected\"===this.state.ph"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId&&(clearTimeout(this.state.dragTimeoutId),this.state.dragTimeoutId=null),this.restoreTouchAction(),this.stat"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/src/lib/api.ts",
+      "sha256": "b251e455955aa7e81eeb3d4c015c9386d461e06901e7ed7d07ed7ebcc295d9be",
+      "matches": [
+        {
+          "line": 36,
+          "fragment": "axios.create({\n  baseURL: API_BASE_URL,\n});\n\n// Fallback: if a request to localhost:8081 fails (legacy default), retry onc"
+        },
+        {
+          "line": 54,
+          "fragment": "axios.create({ baseURL: fallbackBase });\n      const retryConfig = {\n        ...config,\n        baseURL: fallbackBase,\n   "
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/src/app/site-settings/page.tsx",
+      "sha256": "2e16502436e22268715dc498faa328f89a061614a2ffb3f347632f360d837d8f",
+      "matches": [
+        {
+          "line": 263,
+          "fragment": "setTimeout(() => setSuccess(null), 3000);\n      } else {\n        setError(data.message || 'Failed to save settings');\n  "
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/src/app/app-update/page.tsx",
+      "sha256": "118ac407e7a63033bfb3b8c7b674b163e758e63147c25a53325493b45a7868ff",
+      "matches": [
+        {
+          "line": 129,
+          "fragment": "setTimeout(() => setSuccess(null), 3000);\n      } else {\n        setError(data.message || 'Failed to save settings');\n  "
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/src/app/setup/page.tsx",
+      "sha256": "f31597d75b4e5fc5920bc52cc8f7b8590f3b407af0ef1d26d24ff22869822255",
+      "matches": [
+        {
+          "line": 107,
+          "fragment": "setTimeout(() => {\n          router.push('/login');\n        }, 2000);\n      } else {\n        setError(response.data.mess"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/src/app/products/page.tsx",
+      "sha256": "1d8d2fd814ee14723015a57654d7052eb383eee8d15dc6217fcaf8141e16096a",
+      "matches": [
+        {
+          "line": 113,
+          "fragment": "setTimeout> | null>(null);\n\n  // Fetch categories and setup data\n  useEffect(() => {\n    const fetchCategories = async ("
+        },
+        {
+          "line": 217,
+          "fragment": "Timeout(searchDebounceRef.current);\n\n    searchDebounceRef.current = setTimeout(() => {\n      setFilters(prev => ({ ."
+        },
+        {
+          "line": 225,
+          "fragment": "Timeout(searchDebounceRef.current);\n    };\n  }, [searchInput, filters.search]);\n\n  // Filter handlers\n  const handleR"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/node-backend/scripts/trustfolio-category-price-watcher.js",
+      "sha256": "446c7cb5f39356be67529004daa6c8f658564fff33b522e6d393c9f48799def2",
+      "matches": [
+        {
+          "line": 27,
+          "fragment": "setTimeout(() => {\n    timer = null;\n    void flush();\n  }, 6500);\n}\n\nasync function flush() {\n  if (running || stopped)"
+        },
+        {
+          "line": 128,
+          "fragment": "setTimeout(() => {\n    reconnect = null;\n    void startStream();\n  }, 10000);\n}\n\nasync function startStream() {\n  if (st"
+        },
+        {
+          "line": 168,
+          "fragment": "Timeout(timer);\n    if (reconnect) clearTimeout(reconnect);\n    void (async () => {\n      if (stream) await stream.cl"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/node-backend/services/ProductAvailabilityPolicy.js",
+      "sha256": "a814eb2a9f78289c66bb6cf9f9d9e4fff60769384147fa361f8ccd53b4150673",
+      "matches": [
+        {
+          "line": 20,
+          "fragment": "timeout','timed_out','skipped','no_price',\n  'http_502','http_503','http_504','502','503','504','gateway_timeout',\n  "
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/node-backend/services/LivePriceService.js",
+      "sha256": "03d5c3c8ac73f7df281162bdaea467fef4f94859427938db1fbde65fef637f0d",
+      "matches": [
+        {
+          "line": 12,
+          "fragment": "TIMEOUT_MS = 6000;\nconst MAX_IDS = 30;\n\n/** listing id -> pending fetch, shared by concurrent page views */\nconst inf"
+        },
+        {
+          "line": 50,
+          "fragment": "AbortSignal.timeout(WORKER_TIMEOUT_MS)"
+        },
+        {
+          "line": 73,
+          "fragment": "timeouts keep the last good price so the page still shows one.\n    price_inr: priced ? result.priceNum : prev.price_i"
+        },
+        {
+          "line": 130,
+          "fragment": "timeouts and errors never delete. A copy goes to my_products_deleted so a delete can be undone.\n  // Bound irreversib"
+        },
+        {
+          "line": 132,
+          "fragment": "timeout/WAF failures NEVER count as unavailable.\n  const outOfStock = fetched.filter((d) => isConfirmedUnavailable(d."
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/node-backend/services/CromaLivePriceDirect.js",
+      "sha256": "4be6c32c90c28757f1cb3ad2ea399274387088612f214d579c8de7e154f18c71",
+      "matches": [
+        {
+          "line": 58,
+          "fragment": "timeout','3','--max-time','5','--url',url],\n      {timeout:5500, encoding:'utf8', maxBuffer:4000000}, (e,out) => {\n  "
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/standalone/server.js",
+      "sha256": "b6cbd7901308ecff0f7efcb2f3950ceb6e61bb33d40ec66c850f198627458abd",
+      "matches": [
+        {
+          "line": 11,
+          "fragment": "keepAliveTimeout = parseInt(process.env.KEEP_ALIVE_TIMEOUT, 10)\nconst nextConfig = {\"env\":{},\"webpack\":null,\"eslint\":{\"ignoreD"
+        },
+        {
+          "line": 12,
+          "fragment": "Timeout\":60,\"output\":\"standalone\",\"modularizeImports\":{\"@mui/icons-material\":{\"transform\":\"@mui/icons-material/{{memb"
+        },
+        {
+          "line": 12,
+          "fragment": "TimeoutInSeconds\":7,\"imgOptMaxInputPixels\":268402689,\"imgOptSequentialRead\":null,\"isrFlushToDisk\":true,\"workerThreads"
+        },
+        {
+          "line": 20,
+          "fragment": "keepAliveTimeout) ||\n  !Number.isFinite(keepAliveTimeout) ||\n  keepAliveTimeout < 0\n) {\n  keepAliveTimeout = undefined\n}\n\nstar"
+        },
+        {
+          "line": 34,
+          "fragment": "keepAliveTimeout,\n}).catch((err) => {\n  console.error(err);\n  process.exit(1);\n});"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/standalone/.next/static/chunks/589-9ac8ea0c3c7d1e0c.js",
+      "sha256": "3850d45e0a5de70e6e70c4b8f8e42bc5cd44c658c403c4d2d3866f8cb2bef572",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "TIMEOUT_MS);return Number.isFinite(e)&&e>=1e3?e:8e3})(),i=null,l=null;function c(e){let t={...s,...e||{}};return Obje"
+        },
+        {
+          "line": 1,
+          "fragment": "AbortController,r=setTimeout(()=>t.abort(),n);return fetch(e,{signal:t.signal}).finally(()=>clearTimeout(r))}(\"\".concat(e,\"/a"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{Date.now()-t<2500&&(window.location.href=a)},1500);return}window.open(a,\"_blank\",\"noopener,noreferrer\")}"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(h,250),()=>{n=!1,window.clearTimeout(s),cancelAnimationFrame(o),window.removeEventListener(\"resize\",a)}},[]),"
+        },
+        {
+          "line": 1,
+          "fragment": "TIMEOUT_MS);return Number.isFinite(e)&&e>=1e3?e:8e3}();function d(e){let t=Number(e);return Number.isFinite(t)?t:void"
+        },
+        {
+          "line": 1,
+          "fragment": "AbortController,n=[],i=setTimeout(()=>s.abort(),c);if(n.push(()=>clearTimeout(i)),null==t?void 0:t.signal){let e=()=>s.abort("
+        },
+        {
+          "line": 1,
+          "fragment": "/api/products/top?\".concat(o.toString()))},getLivePrices:async(e,t)=>u(\"/api/live-prices\",{method:\"POST\",body:JSON.stringify({i"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/standalone/.next/static/chunks/main-947320f598c0ed9b.js",
+      "sha256": "baa5b1a0f9400e77fd5f3b39289362ecf5fe4e3641a961b350abb82f1c6d9373",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout has not been defined\")}function i(){throw Error(\"clearTimeout has not been defined\")}try{t=\"function\"==typeof"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout?setTimeout:a}catch(e){t=a}try{r=\"function\"==typeof clearTimeout?clearTimeout:i}catch(e){r=i}function u(e){if("
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout)return setTimeout(e,0);if((t===a||!t)&&setTimeout)return t=setTimeout,setTimeout(e,0);try{return t(e,0)}catch"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout)return clearTimeout(e);if((r===i||!r)&&clearTimeout)return r=clearTimeout,clearTimeout(e);try{r(e)}catch(t){t"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>t.scrollIntoView(),0)}render(){return this.props.children}}async function V(e){void 0===e&&(e={}),o=JSON."
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>s(e),0)),window.__NEXT_P=[],window.__NEXT_P.push=s,(l=(0,w.default)()).getIsSsr=()=>n.isSsr,u=document.ge"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{i||a(r)},t))})}function h(){return self.__BUILD_MANIFEST?Promise.resolve(self.__BUILD_MANIFEST):p(new Pr"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){e({didTimeout:!1,timeRemaining:function(){return Math.max(0,50-(Date.now()-t))}})},1)},n=\"undefine"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(e)};(\"function\"==typeof t.default||\"object\"==typeof t.default&&null!==t.default)&&void 0===t.default.__esModu"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/standalone/.next/static/chunks/382-ae7f15110a54fd6f.js",
+      "sha256": "1887db2fc8602b3931dd4446f1adbe96377b4b43f6ee123217ba529f27b335c8",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout has not been defined\")}function o(){throw Error(\"clearTimeout has not been defined\")}try{t=\"function\"==typeof"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout?setTimeout:l}catch(e){t=l}try{r=\"function\"==typeof clearTimeout?clearTimeout:o}catch(e){r=o}function a(e){if("
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout)return setTimeout(e,0);if((t===l||!t)&&setTimeout)return t=setTimeout,setTimeout(e,0);try{return t(e,0)}catch"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout)return clearTimeout(e);if((r===o||!r)&&clearTimeout)return r=clearTimeout,clearTimeout(e);try{r(e)}catch(t){t"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(e)),document.head.appendChild(u)}))},Promise.resolve()).catch(e=>{console.error(e)}).then(()=>{r()}):r()}Obje"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(M);let w=self.__next_f=self.__next_f||[];w.forEach(S),w.push=S;let C=R(new ReadableStream({start(e){n&&(n.for"
+        },
+        {
+          "line": 1,
+          "fragment": "AbortController;async function _(e,t){let{flightRouterState:r,nextUrl:n,prefetchKind:l}=t,o={[u.RSC_HEADER]:\"1\",[u.NEXT_ROUTE"
+        },
+        {
+          "line": 1,
+          "fragment": "AbortController}),(\"function\"==typeof t.default||\"object\"==typeof t.default&&null!==t.default)&&void 0===t.default.__esModule"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout?setTimeout:null,m=\"function\"==typeof clearTimeout?clearTimeout:null,R=\"undefined\"!=typeof setImmediate?setImm"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/standalone/.next/static/chunks/312-d734bff55df5b9ff.js",
+      "sha256": "aaa1242ae56ca3d98cb1c902427cf8243feec9f7081b338c0f1e8956457cf8db",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "AbortController;return b(!0),l.productService.getLivePrices(e,t.signal).then(e=>{e.success&&Array.isArray(e.data)&&h(Object.f"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/standalone/.next/static/chunks/polyfills-42372ed130431b0a.js",
+      "sha256": "0973c1d64c88adc8e3c950410cb58b288f72118d5965b78049438deb8f2f9683",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(Ry(t),0)});var jy={set:vy,clear:dy},ky=function(){this.head=null,this.tail=null};ky.prototype={add:function(t"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout=function(){n(new TypeError(\"Network request failed\"))},i.onabort=function(){n(new lb(\"Aborted\",\"AbortError\"))"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/standalone/.next/static/chunks/framework-93c36476cadae0aa.js",
+      "sha256": "70823846e122f0ab093dffe1e325db7ed33499a6aeda37fc0c3744b5650b3f60",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "AbortController?AbortController:function(){var e=[],t=this.signal={aborted:!1,addEventListener:function(t,n){e.push(n)}};this"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){throw e})}}function of(e,t,n){try{(0,e.onCaughtError)(n.value,{componentStack:n.stack,errorBoundar"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){throw e})}}function od(e,t,n){return(n=ld(n)).tag=3,n.payload={element:null},n.callback=function()"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle=sf(ue.bind(null,r,n,iQ,iY,iW,t,i$,ij,iV,iD,a,2,-0,0),l);break e}ue(r,n,iQ,iY,iW,t,i$,ij,iV,iD,a,0,-0,0)"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle=-1,(8192&(d=t.subtreeFlags)||0x1002000==(0x1002000&d))&&(sQ={stylesheets:null,count:0,unsuspend:sW},iw("
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){if(e.stylesheets&&sY(e,e.stylesheets),e.unsuspend){var t=e.unsuspend;e.unsuspend=null,t()}},6e4);r"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(n)}}:null}()))){e.cancelPendingCommit=d(uh.bind(null,e,t,a,n,r,l,o,i,s,f,1,p,m)),ut(e,a,o,!c);return}uh(e,t,a"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle;-1!==n&&(e.timeoutHandle=-1,sd(n)),null!==(n=e.cancelPendingCommit)&&(e.cancelPendingCommit=null,n()),u"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle)))||ek(r,a)||(n=!0,uH(r,a));r=r.next}while(n);uR=!1}}function uM(){uI()}function uI(){uO=uL=!1;var e,t="
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle),r=e.callbackNode,0===n||e===t&&(2===iO||9===iO)||null!==e.cancelPendingCommit)return null!==r&&null!=="
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle))?null:(i7(e,r,t),uU(e,et()),null!=e.callbackNode&&e.callbackNode===n?uj.bind(null,e):null)}function uH"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout?setTimeout:void 0,sd=\"function\"==typeof clearTimeout?clearTimeout:void 0,sp=\"function\"==typeof Promise?Promis"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){throw e})}function sg(e){return\"head\"===e}function sy(e,t){var n=t,r=0,l=0;do{var a=n.nextSibling;"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle=-1,this.callbackNode=this.next=this.pendingContext=this.context=this.cancelPendingCommit=null,this.call"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout?setTimeout:null,k=\"function\"==typeof clearTimeout?clearTimeout:null,w=\"undefined\"!=typeof setImmediate?setImm"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/standalone/.next/static/chunks/webpack-796dc3fda6b38216.js",
+      "sha256": "d7ae4a0d6e01ef68cdddc10c86cb583e66699c3ea730c2d5e579cd7f8b93f0e0",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "timeout=120,r.nc&&u.setAttribute(\"nonce\",r.nc),u.setAttribute(\"data-webpack\",t+a),u.src=r.tu(o)),e[o]=[n];var s=(t,r)"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(p);var n=e[o];if(delete e[o],u.parentNode&&u.parentNode.removeChild(u),n&&n.forEach(e=>e(r)),t)return t(r)},p"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(s.bind(null,void 0,{type:\"timeout\",target:u}),12e4);u.onerror=s.bind(null,u.onerror),u.onload=s.bind(null,u.o"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/standalone/.next/static/chunks/be46ab62-09b174b6aad913b5.js",
+      "sha256": "86c2c20732b87add09ce5ab398fedb83bacc10a194928fe0825bc47203a7503c",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "AbortController?AbortController:function(){var e=[],n=this.signal={aborted:!1,addEventListener:function(n,t){e.push(t)}};this"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){throw e})}}function oh(e,n,t){try{(0,e.onCaughtError)(t.value,{componentStack:t.stack,errorBoundar"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){throw e})}}function og(e,n,t){return(t=lC(t)).tag=3,t.payload={element:null},t.callback=function()"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle=sb(iu.bind(null,r,t,uG,u1,uZ,n,uK,uW,uY,u$,a,2,-0,0),l);break e}iu(r,t,uG,u1,uZ,n,uK,uW,uY,u$,a,0,-0,0)"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle=-1,(8192&(d=n.subtreeFlags)||0x1002000==(0x1002000&d))&&(s3={stylesheets:null,count:0,unsuspend:nv},uP("
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){if(e.stylesheets&&s6(e,e.stylesheets),e.unsuspend){var n=e.unsuspend;e.unsuspend=null,n()}},6e4);r"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(t)}}:null}()))){e.cancelPendingCommit=d(iE.bind(null,e,n,a,t,r,l,o,u,s,f,1,p,m)),ii(e,a,o,!c);return}iE(e,n,a"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle;-1!==t&&(e.timeoutHandle=-1,sk(t)),null!==(t=e.cancelPendingCommit)&&(e.cancelPendingCommit=null,t()),i"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle)))||eE(r,a)||(t=!0,iX(r,a));r=r.next}while(t);iV=!1}}function iW(){iq()}function iq(){ij=i$=!1;var e,n="
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle),r=e.callbackNode,0===t||e===n&&(2===uI||9===uI)||null!==e.cancelPendingCommit)return null!==r&&null!=="
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle))?null:(io(e,r,n),iK(e,ea()),null!=e.callbackNode&&e.callbackNode===t?iY.bind(null,e):null)}function iX"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout?setTimeout:void 0,sk=\"function\"==typeof clearTimeout?clearTimeout:void 0,sw=\"function\"==typeof Promise?Promis"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){throw e})}function sE(e){return\"head\"===e}function sz(e,n){var t=n,r=0;do{var l=t.nextSibling;if(e"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle=-1,this.callbackNode=this.next=this.pendingContext=this.context=this.cancelPendingCommit=null,this.call"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(t,20)}function t(){if(!r&&!navigation.transition){var e=navigation.currentEntry;e&&null!=e.url&&navigation.na"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(t,100),function(){r=!0,navigation.removeEventListener(\"navigate\",e),navigation.removeEventListener(\"navigates"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/standalone/.next/server/pages/_error.js",
+      "sha256": "b6f08e16ebe150923257f3893fa53a866412b93416e3e9fff8a833b215f134dd",
+      "matches": [
+        {
+          "line": 19,
+          "fragment": "AbortController)(b),l=function(a,b){let c=!1,d=new e.DetachedPromise;function i(){d.resolve()}a.on(\"drain\",i),a.once(\"close\","
+        },
+        {
+          "line": 19,
+          "fragment": "AbortController:function(){return j},signalFromNodeResponse:function(){return k}});let d=c(42443),e=c(35932),f=c(48606),g=c(5"
+        },
+        {
+          "line": 19,
+          "fragment": "AbortController;return a.once(\"close\",()=>{a.writableFinished||b.abort(new i)}),b}function k(a){let{errored:b,destroyed:c}=a;"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/standalone/.next/server/chunks/543.js",
+      "sha256": "6ce3b6a30e0001916d0b9ca355480b7c4052ea0996cff5cab42a69070b550e29",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout\\`, \\`after\\`, or similar functions you may observe this error and you should handle it in that context.`),thi"
+        },
+        {
+          "line": 1,
+          "fragment": "abortController.abort(Object.defineProperty(Error(\"Accessed fallback `params` during prerendering.\"),\"__NEXT_ERROR_CODE\",{val"
+        },
+        {
+          "line": 3,
+          "fragment": "AbortController,p=async()=>{await (0,h.waitAtLeastOneReactRenderTask)(),o.abort()},q=[],{prelude:r}=await (0,f.unstable_prere"
+        },
+        {
+          "line": 3,
+          "fragment": "AbortController;(0,h.waitAtLeastOneReactRenderTask)().then(()=>m.abort());let{prelude:n}=await (0,f.unstable_prerender)(j,d,{"
+        },
+        {
+          "line": 3,
+          "fragment": "AbortController;return(0,h.waitAtLeastOneReactRenderTask)().then(()=>{c=!0,d.abort()}),await (0,f.unstable_prerender)(a,b,{fi"
+        },
+        {
+          "line": 3,
+          "fragment": "AbortController;async function p(a,b){let{flightRouterState:c,nextUrl:d,prefetchKind:f}=b,g={[e.RSC_HEADER]:\"1\",[e.NEXT_ROUTE"
+        },
+        {
+          "line": 4,
+          "fragment": "AbortController;try{d.default.unstable_postpone(a)}catch(a){b.abort(a)}return b.signal}function L(a){let b=new AbortControlle"
+        },
+        {
+          "line": 6,
+          "fragment": "setTimeout(function(){a({didTimeout:!1,timeRemaining:function(){return Math.max(0,50-(Date.now()-b))}})},1)},d=\"undefine"
+        },
+        {
+          "line": 6,
+          "fragment": "Timeout(a)};(\"function\"==typeof b.default||\"object\"==typeof b.default&&null!==b.default)&&void 0===b.default.__esModu"
+        },
+        {
+          "line": 7,
+          "fragment": "abortController.abort(Object.defineProperty(Error(\"Accessed fallback `params` during prerendering.\"),\"__NEXT_ERROR_CODE\",{val"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/standalone/.next/server/chunks/725.js",
+      "sha256": "b9019f1a988489c8e3fc39ef40916c083e76886852d894a37e37b2cfe62768d9",
+      "matches": [
+        {
+          "line": 70,
+          "fragment": "TIMEOUT_MS);return Number.isFinite(a)&&a>=1e3?a:8e3})(),g=null,h=null;function i(a){let b={...e,...a||{}};return Obje"
+        },
+        {
+          "line": 70,
+          "fragment": "AbortController,c=setTimeout(()=>b.abort(),f);return fetch(a,{signal:b.signal}).finally(()=>clearTimeout(c))}(`${a}/api/site-"
+        },
+        {
+          "line": 70,
+          "fragment": "TIMEOUT_MS);return Number.isFinite(a)&&a>=1e3?a:8e3}();function h(a){let b=Number(a);return Number.isFinite(b)?b:void"
+        },
+        {
+          "line": 70,
+          "fragment": "AbortController,h=[],i=setTimeout(()=>f.abort(),g);if(h.push(()=>clearTimeout(i)),b?.signal){let a=()=>f.abort();b.signal.abo"
+        },
+        {
+          "line": 70,
+          "fragment": "/api/products/top?${e.toString()}`)},getLivePrices:async(a,b)=>j(\"/api/live-prices\",{method:\"POST\",body:JSON.stringify({ids:a})"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/standalone/.next/server/chunks/135.js",
+      "sha256": "5bf4a6dd9d40f8c2e734df4ac5411274c75e21f9963639d122e920dc129baf0f",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout\\`, \\`after\\`, or similar functions you may observe this error and you should handle it in that context.`),thi"
+        },
+        {
+          "line": 2,
+          "fragment": "AbortController;try{d.default.unstable_postpone(a)}catch(a){b.abort(a)}return b.signal}function L(a){let b=new AbortControlle"
+        },
+        {
+          "line": 11,
+          "fragment": "AbortController:function(){return j},signalFromNodeResponse:function(){return k}});let d=c(84022),e=c(62055),f=c(51889),g=c(8"
+        },
+        {
+          "line": 11,
+          "fragment": "AbortController;return a.once(\"close\",()=>{a.writableFinished||b.abort(new i)}),b}function k(a){let{errored:b,destroyed:c}=a;"
+        },
+        {
+          "line": 11,
+          "fragment": "AbortController)(b),l=function(a,b){let c=!1,d=new e.DetachedPromise;function i(){d.resolve()}a.on(\"drain\",i),a.once(\"close\","
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/standalone/.next/server/chunks/458.js",
+      "sha256": "e2f717a2d682eed3117b913f8970cc1f4a792c9b1240f0cc88b0bbddea4b51f1",
+      "matches": [
+        {
+          "line": 6,
+          "fragment": "setTimeout(j,k)}return function(...a){e=a,f=this,i=Date.now(),void 0===d&&(h=i,d=setTimeout(j,b))}}},28888:(a,b)=>{\"use "
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/static/chunks/589-9ac8ea0c3c7d1e0c.js",
+      "sha256": "3850d45e0a5de70e6e70c4b8f8e42bc5cd44c658c403c4d2d3866f8cb2bef572",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "TIMEOUT_MS);return Number.isFinite(e)&&e>=1e3?e:8e3})(),i=null,l=null;function c(e){let t={...s,...e||{}};return Obje"
+        },
+        {
+          "line": 1,
+          "fragment": "AbortController,r=setTimeout(()=>t.abort(),n);return fetch(e,{signal:t.signal}).finally(()=>clearTimeout(r))}(\"\".concat(e,\"/a"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{Date.now()-t<2500&&(window.location.href=a)},1500);return}window.open(a,\"_blank\",\"noopener,noreferrer\")}"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(h,250),()=>{n=!1,window.clearTimeout(s),cancelAnimationFrame(o),window.removeEventListener(\"resize\",a)}},[]),"
+        },
+        {
+          "line": 1,
+          "fragment": "TIMEOUT_MS);return Number.isFinite(e)&&e>=1e3?e:8e3}();function d(e){let t=Number(e);return Number.isFinite(t)?t:void"
+        },
+        {
+          "line": 1,
+          "fragment": "AbortController,n=[],i=setTimeout(()=>s.abort(),c);if(n.push(()=>clearTimeout(i)),null==t?void 0:t.signal){let e=()=>s.abort("
+        },
+        {
+          "line": 1,
+          "fragment": "/api/products/top?\".concat(o.toString()))},getLivePrices:async(e,t)=>u(\"/api/live-prices\",{method:\"POST\",body:JSON.stringify({i"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/static/chunks/main-947320f598c0ed9b.js",
+      "sha256": "baa5b1a0f9400e77fd5f3b39289362ecf5fe4e3641a961b350abb82f1c6d9373",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout has not been defined\")}function i(){throw Error(\"clearTimeout has not been defined\")}try{t=\"function\"==typeof"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout?setTimeout:a}catch(e){t=a}try{r=\"function\"==typeof clearTimeout?clearTimeout:i}catch(e){r=i}function u(e){if("
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout)return setTimeout(e,0);if((t===a||!t)&&setTimeout)return t=setTimeout,setTimeout(e,0);try{return t(e,0)}catch"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout)return clearTimeout(e);if((r===i||!r)&&clearTimeout)return r=clearTimeout,clearTimeout(e);try{r(e)}catch(t){t"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>t.scrollIntoView(),0)}render(){return this.props.children}}async function V(e){void 0===e&&(e={}),o=JSON."
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>s(e),0)),window.__NEXT_P=[],window.__NEXT_P.push=s,(l=(0,w.default)()).getIsSsr=()=>n.isSsr,u=document.ge"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{i||a(r)},t))})}function h(){return self.__BUILD_MANIFEST?Promise.resolve(self.__BUILD_MANIFEST):p(new Pr"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){e({didTimeout:!1,timeRemaining:function(){return Math.max(0,50-(Date.now()-t))}})},1)},n=\"undefine"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(e)};(\"function\"==typeof t.default||\"object\"==typeof t.default&&null!==t.default)&&void 0===t.default.__esModu"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/static/chunks/382-ae7f15110a54fd6f.js",
+      "sha256": "1887db2fc8602b3931dd4446f1adbe96377b4b43f6ee123217ba529f27b335c8",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout has not been defined\")}function o(){throw Error(\"clearTimeout has not been defined\")}try{t=\"function\"==typeof"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout?setTimeout:l}catch(e){t=l}try{r=\"function\"==typeof clearTimeout?clearTimeout:o}catch(e){r=o}function a(e){if("
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout)return setTimeout(e,0);if((t===l||!t)&&setTimeout)return t=setTimeout,setTimeout(e,0);try{return t(e,0)}catch"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout)return clearTimeout(e);if((r===o||!r)&&clearTimeout)return r=clearTimeout,clearTimeout(e);try{r(e)}catch(t){t"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(e)),document.head.appendChild(u)}))},Promise.resolve()).catch(e=>{console.error(e)}).then(()=>{r()}):r()}Obje"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(M);let w=self.__next_f=self.__next_f||[];w.forEach(S),w.push=S;let C=R(new ReadableStream({start(e){n&&(n.for"
+        },
+        {
+          "line": 1,
+          "fragment": "AbortController;async function _(e,t){let{flightRouterState:r,nextUrl:n,prefetchKind:l}=t,o={[u.RSC_HEADER]:\"1\",[u.NEXT_ROUTE"
+        },
+        {
+          "line": 1,
+          "fragment": "AbortController}),(\"function\"==typeof t.default||\"object\"==typeof t.default&&null!==t.default)&&void 0===t.default.__esModule"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout?setTimeout:null,m=\"function\"==typeof clearTimeout?clearTimeout:null,R=\"undefined\"!=typeof setImmediate?setImm"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/static/chunks/312-d734bff55df5b9ff.js",
+      "sha256": "aaa1242ae56ca3d98cb1c902427cf8243feec9f7081b338c0f1e8956457cf8db",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "AbortController;return b(!0),l.productService.getLivePrices(e,t.signal).then(e=>{e.success&&Array.isArray(e.data)&&h(Object.f"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/static/chunks/polyfills-42372ed130431b0a.js",
+      "sha256": "0973c1d64c88adc8e3c950410cb58b288f72118d5965b78049438deb8f2f9683",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(Ry(t),0)});var jy={set:vy,clear:dy},ky=function(){this.head=null,this.tail=null};ky.prototype={add:function(t"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout=function(){n(new TypeError(\"Network request failed\"))},i.onabort=function(){n(new lb(\"Aborted\",\"AbortError\"))"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/static/chunks/framework-93c36476cadae0aa.js",
+      "sha256": "70823846e122f0ab093dffe1e325db7ed33499a6aeda37fc0c3744b5650b3f60",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "AbortController?AbortController:function(){var e=[],t=this.signal={aborted:!1,addEventListener:function(t,n){e.push(n)}};this"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){throw e})}}function of(e,t,n){try{(0,e.onCaughtError)(n.value,{componentStack:n.stack,errorBoundar"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){throw e})}}function od(e,t,n){return(n=ld(n)).tag=3,n.payload={element:null},n.callback=function()"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle=sf(ue.bind(null,r,n,iQ,iY,iW,t,i$,ij,iV,iD,a,2,-0,0),l);break e}ue(r,n,iQ,iY,iW,t,i$,ij,iV,iD,a,0,-0,0)"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle=-1,(8192&(d=t.subtreeFlags)||0x1002000==(0x1002000&d))&&(sQ={stylesheets:null,count:0,unsuspend:sW},iw("
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){if(e.stylesheets&&sY(e,e.stylesheets),e.unsuspend){var t=e.unsuspend;e.unsuspend=null,t()}},6e4);r"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(n)}}:null}()))){e.cancelPendingCommit=d(uh.bind(null,e,t,a,n,r,l,o,i,s,f,1,p,m)),ut(e,a,o,!c);return}uh(e,t,a"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle;-1!==n&&(e.timeoutHandle=-1,sd(n)),null!==(n=e.cancelPendingCommit)&&(e.cancelPendingCommit=null,n()),u"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle)))||ek(r,a)||(n=!0,uH(r,a));r=r.next}while(n);uR=!1}}function uM(){uI()}function uI(){uO=uL=!1;var e,t="
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle),r=e.callbackNode,0===n||e===t&&(2===iO||9===iO)||null!==e.cancelPendingCommit)return null!==r&&null!=="
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle))?null:(i7(e,r,t),uU(e,et()),null!=e.callbackNode&&e.callbackNode===n?uj.bind(null,e):null)}function uH"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout?setTimeout:void 0,sd=\"function\"==typeof clearTimeout?clearTimeout:void 0,sp=\"function\"==typeof Promise?Promis"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){throw e})}function sg(e){return\"head\"===e}function sy(e,t){var n=t,r=0,l=0;do{var a=n.nextSibling;"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle=-1,this.callbackNode=this.next=this.pendingContext=this.context=this.cancelPendingCommit=null,this.call"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout?setTimeout:null,k=\"function\"==typeof clearTimeout?clearTimeout:null,w=\"undefined\"!=typeof setImmediate?setImm"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/static/chunks/webpack-796dc3fda6b38216.js",
+      "sha256": "d7ae4a0d6e01ef68cdddc10c86cb583e66699c3ea730c2d5e579cd7f8b93f0e0",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "timeout=120,r.nc&&u.setAttribute(\"nonce\",r.nc),u.setAttribute(\"data-webpack\",t+a),u.src=r.tu(o)),e[o]=[n];var s=(t,r)"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(p);var n=e[o];if(delete e[o],u.parentNode&&u.parentNode.removeChild(u),n&&n.forEach(e=>e(r)),t)return t(r)},p"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(s.bind(null,void 0,{type:\"timeout\",target:u}),12e4);u.onerror=s.bind(null,u.onerror),u.onload=s.bind(null,u.o"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/static/chunks/be46ab62-09b174b6aad913b5.js",
+      "sha256": "86c2c20732b87add09ce5ab398fedb83bacc10a194928fe0825bc47203a7503c",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "AbortController?AbortController:function(){var e=[],n=this.signal={aborted:!1,addEventListener:function(n,t){e.push(t)}};this"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){throw e})}}function oh(e,n,t){try{(0,e.onCaughtError)(t.value,{componentStack:t.stack,errorBoundar"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){throw e})}}function og(e,n,t){return(t=lC(t)).tag=3,t.payload={element:null},t.callback=function()"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle=sb(iu.bind(null,r,t,uG,u1,uZ,n,uK,uW,uY,u$,a,2,-0,0),l);break e}iu(r,t,uG,u1,uZ,n,uK,uW,uY,u$,a,0,-0,0)"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle=-1,(8192&(d=n.subtreeFlags)||0x1002000==(0x1002000&d))&&(s3={stylesheets:null,count:0,unsuspend:nv},uP("
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){if(e.stylesheets&&s6(e,e.stylesheets),e.unsuspend){var n=e.unsuspend;e.unsuspend=null,n()}},6e4);r"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(t)}}:null}()))){e.cancelPendingCommit=d(iE.bind(null,e,n,a,t,r,l,o,u,s,f,1,p,m)),ii(e,a,o,!c);return}iE(e,n,a"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle;-1!==t&&(e.timeoutHandle=-1,sk(t)),null!==(t=e.cancelPendingCommit)&&(e.cancelPendingCommit=null,t()),i"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle)))||eE(r,a)||(t=!0,iX(r,a));r=r.next}while(t);iV=!1}}function iW(){iq()}function iq(){ij=i$=!1;var e,n="
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle),r=e.callbackNode,0===t||e===n&&(2===uI||9===uI)||null!==e.cancelPendingCommit)return null!==r&&null!=="
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle))?null:(io(e,r,n),iK(e,ea()),null!=e.callbackNode&&e.callbackNode===t?iY.bind(null,e):null)}function iX"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout?setTimeout:void 0,sk=\"function\"==typeof clearTimeout?clearTimeout:void 0,sw=\"function\"==typeof Promise?Promis"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){throw e})}function sE(e){return\"head\"===e}function sz(e,n){var t=n,r=0;do{var l=t.nextSibling;if(e"
+        },
+        {
+          "line": 1,
+          "fragment": "timeoutHandle=-1,this.callbackNode=this.next=this.pendingContext=this.context=this.cancelPendingCommit=null,this.call"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(t,20)}function t(){if(!r&&!navigation.transition){var e=navigation.currentEntry;e&&null!=e.url&&navigation.na"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(t,100),function(){r=!0,navigation.removeEventListener(\"navigate\",e),navigation.removeEventListener(\"navigates"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/static/chunks/app/page-05102fc0593e8c0e.js",
+      "sha256": "4f22c59abb517793f523db198a7f63b854c2480452b9804b0d1a0900073c5a08",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{if(\"function\"==typeof window.requestIdleCallback)return void window.requestIdleCallback(e,{timeout:3e3})"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(t)}},[]);let A=async()=>{let e=e=>{let r=f();return 0!==r.length&&(t(r),j(!0),u(e),!0)};try{c(!0),u(\"\"),y(!1)"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/static/chunks/app/layout-2f32cf9e53a54c76.js",
+      "sha256": "bac4229b0151465746e5c27f497a199f87b07b5affa8b1ee3ce6a85d054c4f1c",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){e({didTimeout:!1,timeRemaining:function(){return Math.max(0,50-(Date.now()-t))}})},1)},r=\"undefine"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(e)};(\"function\"==typeof t.default||\"object\"==typeof t.default&&null!==t.default)&&void 0===t.default.__esModu"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/static/chunks/app/products/page-86851f68c71965a9.js",
+      "sha256": "a7b1fce87af3d7460432b66b394d7ab3aa713be4baaca0439305157b0ebb13aa",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{let e=p;\"all\"!==m&&(e=e.filter(e=>e.product_category===m));let t={};(e=(e=e.filter(e=>e.price_inr<=a)).s"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/server/pages/_error.js",
+      "sha256": "b6f08e16ebe150923257f3893fa53a866412b93416e3e9fff8a833b215f134dd",
+      "matches": [
+        {
+          "line": 19,
+          "fragment": "AbortController)(b),l=function(a,b){let c=!1,d=new e.DetachedPromise;function i(){d.resolve()}a.on(\"drain\",i),a.once(\"close\","
+        },
+        {
+          "line": 19,
+          "fragment": "AbortController:function(){return j},signalFromNodeResponse:function(){return k}});let d=c(42443),e=c(35932),f=c(48606),g=c(5"
+        },
+        {
+          "line": 19,
+          "fragment": "AbortController;return a.once(\"close\",()=>{a.writableFinished||b.abort(new i)}),b}function k(a){let{errored:b,destroyed:c}=a;"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/server/chunks/543.js",
+      "sha256": "6ce3b6a30e0001916d0b9ca355480b7c4052ea0996cff5cab42a69070b550e29",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout\\`, \\`after\\`, or similar functions you may observe this error and you should handle it in that context.`),thi"
+        },
+        {
+          "line": 1,
+          "fragment": "abortController.abort(Object.defineProperty(Error(\"Accessed fallback `params` during prerendering.\"),\"__NEXT_ERROR_CODE\",{val"
+        },
+        {
+          "line": 3,
+          "fragment": "AbortController,p=async()=>{await (0,h.waitAtLeastOneReactRenderTask)(),o.abort()},q=[],{prelude:r}=await (0,f.unstable_prere"
+        },
+        {
+          "line": 3,
+          "fragment": "AbortController;(0,h.waitAtLeastOneReactRenderTask)().then(()=>m.abort());let{prelude:n}=await (0,f.unstable_prerender)(j,d,{"
+        },
+        {
+          "line": 3,
+          "fragment": "AbortController;return(0,h.waitAtLeastOneReactRenderTask)().then(()=>{c=!0,d.abort()}),await (0,f.unstable_prerender)(a,b,{fi"
+        },
+        {
+          "line": 3,
+          "fragment": "AbortController;async function p(a,b){let{flightRouterState:c,nextUrl:d,prefetchKind:f}=b,g={[e.RSC_HEADER]:\"1\",[e.NEXT_ROUTE"
+        },
+        {
+          "line": 4,
+          "fragment": "AbortController;try{d.default.unstable_postpone(a)}catch(a){b.abort(a)}return b.signal}function L(a){let b=new AbortControlle"
+        },
+        {
+          "line": 6,
+          "fragment": "setTimeout(function(){a({didTimeout:!1,timeRemaining:function(){return Math.max(0,50-(Date.now()-b))}})},1)},d=\"undefine"
+        },
+        {
+          "line": 6,
+          "fragment": "Timeout(a)};(\"function\"==typeof b.default||\"object\"==typeof b.default&&null!==b.default)&&void 0===b.default.__esModu"
+        },
+        {
+          "line": 7,
+          "fragment": "abortController.abort(Object.defineProperty(Error(\"Accessed fallback `params` during prerendering.\"),\"__NEXT_ERROR_CODE\",{val"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/server/chunks/725.js",
+      "sha256": "b9019f1a988489c8e3fc39ef40916c083e76886852d894a37e37b2cfe62768d9",
+      "matches": [
+        {
+          "line": 70,
+          "fragment": "TIMEOUT_MS);return Number.isFinite(a)&&a>=1e3?a:8e3})(),g=null,h=null;function i(a){let b={...e,...a||{}};return Obje"
+        },
+        {
+          "line": 70,
+          "fragment": "AbortController,c=setTimeout(()=>b.abort(),f);return fetch(a,{signal:b.signal}).finally(()=>clearTimeout(c))}(`${a}/api/site-"
+        },
+        {
+          "line": 70,
+          "fragment": "TIMEOUT_MS);return Number.isFinite(a)&&a>=1e3?a:8e3}();function h(a){let b=Number(a);return Number.isFinite(b)?b:void"
+        },
+        {
+          "line": 70,
+          "fragment": "AbortController,h=[],i=setTimeout(()=>f.abort(),g);if(h.push(()=>clearTimeout(i)),b?.signal){let a=()=>f.abort();b.signal.abo"
+        },
+        {
+          "line": 70,
+          "fragment": "/api/products/top?${e.toString()}`)},getLivePrices:async(a,b)=>j(\"/api/live-prices\",{method:\"POST\",body:JSON.stringify({ids:a})"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/server/chunks/135.js",
+      "sha256": "5bf4a6dd9d40f8c2e734df4ac5411274c75e21f9963639d122e920dc129baf0f",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout\\`, \\`after\\`, or similar functions you may observe this error and you should handle it in that context.`),thi"
+        },
+        {
+          "line": 2,
+          "fragment": "AbortController;try{d.default.unstable_postpone(a)}catch(a){b.abort(a)}return b.signal}function L(a){let b=new AbortControlle"
+        },
+        {
+          "line": 11,
+          "fragment": "AbortController:function(){return j},signalFromNodeResponse:function(){return k}});let d=c(84022),e=c(62055),f=c(51889),g=c(8"
+        },
+        {
+          "line": 11,
+          "fragment": "AbortController;return a.once(\"close\",()=>{a.writableFinished||b.abort(new i)}),b}function k(a){let{errored:b,destroyed:c}=a;"
+        },
+        {
+          "line": 11,
+          "fragment": "AbortController)(b),l=function(a,b){let c=!1,d=new e.DetachedPromise;function i(){d.resolve()}a.on(\"drain\",i),a.once(\"close\","
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/server/chunks/458.js",
+      "sha256": "e2f717a2d682eed3117b913f8970cc1f4a792c9b1240f0cc88b0bbddea4b51f1",
+      "matches": [
+        {
+          "line": 6,
+          "fragment": "setTimeout(j,k)}return function(...a){e=a,f=this,i=Date.now(),void 0===d&&(h=i,d=setTimeout(j,b))}}},28888:(a,b)=>{\"use "
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/server/app/category/[slug]/page.js",
+      "sha256": "ce6ef15e05b088aa075663883fb39210da6d95ce27e7e7b274656db3a0c86892",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "AbortController;x.current=d,p(!0),r(\"\");try{let{productService:e}=await Promise.resolve().then(c.bind(c,56491)),f=await e.get"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/server/app/products/page.js",
+      "sha256": "d45147144dc00e557bb3513eada00de8ec08cbd0a69cdd16b83c5116fe95f3f4",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{let b=k;\"all\"!==c&&(b=b.filter(a=>a.product_category===c));let d={};(b=(b=b.filter(b=>b.price_inr<=a)).s"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/src/services/api.service.ts",
+      "sha256": "36d74bdbfe88a2221c1929897caba75df4bddb8e260cd5a6ab5829be61410521",
+      "matches": [
+        {
+          "line": 67,
+          "fragment": "TIMEOUT_MS = 8000;\n\nfunction getApiTimeoutMs() {\n  const configuredTimeout = Number(process.env.NEXT_PUBLIC_API_TIMEO"
+        },
+        {
+          "line": 71,
+          "fragment": "Timeout) && configuredTimeout >= 1000) {\n    return configuredTimeout;\n  }\n  return DEFAULT_API_TIMEOUT_MS;\n}\n\nconst "
+        },
+        {
+          "line": 77,
+          "fragment": "TIMEOUT_MS = getApiTimeoutMs();\n\nfunction toFiniteNumber(value: unknown): number | undefined {\n  const numeric = Numb"
+        },
+        {
+          "line": 188,
+          "fragment": "AbortController();\n    const cleanupFns: Array<() => void> = [];\n    const timeoutId = setTimeout(() => controller.abort(), A"
+        },
+        {
+          "line": 190,
+          "fragment": "TIMEOUT_MS);\n    cleanupFns.push(() => clearTimeout(timeoutId));\n\n    if (options?.signal) {\n      const handleAbort "
+        },
+        {
+          "line": 233,
+          "fragment": "TIMEOUT_MS / 1000)}s`);\n      }\n      // try next base\n    } finally {\n      // cleanup timeouts/listeners\n      // @"
+        },
+        {
+          "line": 343,
+          "fragment": "/api/products/top?${params.toString()}`);\n  },\n\n  /**\n   * Live Amazon / Flipkart / Croma prices for the listings on screen (fe"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/src/components/BrandSelector.tsx",
+      "sha256": "22cfad52224cdec0ffc8a4aecf3b39bf2333cb7b85b4763b19be99c44a20baff",
+      "matches": [
+        {
+          "line": 35,
+          "fragment": "AbortController | null>(null);\n\n  useEffect(() => {\n    const timer = window.setTimeout(() => {\n      setDebouncedFilter(filt"
+        },
+        {
+          "line": 41,
+          "fragment": "Timeout(timer);\n  }, [filterText]);\n\n  const loadBrands = useCallback(async (searchQ: string) => {\n    abortRef.curre"
+        },
+        {
+          "line": 46,
+          "fragment": "AbortController();\n    abortRef.current = controller;\n\n    setLoading(true);\n    setLoadError('');\n    try {\n      const { pr"
+        },
+        {
+          "line": 84,
+          "fragment": "setTimeout(() => searchRef.current?.focus(), 100);\n      return () => window.clearTimeout(t);\n    }\n  }, [open]);\n\n  use"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/src/components/AnimatedBackground.tsx",
+      "sha256": "6f896321503c14a1761eb5f30e0600839ebf2037f19702b63d00a74c6777cdab",
+      "matches": [
+        {
+          "line": 31,
+          "fragment": "Timeout = 0;\n    let isMounted = true;\n    const particleCount = window.innerWidth < 640 ? 18 : 36;\n    const connect"
+        },
+        {
+          "line": 155,
+          "fragment": "Timeout = window.setTimeout(animate, 250);\n\n    return () => {\n      isMounted = false;\n      window.clearTimeout(sta"
+        },
+        {
+          "line": 159,
+          "fragment": "Timeout);\n      cancelAnimationFrame(animationFrame);\n      window.removeEventListener('resize', resizeCanvas);\n    }"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/src/components/ProductsTable.tsx",
+      "sha256": "b92c2dd292df436877b5526fc73ce9e1a0ca79abfa683fb4731cc8c0403f321a",
+      "matches": [
+        {
+          "line": 309,
+          "fragment": "AbortController();\n        setLivePending(true);\n        productService\n            .getLivePrices(ids, controller.signal)\n  "
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/src/app/page.tsx",
+      "sha256": "2962140e0c50f86e5e51f352d2debe4c4c690732ca3f25092cc249cf18cd9eda",
+      "matches": [
+        {
+          "line": 59,
+          "fragment": "timeoutId = window.setTimeout(() => {\n      if (typeof window.requestIdleCallback === 'function') {\n        window.re"
+        },
+        {
+          "line": 61,
+          "fragment": "timeout: 3000 });\n        return;\n      }\n\n      loadTestimonials();\n    }, 1500);\n\n    return () => {\n      window.c"
+        },
+        {
+          "line": 69,
+          "fragment": "Timeout(timeoutId);\n    };\n  }, []);\n\n  const fetchCategories = async () => {\n    const restoreCachedCategories = (me"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/src/app/products/page.tsx",
+      "sha256": "e39006a90cb8078714d2a5039dfbf14cb19aecd366346614cf9a597cdc8d3a3f",
+      "matches": [
+        {
+          "line": 52,
+          "fragment": "setTimeout(() => {\n      let products = dummyProducts;\n\n      // Filter by category\n      if (selectedCategory !== 'all'"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/src/utils/siteSettings.ts",
+      "sha256": "5a1fd71def51de62c4d82a672ca07522c3581d6f116b85092fcef69b93cfc7fb",
+      "matches": [
+        {
+          "line": 131,
+          "fragment": "TIMEOUT_MS = (() => {\n  const configured = Number(process.env.NEXT_PUBLIC_API_TIMEOUT_MS);\n  if (Number.isFinite(conf"
+        },
+        {
+          "line": 140,
+          "fragment": "Timeout(url: string) {\n  const controller = new AbortController();\n  const timeout = setTimeout(() => controller.abor"
+        },
+        {
+          "line": 142,
+          "fragment": "TIMEOUT_MS);\n  return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timeout));\n}\n\nfunction mer"
+        },
+        {
+          "line": 172,
+          "fragment": "Timeout(`${base}/api/site-settings`);\n        if (res.ok) {\n          const json = await res.json().catch(() => null)"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/src/utils/openSurveyInApp.ts",
+      "sha256": "d2d3d765b670554c32bb42e0a016b16fd9733c62a3e2fcf0eaf02d41433bb8ae",
+      "matches": [
+        {
+          "line": 28,
+          "fragment": "setTimeout(() => {\n      if (Date.now() - start < 2500) {\n        window.location.href = GOOGLE_PLAY_APP_URL;\n      }\n  "
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/src/utils/productRanking.ts",
+      "sha256": "01556c4d5d3b145c9d8a2de9081973c57c2e4f0cbc360736c1fa7c49b097095f",
+      "matches": [
+        {
+          "line": 317,
+          "fragment": "setTimeout(resolve, delayPerStep));\n    if (onProgress) {\n      onProgress((i / steps) * 100);\n    }\n  }\n\n  // Backend a"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/standalone/.next/static/chunks/app/page-05102fc0593e8c0e.js",
+      "sha256": "4f22c59abb517793f523db198a7f63b854c2480452b9804b0d1a0900073c5a08",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{if(\"function\"==typeof window.requestIdleCallback)return void window.requestIdleCallback(e,{timeout:3e3})"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(t)}},[]);let A=async()=>{let e=e=>{let r=f();return 0!==r.length&&(t(r),j(!0),u(e),!0)};try{c(!0),u(\"\"),y(!1)"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/standalone/.next/static/chunks/app/layout-2f32cf9e53a54c76.js",
+      "sha256": "bac4229b0151465746e5c27f497a199f87b07b5affa8b1ee3ce6a85d054c4f1c",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(function(){e({didTimeout:!1,timeRemaining:function(){return Math.max(0,50-(Date.now()-t))}})},1)},r=\"undefine"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(e)};(\"function\"==typeof t.default||\"object\"==typeof t.default&&null!==t.default)&&void 0===t.default.__esModu"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/standalone/.next/server/app/products/page.js",
+      "sha256": "d45147144dc00e557bb3513eada00de8ec08cbd0a69cdd16b83c5116fe95f3f4",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{let b=k;\"all\"!==c&&(b=b.filter(a=>a.product_category===c));let d={};(b=(b=b.filter(b=>b.price_inr<=a)).s"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/static/chunks/app/category/[slug]/page-65029caa952af5fd.js",
+      "sha256": "787291c1a75a8db238e51f87422c63f530d64b0ed0aee87ee0b377f37c82022f",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{N(w.trim())},300);return()=>window.clearTimeout(e)},[w]);let S=(0,l.useCallback)(async e=>{var s,l;null="
+        },
+        {
+          "line": 1,
+          "fragment": "AbortController;k.current=a,p(!0),g(\"\");try{let{productService:s}=await Promise.resolve().then(r.bind(r,9655)),n=await s.getB"
+        },
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{var e;return null==(e=y.current)?void 0:e.focus()},100);return()=>window.clearTimeout(e)}},[c]),(0,l.use"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/static/chunks/app/survey/complete/page-a4565a2b394815e4.js",
+      "sha256": "576c7363263f1b5e31bf8a6186dadc96fd438e544e1b31c0438610f6cb0af267",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{Date.now()-t<2500&&(window.location.href=r)},1500);return}window.open(r,\"_blank\",\"noopener,noreferrer\")}"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/static/chunks/app/survey/questions/page-182c3dc4e52dec2a.js",
+      "sha256": "a34b1d4f7917099d78708c1d9dd23e30e48002769c2691c23c8e56b5cc07fea8",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{Date.now()-t<2500&&(window.location.href=r)},1500);return}window.open(r,\"_blank\",\"noopener,noreferrer\")}"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/standalone/.next/server/app/site-settings/page.js",
+      "sha256": "03016f1bfb6fc8a28964f77969a4ccefad50808d769f47fee91da08cabefca91",
+      "matches": [
+        {
+          "line": 53,
+          "fragment": "setTimeout(()=>B(null),3e3)):z(e.message||\"Failed to save settings\")}catch(a){z(\"Failed to save settings\"),console.error"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/standalone/.next/server/app/app-update/page.js",
+      "sha256": "b13f8f16a9120c0549a27a37d12944029a6811ca0a75cdd89578ea6040fe2d56",
+      "matches": [
+        {
+          "line": 2,
+          "fragment": "setTimeout(()=>A(null),3e3)):y(b.message||\"Failed to save settings\")}catch(a){y(\"Failed to save settings\"),console.error"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/standalone/.next/server/app/setup/page.js",
+      "sha256": "610067bb48db1026847928fbf62cbba13430513889dbdbb93ca45d64eccca0b6",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{u.push(\"/login\")},2e3)):p(c.data.message||\"Failed to create admin account\")}catch(a){a?.code===\"ECONNREF"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/standalone/.next/server/app/products/page.js",
+      "sha256": "038b1cb0cf580cb65eab8616dcaaf7ed21212a0ea177c9310a7745c61e326972",
+      "matches": [
+        {
+          "line": 1,
+          "fragment": "setTimeout(()=>{o.current=!0},0),()=>{o.current=!1}),[]);let q=(0,f.A)((0,h.A)(b),n),r=(0,g.A)(a=>{let b=p.current;p.cur"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout\")})});e.useEffect(()=>(f&&j(b),h.clear),[f,b,j,h]);let k=h.clear,l=e.useCallback(()=>{null!=b&&j(null!=g?g:.5"
+        },
+        {
+          "line": 1,
+          "fragment": "timeout:D,direction:\"top\"===i?\"down\":\"up\"},ownerState:J});return!x&&O?null:(0,d.jsx)(T,{...V,...z.clickAwayListener&&"
+        },
+        {
+          "line": 1,
+          "fragment": "Timeout(O.current),O.current=setTimeout(()=>{H(a=>({...a,search:I})),B(1)},350),()=>{O.current&&clearTimeout(O.curren"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio_admin/.next/standalone/.next/server/app/survey/page.js",
+      "sha256": "14d362544fcef3e6dfa4d91dac39289213a573e29b4149ed2a0db2732edfdd6c",
+      "matches": [
+        {
+          "line": 2,
+          "fragment": "setTimeout(a,17)};function fx(){return ft||(fw(fy),ft=fv.now()+fu)}function fy(){ft=0}function fz(){this._call=this._tim"
+        },
+        {
+          "line": 2,
+          "fragment": "Timeout(fq)),a-ft>24?(a<1/0&&(fq=setTimeout(fB,a-fv.now()-fu)),fr&&(fr=clearInterval(fr))):(fr||(fs=fv.now(),fr=setIn"
+        },
+        {
+          "line": 11,
+          "fragment": "setTimeout(()=>{this.state&&this.state.currentTapCount>0&&this.state.currentTapCount<this.taps&&(this.state.currentTapCo"
+        },
+        {
+          "line": 11,
+          "fragment": "Timeout(this.state.timerId),this.state.timerId=null)}handlePointerEvent=(a,b)=>{let c=Array.from(a.values());if(\"forc"
+        },
+        {
+          "line": 11,
+          "fragment": "setTimeout(()=>{if(this.isActive&&this.state.startCentroid){this.state.pressThresholdReached=!0;let a=this.state.lastPos"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId:null};constructor(a){super(a),this.tapMaxDistance=a.tapMaxDistance??10,this.dragTimeout=a.dragTimeout??1e3,"
+        },
+        {
+          "line": 11,
+          "fragment": "Timeout:this.dragTimeout,dragThreshold:this.dragThreshold,dragDirection:[...this.dragDirection],requiredKeys:[...this"
+        },
+        {
+          "line": 11,
+          "fragment": "Timeout=a.dragTimeout??this.dragTimeout,this.dragThreshold=a.dragThreshold??this.dragThreshold,this.dragDirection=a.d"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId&&clearTimeout(this.state.dragTimeoutId),this.restoreTouchAction(),this.isActive=!1,this.state={phase:\"waiti"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId:null}}handlePointerEvent(){}tapHandler=()=>{\"waitingForTap\"===this.state.phase&&(this.state.phase=\"tapDetec"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId=setTimeout(()=>{this.resetState()},this.dragTimeout))};dragStartHandler=a=>{\"tapDetected\"===this.state.phas"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId&&(clearTimeout(this.state.dragTimeoutId),this.state.dragTimeoutId=null),this.restoreTouchAction(),this.stat"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId:null};constructor(a){super(a),this.pressDuration=a.pressDuration??500,this.pressMaxDistance=a.pressMaxDista"
+        },
+        {
+          "line": 11,
+          "fragment": "Timeout=a.dragTimeout??1e3,this.dragThreshold=a.dragThreshold??0,this.dragDirection=a.dragDirection||[\"up\",\"down\",\"le"
+        },
+        {
+          "line": 11,
+          "fragment": "Timeout:this.dragTimeout,dragThreshold:this.dragThreshold,dragDirection:[...this.dragDirection],requiredKeys:[...this"
+        },
+        {
+          "line": 11,
+          "fragment": "Timeout=a.dragTimeout??this.dragTimeout,this.dragThreshold=a.dragThreshold??this.dragThreshold,this.dragDirection=a.d"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId&&clearTimeout(this.state.dragTimeoutId),this.restoreTouchAction(),this.isActive=!1,this.state={phase:\"waiti"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId:null}}handlePointerEvent(){}pressHandler=()=>{\"waitingForPress\"===this.state.phase&&(this.state.phase=\"pres"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId=setTimeout(()=>{this.resetState()},this.dragTimeout))};dragStartHandler=a=>{\"pressDetected\"===this.state.ph"
+        },
+        {
+          "line": 11,
+          "fragment": "TimeoutId&&(clearTimeout(this.state.dragTimeoutId),this.state.dragTimeoutId=null),this.restoreTouchAction(),this.stat"
+        }
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "tool": "docker",
+      "present": false
+    },
+    {
+      "tool": "podman",
+      "present": false
+    },
+    {
+      "tool": "mongod",
+      "present": false
+    },
+    {
+      "tool": "mongosh",
+      "present": false
+    },
+    {
+      "tool": "bwrap",
+      "present": false
+    },
+    {
+      "tool": "proot",
+      "present": false
+    },
+    {
+      "tool": "unshare",
+      "present": true
+    }
+  ],
+  "catalog": [
+    {
+      "_id": "69f419329a622ea2d7ccb736",
+      "fieldNames": [
+        "_id",
+        "brand",
+        "clean_url",
+        "image_url",
+        "price",
+        "rating",
+        "title",
+        "specifications",
+        "url",
+        "platform",
+        "platform_product_id",
+        "price_ready",
+        "price_status",
+        "category",
+        "category_slug",
+        "updated_at",
+        "price_updated_at",
+        "availability",
+        "price_inr",
+        "isActive",
+        "product_category",
+        "price_update_status",
+        "product_url",
+        "original_product_url",
+        "affiliate",
+        "availability_status",
+        "category_cleanup_at",
+        "category_cleanup_route",
+        "category_cleanup_version",
+        "category_ml_version",
+        "final_category",
+        "primary_specifications",
+        "affiliate_converted",
+        "affiliate_updated_at",
+        "live",
+        "currentPriceValue"
+      ],
+      "identityFields": {
+        "_id": "69f419329a622ea2d7ccb736",
+        "brand": "Godrej",
+        "clean_url": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+        "image_url": "https://rukminim2.flixcart.com/image/300/300/xif0q/washing-machine-new/t/r/k/-original-imahmjqskyzfjeys.jpeg?q=90",
+        "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+        "specifications": {
+          "Capacity": "9 kg",
+          "Automation Type": "Fully Automatic",
+          "Load Type": "Front Load",
+          "Wash Features": "In-built Heater"
+        },
+        "url": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+        "platform_product_id": "itm85c805abf4849",
+        "product_url": "https://fkrt.clnk.in/CfvV",
+        "original_product_url": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+        "primary_specifications": {
+          "Capacity": "9 kg",
+          "Automation Type": "Fully Automatic",
+          "Load Type": "Front Load",
+          "Wash Features": "In-built Heater"
+        }
+      }
+    },
+    {
+      "_id": "6a1013380f397d1e1344dd59",
+      "fieldNames": [
+        "_id",
+        "brand",
+        "clean_url",
+        "image_url",
+        "price",
+        "rating",
+        "specifications",
+        "title",
+        "url",
+        "platform",
+        "platform_product_id",
+        "price_ready",
+        "price_status",
+        "category",
+        "category_slug",
+        "updated_at",
+        "availability",
+        "price_updated_at",
+        "price_inr",
+        "isActive",
+        "product_category",
+        "price_update_status",
+        "product_url",
+        "original_product_url",
+        "affiliate",
+        "availability_status",
+        "category_cleanup_at",
+        "category_cleanup_route",
+        "category_cleanup_version",
+        "category_ml_version",
+        "final_category",
+        "primary_specifications",
+        "affiliate_converted",
+        "affiliate_updated_at"
+      ],
+      "identityFields": {
+        "_id": "6a1013380f397d1e1344dd59",
+        "brand": "Motorola",
+        "clean_url": "https://www.flipkart.com/motorola-7-kg-5-star-rating-garment-sterilization-fully-automatic-front-load-washing-machine-in-built-heater-white/p/itm1ad6a5136676c",
+        "image_url": "https://rukminim2.flixcart.com/image/312/312/ku1k4280/washing-machine-new/e/u/h/70flam5w-motorola-original-imag79cjzzzrgbsy.jpeg?q=70",
+        "specifications": {
+          "Capacity": "7 kg",
+          "Automation Type": "Fully Automatic",
+          "Load Type": "Front Load",
+          "Energy Rating": "5 Star"
+        },
+        "title": "Motorola 7 Kg 5 Star Rating Garment Sterilization Fully Automatic Front Load Washing Machine In Built Heater White",
+        "url": "https://www.flipkart.com/motorola-7-kg-5-star-rating-garment-sterilization-fully-automatic-front-load-washing-machine-in-built-heater-white/p/itm1ad6a5136676c",
+        "platform_product_id": "itm1ad6a5136676c",
+        "product_url": "https://fkrt.clnk.in/CgMc",
+        "original_product_url": "https://www.flipkart.com/motorola-7-kg-5-star-rating-garment-sterilization-fully-automatic-front-load-washing-machine-in-built-heater-white/p/itm1ad6a5136676c",
+        "primary_specifications": {
+          "Capacity": "7 kg",
+          "Automation Type": "Fully Automatic",
+          "Load Type": "Front Load",
+          "Energy Rating": "5 Star"
+        }
+      }
+    },
+    {
+      "_id": "6a2c08a19665e4a0b177b34b",
+      "fieldNames": [
+        "_id",
+        "brand",
+        "category",
+        "category_slug",
+        "clean_url",
+        "image_url",
+        "platform",
+        "platform_product_id",
+        "price",
+        "rating",
+        "specifications",
+        "title",
+        "url",
+        "updated_at",
+        "availability",
+        "price_ready",
+        "price_status",
+        "price_updated_at",
+        "price_inr",
+        "isActive",
+        "product_category",
+        "price_update_status",
+        "product_url",
+        "original_product_url",
+        "affiliate",
+        "availability_status",
+        "category_cleanup_at",
+        "category_cleanup_route",
+        "category_cleanup_version",
+        "category_ml_version",
+        "final_category",
+        "primary_specifications",
+        "affiliate_converted",
+        "affiliate_updated_at"
+      ],
+      "identityFields": {
+        "_id": "6a2c08a19665e4a0b177b34b",
+        "brand": "Haier",
+        "clean_url": "https://www.flipkart.com/haier-8-kg-ai-smart-wash-ai-dbt-puristeam-525mm-super-drum-fully-automatic-front-load-washing-machine-in-built-heater-black/p/itm5b001b74dc1cc",
+        "image_url": "https://rukminim2.flixcart.com/image/312/312/xif0q/washing-machine-new/z/o/1/-original-imahmf2zbqrsjzax.jpeg?q=70",
+        "platform_product_id": "WMNHHUCY5FWTHBAN",
+        "specifications": {
+          "Capacity": "8 kg",
+          "Energy Rating": "5 Star",
+          "Load Type": "Front Load",
+          "Washing Machine Type": "Fully Automatic"
+        },
+        "title": "Haier 8 kg AI Smart Wash (AI-DBT) , PuriSteam , 525mm Super Drum Fully Automatic Front Load Washing Ma",
+        "url": "https://www.flipkart.com/haier-8-kg-ai-smart-wash-ai-dbt-puristeam-525mm-super-drum-fully-automatic-front-load-washing-machine-in-built-heater-black/p/itm5b001b74dc1cc",
+        "product_url": "https://fkrt.clnk.in/CgYv",
+        "original_product_url": "https://www.flipkart.com/haier-8-kg-ai-smart-wash-ai-dbt-puristeam-525mm-super-drum-fully-automatic-front-load-washing-machine-in-built-heater-black/p/itm5b001b74dc1cc",
+        "primary_specifications": {
+          "Capacity": "8 kg",
+          "Energy Rating": "5 Star",
+          "Load Type": "Front Load",
+          "Washing Machine Type": "Fully Automatic"
+        }
+      }
+    }
+  ],
+  "limits": [],
+  "namespaceProbe": {
+    "exitCode": 1,
+    "stderr": "unshare: write failed /proc/self/uid_map: Operation not permitted\n"
+  },
+  "sourceFilesScanned": 511
+}

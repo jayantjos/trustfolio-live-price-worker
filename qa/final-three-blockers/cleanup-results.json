@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "resources": [
+    {
+      "path": "qa/final-three-blockers/transport-public-cert.pem",
+      "status": "already_absent"
+    },
+    {
+      "path": "qa/final-three-blockers/worker-key-envelope.json",
+      "status": "already_absent"
+    },
+    {
+      "run": 41579209184,
+      "artifact": 13203948931,
+      "status": "deleted"
+    },
+    {
+      "run": 41579784025,
+      "artifact": 13204534996,
+      "status": "deleted"
+    }
+  ],
+  "productionChanges": 0
+}

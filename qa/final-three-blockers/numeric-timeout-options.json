@@ -1,0 +1,37 @@
+{
+  "productionWrites": 0,
+  "numericTimeoutConfig": [
+    {
+      "source": "pm2:trustfolio-backend",
+      "values": {}
+    },
+    {
+      "source": "pm2:trustfolio-web",
+      "values": {}
+    },
+    {
+      "source": "backend dotenv",
+      "values": {}
+    },
+    {
+      "source": "scraper dotenv",
+      "values": {}
+    }
+  ],
+  "mongoURIOptionKeys": [
+    {
+      "source": "backend dotenv",
+      "variable": "MONGODB_URI",
+      "timeoutOptions": {}
+    },
+    {
+      "source": "scraper dotenv",
+      "variable": "MONGODB_URI",
+      "timeoutOptions": {}
+    }
+  ],
+  "packageVersions": {
+    "mongoose": "8.22.1",
+    "mongodb": "6.20.0"
+  }
+}

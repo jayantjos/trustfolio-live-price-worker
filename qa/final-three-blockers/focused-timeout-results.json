@@ -1,0 +1,698 @@
+{
+  "atUTC": "2026-11-03T04:44:58.037658+00:00",
+  "productionWrites": 0,
+  "sources": [
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/src/services/api.service.ts",
+      "sha256": "36d74bdbfe88a2221c1929897caba75df4bddb8e260cd5a6ab5829be61410521",
+      "lines": [
+        {
+          "line": 55,
+          "text": "    candidates.push(...LOCAL_API_BASES);"
+        },
+        {
+          "line": 56,
+          "text": "  }"
+        },
+        {
+          "line": 57,
+          "text": ""
+        },
+        {
+          "line": 58,
+          "text": "  candidates.push(PRODUCTION_API_BASE);"
+        },
+        {
+          "line": 59,
+          "text": ""
+        },
+        {
+          "line": 60,
+          "text": "  return dedupe(candidates);"
+        },
+        {
+          "line": 61,
+          "text": "}"
+        },
+        {
+          "line": 62,
+          "text": ""
+        },
+        {
+          "line": 63,
+          "text": "/** Base URL for resolving relative media paths (must match the API host that serves `/uploads`). */"
+        },
+        {
+          "line": 64,
+          "text": "const API_BASE_URL = getApiBaseCandidates()[0] ?? 'https://api.trustfolio.in';"
+        },
+        {
+          "line": 65,
+          "text": ""
+        },
+        {
+          "line": 66,
+          "text": "const DEFAULT_CATEGORY_IMAGE = '/logo.png';"
+        },
+        {
+          "line": 67,
+          "text": "const DEFAULT_API_TIMEOUT_MS = 8000;"
+        },
+        {
+          "line": 68,
+          "text": ""
+        },
+        {
+          "line": 69,
+          "text": "function getApiTimeoutMs() {"
+        },
+        {
+          "line": 70,
+          "text": "  const configuredTimeout = Number(process.env.NEXT_PUBLIC_API_TIMEOUT_MS);"
+        },
+        {
+          "line": 71,
+          "text": "  if (Number.isFinite(configuredTimeout) && configuredTimeout >= 1000) {"
+        },
+        {
+          "line": 72,
+          "text": "    return configuredTimeout;"
+        },
+        {
+          "line": 73,
+          "text": "  }"
+        },
+        {
+          "line": 74,
+          "text": "  return DEFAULT_API_TIMEOUT_MS;"
+        },
+        {
+          "line": 75,
+          "text": "}"
+        },
+        {
+          "line": 76,
+          "text": ""
+        },
+        {
+          "line": 77,
+          "text": "const API_TIMEOUT_MS = getApiTimeoutMs();"
+        },
+        {
+          "line": 78,
+          "text": ""
+        },
+        {
+          "line": 79,
+          "text": "function toFiniteNumber(value: unknown): number | undefined {"
+        },
+        {
+          "line": 80,
+          "text": "  const numeric = Number(value);"
+        },
+        {
+          "line": 170,
+          "text": "}"
+        },
+        {
+          "line": 171,
+          "text": ""
+        },
+        {
+          "line": 172,
+          "text": "function isAbortError(error: unknown) {"
+        },
+        {
+          "line": 173,
+          "text": "  return error instanceof Error && error.name === 'AbortError';"
+        },
+        {
+          "line": 174,
+          "text": "}"
+        },
+        {
+          "line": 175,
+          "text": ""
+        },
+        {
+          "line": 176,
+          "text": "/**"
+        },
+        {
+          "line": 177,
+          "text": " * Generic fetch wrapper with error handling"
+        },
+        {
+          "line": 178,
+          "text": " */"
+        },
+        {
+          "line": 179,
+          "text": "async function fetchAPI<T>("
+        },
+        {
+          "line": 180,
+          "text": "  endpoint: string,"
+        },
+        {
+          "line": 181,
+          "text": "  options?: RequestInit"
+        },
+        {
+          "line": 182,
+          "text": "): Promise<ApiResponse<T>> {"
+        },
+        {
+          "line": 183,
+          "text": "  const bases = getApiBaseCandidates();"
+        },
+        {
+          "line": 184,
+          "text": "  const errors: string[] = [];"
+        },
+        {
+          "line": 185,
+          "text": ""
+        },
+        {
+          "line": 186,
+          "text": "  for (const base of bases) {"
+        },
+        {
+          "line": 187,
+          "text": "    const url = `${base}${endpoint}`;"
+        },
+        {
+          "line": 188,
+          "text": "    const controller = new AbortController();"
+        },
+        {
+          "line": 189,
+          "text": "    const cleanupFns: Array<() => void> = [];"
+        },
+        {
+          "line": 190,
+          "text": "    const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);"
+        },
+        {
+          "line": 191,
+          "text": "    cleanupFns.push(() => clearTimeout(timeoutId));"
+        },
+        {
+          "line": 192,
+          "text": ""
+        },
+        {
+          "line": 193,
+          "text": "    if (options?.signal) {"
+        },
+        {
+          "line": 194,
+          "text": "      const handleAbort = () => controller.abort();"
+        },
+        {
+          "line": 195,
+          "text": ""
+        },
+        {
+          "line": 196,
+          "text": "      if (options.signal.aborted) {"
+        },
+        {
+          "line": 197,
+          "text": "        controller.abort();"
+        },
+        {
+          "line": 198,
+          "text": "      } else {"
+        },
+        {
+          "line": 199,
+          "text": "        options.signal.addEventListener('abort', handleAbort, { once: true });"
+        },
+        {
+          "line": 200,
+          "text": "        cleanupFns.push(() => options.signal?.removeEventListener('abort', handleAbort));"
+        },
+        {
+          "line": 201,
+          "text": "      }"
+        },
+        {
+          "line": 202,
+          "text": "    }"
+        },
+        {
+          "line": 203,
+          "text": ""
+        },
+        {
+          "line": 204,
+          "text": "    try {"
+        },
+        {
+          "line": 205,
+          "text": "      const response = await fetch(url, {"
+        },
+        {
+          "line": 206,
+          "text": "        ...options,"
+        },
+        {
+          "line": 207,
+          "text": "        signal: controller.signal,"
+        },
+        {
+          "line": 208,
+          "text": "        headers: {"
+        },
+        {
+          "line": 209,
+          "text": "          'Content-Type': 'application/json',"
+        },
+        {
+          "line": 210,
+          "text": "          ...options?.headers,"
+        },
+        {
+          "line": 211,
+          "text": "        },"
+        },
+        {
+          "line": 212,
+          "text": "      });"
+        },
+        {
+          "line": 213,
+          "text": ""
+        },
+        {
+          "line": 214,
+          "text": "      let data: ApiResponse<T>;"
+        },
+        {
+          "line": 215,
+          "text": "      try {"
+        },
+        {
+          "line": 216,
+          "text": "        data = await response.json();"
+        },
+        {
+          "line": 217,
+          "text": "      } catch {"
+        },
+        {
+          "line": 218,
+          "text": "        data = { success: false, message: `HTTP ${response.status}`, data: null as T };"
+        },
+        {
+          "line": 219,
+          "text": "      }"
+        },
+        {
+          "line": 220,
+          "text": ""
+        },
+        {
+          "line": 221,
+          "text": "      if (!response.ok) {"
+        },
+        {
+          "line": 222,
+          "text": "        const msg = typeof data?.message === 'string' ? data.message : `HTTP error! status: ${response.status}`;"
+        },
+        {
+          "line": 223,
+          "text": "        throw new Error(msg);"
+        },
+        {
+          "line": 224,
+          "text": "      }"
+        },
+        {
+          "line": 225,
+          "text": ""
+        },
+        {
+          "line": 226,
+          "text": "      return data;"
+        },
+        {
+          "line": 227,
+          "text": "    } catch (error) {"
+        },
+        {
+          "line": 228,
+          "text": "      const message = error instanceof Error ? error.message : 'Unknown error';"
+        },
+        {
+          "line": 229,
+          "text": "      errors.push(`${base}: ${message}`);"
+        },
+        {
+          "line": 230,
+          "text": "      const isNetworkError = message === 'Failed to fetch' || (error instanceof TypeError && message.includes('fetch'));"
+        },
+        {
+          "line": 231,
+          "text": "      const isAbort = isAbortError(error);"
+        },
+        {
+          "line": 232,
+          "text": "      if (isAbort) {"
+        },
+        {
+          "line": 233,
+          "text": "        errors.push(`${base}: timed out after ${Math.round(API_TIMEOUT_MS / 1000)}s`);"
+        },
+        {
+          "line": 234,
+          "text": "      }"
+        },
+        {
+          "line": 235,
+          "text": "      // try next base"
+        },
+        {
+          "line": 236,
+          "text": "    } finally {"
+        },
+        {
+          "line": 237,
+          "text": "      // cleanup timeouts/listeners"
+        },
+        {
+          "line": 238,
+          "text": "      // @ts-ignore"
+        },
+        {
+          "line": 239,
+          "text": "      cleanupFns.forEach((cleanup) => cleanup());"
+        },
+        {
+          "line": 240,
+          "text": "    }"
+        },
+        {
+          "line": 241,
+          "text": "  }"
+        },
+        {
+          "line": 242,
+          "text": ""
+        },
+        {
+          "line": 243,
+          "text": "  throw new Error(`All API bases failed: ${errors.join(' | ')}`);"
+        },
+        {
+          "line": 244,
+          "text": "}"
+        },
+        {
+          "line": 245,
+          "text": ""
+        },
+        {
+          "line": 310,
+          "text": "      min: number | null;"
+        },
+        {
+          "line": 311,
+          "text": "      max: number | null;"
+        },
+        {
+          "line": 312,
+          "text": "      count: number;"
+        },
+        {
+          "line": 313,
+          "text": "    }>(`/api/products/price-bounds?category=${encodeURIComponent(category)}`);"
+        },
+        {
+          "line": 314,
+          "text": "  },"
+        },
+        {
+          "line": 315,
+          "text": ""
+        },
+        {
+          "line": 316,
+          "text": "  /**"
+        },
+        {
+          "line": 317,
+          "text": "   * Distinct brands for a category (select-only picker source)."
+        },
+        {
+          "line": 318,
+          "text": "   */"
+        },
+        {
+          "line": 319,
+          "text": "  async getBrandsByCategory(category: string, q?: string, limit: number = 30) {"
+        },
+        {
+          "line": 320,
+          "text": "    const params = new URLSearchParams({"
+        },
+        {
+          "line": 321,
+          "text": "      category,"
+        },
+        {
+          "line": 322,
+          "text": "      limit: String(limit),"
+        },
+        {
+          "line": 323,
+          "text": "    });"
+        },
+        {
+          "line": 324,
+          "text": "    if (q && q.trim().length >= 2) {"
+        },
+        {
+          "line": 325,
+          "text": "      params.set('q', q.trim());"
+        },
+        {
+          "line": 326,
+          "text": "    }"
+        },
+        {
+          "line": 327,
+          "text": "    return fetchAPI<CategoryBrandsResponse>(`/api/products/brands?${params.toString()}`);"
+        },
+        {
+          "line": 328,
+          "text": "  },"
+        },
+        {
+          "line": 329,
+          "text": ""
+        },
+        {
+          "line": 330,
+          "text": "  /**"
+        },
+        {
+          "line": 331,
+          "text": "   * Get top products by category and budget."
+        },
+        {
+          "line": 332,
+          "text": "   * Optional brand must be a value selected from getBrandsByCategory (Budget Only omits brand)."
+        },
+        {
+          "line": 333,
+          "text": "   */"
+        },
+        {
+          "line": 334,
+          "text": "  async getTopProducts(category: string, budget: number, limit: number = 5, brand?: string) {"
+        },
+        {
+          "line": 335,
+          "text": "    const params = new URLSearchParams({"
+        },
+        {
+          "line": 336,
+          "text": "      category,"
+        },
+        {
+          "line": 337,
+          "text": "      budget: String(budget),"
+        },
+        {
+          "line": 338,
+          "text": "      limit: String(limit),"
+        },
+        {
+          "line": 339,
+          "text": "    });"
+        },
+        {
+          "line": 340,
+          "text": "    if (brand && brand.trim()) {"
+        },
+        {
+          "line": 341,
+          "text": "      params.set('brand', brand.trim());"
+        },
+        {
+          "line": 342,
+          "text": "    }"
+        },
+        {
+          "line": 343,
+          "text": "    return fetchAPI<TopProductsResponse>(`/api/products/top?${params.toString()}`);"
+        },
+        {
+          "line": 344,
+          "text": "  },"
+        },
+        {
+          "line": 345,
+          "text": ""
+        },
+        {
+          "line": 346,
+          "text": "  /**"
+        },
+        {
+          "line": 347,
+          "text": "   * Live Amazon / Flipkart / Croma prices for the listings on screen (fetched via the price Worker, cached 60s)."
+        },
+        {
+          "line": 348,
+          "text": "   */"
+        },
+        {
+          "line": 349,
+          "text": "  async getLivePrices(ids: string[], signal?: AbortSignal) {"
+        },
+        {
+          "line": 350,
+          "text": "    return fetchAPI<LivePrice[]>('/api/live-prices', {"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/node-backend/server.js",
+      "sha256": "b406ac861a1a5822b9e6817346cbff5ea6ef71951d5cb5c030fe33fb64b53cae",
+      "lines": [
+        {
+          "line": 12,
+          "text": "app.listen(PORT, () => {"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/node-backend/config/mongo.js",
+      "sha256": "b9ab36ece318632db95c2080d72922b2bd4f72ff8f762881cae240a4b7346ac3",
+      "lines": [
+        {
+          "line": 36,
+          "text": "    const conn = await mongoose.connect(uri, { dbName: db });"
+        },
+        {
+          "line": 43,
+          "text": "        const conn = await mongoose.connect(uri, { dbName: db });"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/node-backend/services/CromaLivePriceDirect.js",
+      "sha256": "4be6c32c90c28757f1cb3ad2ea399274387088612f214d579c8de7e154f18c71",
+      "lines": [
+        {
+          "line": 6,
+          "text": "const MAX_CONCURRENT = Math.min(8, Math.max(1, Number.parseInt(process.env.CROMA_MAX_CONCURRENT || '8', 10) || 8));"
+        },
+        {
+          "line": 8,
+          "text": "const MAX_QUEUE = 64;"
+        },
+        {
+          "line": 13,
+          "text": "    if (active >= MAX_CONCURRENT && queue.length >= MAX_QUEUE) {"
+        },
+        {
+          "line": 27,
+          "text": "    if (active < MAX_CONCURRENT) run();"
+        },
+        {
+          "line": 56,
+          "text": "function curlJson(url) {"
+        },
+        {
+          "line": 58,
+          "text": "    execFile('curl', ['-fsS','--connect-timeout','3','--max-time','5','--url',url],"
+        },
+        {
+          "line": 59,
+          "text": "      {timeout:5500, encoding:'utf8', maxBuffer:4000000}, (e,out) => {"
+        },
+        {
+          "line": 70,
+          "text": "function cachedCurlJson(url) {"
+        },
+        {
+          "line": 75,
+          "text": "  const promise = curlJson(url).catch(error => { queryCache.delete(url); throw error; });"
+        },
+        {
+          "line": 118,
+          "text": "      try { response = await cachedCurlJson(API + '?' + params.toString()); }"
+        }
+      ]
+    },
+    {
+      "path": "/home/***/apps/trustfolio/node-backend/services/ProductRecommendationService.js",
+      "sha256": "cadaae48fe765d2535449508bba75811ffc1df172eb01f3f9b07d30ff527d6e9",
+      "lines": [
+        {
+          "line": 176,
+          "text": "function getBudgetQueryMaxTimeMS() {"
+        },
+        {
+          "line": 196,
+          "text": "    .maxTimeMS(getBudgetQueryMaxTimeMS())"
+        },
+        {
+          "line": 617,
+          "text": "          .maxTimeMS(getBudgetQueryMaxTimeMS())"
+        }
+      ]
+    }
+  ],
+  "compiledFrontend": [
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.next/static/chunks/589-9ac8ea0c3c7d1e0c.js",
+      "sha256": "3850d45e0a5de70e6e70c4b8f8e42bc5cd44c658c403c4d2d3866f8cb2bef572",
+      "fragments": [
+        ">\\n<p>Use the Feedback page to suggest improvements, categories, features, or issues you want TrustFolio to handle better.</p>\",copyrightText:\"Copyright 2025 TrustFolio. All rights reserved.\"},n=(()=>{let e=Number(o.env.NEXT_PUBLIC_API_TIMEOUT_MS);return Number.isFinite(e)&&e>=1e3?e:8e3})(),i=null,l=null;function c(e){let t={...s,...e||{}};return Object.entries(s).forEach(e=>{let[r,a]=e,o=String(t[r]||\"\").trim();\"string\"==typeof a&&a&&(\"\"===o||\"aboutUs\"===r&&\"TrustFolio helps you discover top-rated products within your budget across various categories.\"===o)&&(t[r]=a)}),t}async function d(){if(i)return i;if(l)return l;l=(async()=>{f",
+        "let r=arguments.length>2&&void 0!==arguments[2]?arguments[2]:5,a=arguments.length>3?arguments[3]:void 0,o=new URLSearchParams({category:e,budget:String(t),limit:String(r)});return a&&a.trim()&&o.set(\"brand\",a.trim()),u(\"/api/products/top?\".concat(o.toString()))},getLivePrices:async(e,t)=>u(\"/api/live-prices\",{method:\"POST\",body:JSON.stringify({ids:e}),signal:t}),async getMyProducts(e){let t=new URLSearchParams;return e.category&&t.append(\"category\",e.category),e.brand&&t.append(\"brand\",e.brand),e.keyword&&t.append(\"keyword\",e.keyword),e.limit&&t.append(\"limit\",e.limit.toString()),u(\"/api/advanced-scraping/my-products?\".concat(t.toSt",
+        "{let e=t instanceof Error?t.message:\"Unknown error\";a.push(\"\".concat(o,\": \").concat(e)),\"Failed to fetch\"===e||t instanceof TypeError&&e.includes(\"fetch\"),t instanceof Error&&\"AbortError\"===t.name&&a.push(\"\".concat(o,\": timed out after \").concat(Math.round(c/1e3),\"s\"))}finally{n.forEach(e=>e())}}throw Error(\"All API bases failed: \".concat(a.join(\" | \")))}let p={async getAllCategories(){let e=await u(\"/api/categories\");return e.success&&Array.isArray(e.data)&&(e.data=e.data.map(e=>h(e))),e},async getCategoryBySlug(e){let t=await u(\"/api/categories/slug/\".concat(e));return t.success&&t.data&&(t.data=h(t.data)),t},async getCategoryById",
+        " you discover top-rated products within your budget across various categories.\"===o)&&(t[r]=a)}),t}async function d(){if(i)return i;if(l)return l;l=(async()=>{for(let e of(0,a.Ob)())try{let t=await function(e){let t=new AbortController,r=setTimeout(()=>t.abort(),n);return fetch(e,{signal:t.signal}).finally(()=>clearTimeout(r))}(\"\".concat(e,\"/api/site-settings\"));if(t.ok){let e=await t.json().catch(()=>null);if((null==e?void 0:e.success)&&(null==e?void 0:e.data))return i=c(e.data)}}catch(e){continue}return i=c()})();try{return await l}finally{l=null}}},4215:(e,t,r)=>{r.d(t,{A:()=>c});var a=r(1960),o=r(7332),s=r(2613),n=r(3317),i=r.n("
+      ]
+    }
+  ],
+  "frontendTimeoutEnv": [
+    {
+      "path": "/home/***/apps/trustfolio/trustfolio-main/.env",
+      "NEXT_PUBLIC_API_TIMEOUT_MS": null
+    }
+  ],
+  "pm2FrontendTimeout": null,
+  "nativeNodeHTTPDefaults": {
+    "node": "v20.20.2",
+    "serverTimeout": 0,
+    "requestTimeout": 300000,
+    "headersTimeout": 60000,
+    "keepAliveTimeout": 5000
+  }
+}

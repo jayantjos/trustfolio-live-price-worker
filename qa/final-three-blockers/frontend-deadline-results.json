@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "results": [
+    {
+      "kind": "actual frontend wrapper; SIMULATED local HTTP origin; no retailer/DB/proxy traffic",
+      "callerTimeoutMs": 8000,
+      "originDelayMs": 9000,
+      "latencyMs": 8003,
+      "success": false,
+      "error": "All API bases failed: http://127.0.0.1:42177: This operation was aborted | http://127.0.0.1:42177: timed out after 8s"
+    },
+    {
+      "kind": "actual frontend wrapper; SIMULATED local HTTP origin; no retailer/DB/proxy traffic",
+      "callerTimeoutMs": 20000,
+      "originDelayMs": 9000,
+      "latencyMs": 9012,
+      "success": true,
+      "error": null
+    }
+  ],
+  "productionChanges": 0,
+  "scope": "Failure reproduction and one hypothetical staging-only outer deadline; not native acceptance"
+}

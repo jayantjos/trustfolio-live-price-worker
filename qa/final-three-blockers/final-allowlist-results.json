@@ -1,0 +1,989 @@
+{
+  "status": "PASS",
+  "productionWrites": 0,
+  "workerDeployment": false,
+  "checks": [
+    {
+      "name": "genuine_approved_mapping_and_persistence",
+      "status": "PASS"
+    },
+    {
+      "name": "reject_unknown_page",
+      "status": "PASS"
+    },
+    {
+      "name": "reject_conflicting_pid",
+      "status": "PASS"
+    },
+    {
+      "name": "reject_wrong_brand",
+      "status": "PASS"
+    },
+    {
+      "name": "reject_wrong_capacity",
+      "status": "PASS"
+    },
+    {
+      "name": "reject_wrong_model",
+      "status": "PASS"
+    },
+    {
+      "name": "excluded_catalog_69f419289a622ea2d7ccb608",
+      "status": "PASS"
+    },
+    {
+      "name": "excluded_catalog_69f4026f9a622ea2d7ccb2e6",
+      "status": "PASS"
+    },
+    {
+      "name": "only_approved_ids_in_actual_controller",
+      "status": "PASS"
+    },
+    {
+      "name": "zero_archive_and_no_staging_deletion",
+      "status": "PASS"
+    },
+    {
+      "name": "no_archives",
+      "status": "PASS"
+    }
+  ],
+  "quotes": [
+    {
+      "item": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U",
+      "atUTC": "2026-11-03T04:47:17.593Z",
+      "http": 200,
+      "ray": "a548bd70ff7c4800-LAX",
+      "latencyMs": 1083,
+      "row": {
+        "asin": null,
+        "pid": "WMNHBK4HNYBSDJ9U",
+        "input": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U",
+        "amazon": {
+          "platform": "Amazon",
+          "url": null,
+          "title": null,
+          "price": null,
+          "priceNum": null,
+          "inStock": null,
+          "status": "skipped"
+        },
+        "flipkart": {
+          "platform": "Flipkart",
+          "url": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U",
+          "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey Price in India - Buy Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey online at Flipkart.com",
+          "price": "₹34,490",
+          "priceNum": 34490,
+          "inStock": true,
+          "in_stock": true,
+          "status": "ok",
+          "verificationStatus": "ok",
+          "verificationOutcome": "selling_price_verified",
+          "availability": null,
+          "error": null,
+          "httpStatus": 200,
+          "extractionSource": "jsonld_product_offer",
+          "bytesRead": "1529 KB",
+          "latencyMs": 864
+        },
+        "croma": {
+          "platform": "Croma",
+          "url": null,
+          "title": null,
+          "price": null,
+          "priceNum": null,
+          "inStock": null,
+          "status": "not_supported"
+        },
+        "bestDeal": {
+          "winner": "flipkart",
+          "savings": 0,
+          "status": "ok"
+        },
+        "cached": false,
+        "itemLatencyMs": 864
+      }
+    },
+    {
+      "item": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U",
+      "atUTC": "2026-11-03T04:47:17.746Z",
+      "http": 200,
+      "ray": "a548bd70ef7278e9-LAX",
+      "latencyMs": 1256,
+      "row": {
+        "asin": null,
+        "pid": "WMNHBK4HNYBSDJ9U",
+        "input": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U",
+        "amazon": {
+          "platform": "Amazon",
+          "url": null,
+          "title": null,
+          "price": null,
+          "priceNum": null,
+          "inStock": null,
+          "status": "skipped"
+        },
+        "flipkart": {
+          "platform": "Flipkart",
+          "url": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U",
+          "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey Price in India - Buy Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey online at Flipkart.com",
+          "price": "₹34,490",
+          "priceNum": 34490,
+          "inStock": true,
+          "in_stock": true,
+          "status": "ok",
+          "verificationStatus": "ok",
+          "verificationOutcome": "selling_price_verified",
+          "availability": null,
+          "error": null,
+          "httpStatus": 200,
+          "extractionSource": "jsonld_product_offer",
+          "bytesRead": "1528 KB",
+          "latencyMs": 987
+        },
+        "croma": {
+          "platform": "Croma",
+          "url": null,
+          "title": null,
+          "price": null,
+          "priceNum": null,
+          "inStock": null,
+          "status": "not_supported"
+        },
+        "bestDeal": {
+          "winner": "flipkart",
+          "savings": 0,
+          "status": "ok"
+        },
+        "cached": false,
+        "itemLatencyMs": 987
+      }
+    },
+    {
+      "item": "B0D41L64NR",
+      "atUTC": "2026-11-03T04:47:19.004Z",
+      "http": 200,
+      "ray": "a548bd70ddce2ea5-LAX",
+      "latencyMs": 2495,
+      "row": {
+        "asin": "B0D41L64NR",
+        "pid": "B0D41L64NR",
+        "input": "B0D41L64NR",
+        "amazon": {
+          "platform": "Amazon",
+          "url": "https://www.amazon.in/dp/B0D41L64NR",
+          "title": "Bosch 9 kg 5 Star Front Load Fully-Automatic Washing Machine, AI ActiveWater, 14 Wash Programs, Removes 99.9% Germs with Steam, No Tangle or Wrinkle, SoftCare Paddle,Zero Vibration, White, WGA14200IN : Amazon.in: Home &amp; Kitchen",
+          "price": "₹33,490",
+          "priceNum": 33490,
+          "inStock": true,
+          "in_stock": true,
+          "status": "ok",
+          "verificationStatus": "ok",
+          "verificationOutcome": "selling_price_verified",
+          "availability": null,
+          "error": null,
+          "httpStatus": 200,
+          "extractionSource": "amazon_price_to_pay_parts",
+          "bytesRead": "2307 KB",
+          "latencyMs": 2216
+        },
+        "flipkart": {
+          "platform": "Flipkart",
+          "url": null,
+          "title": null,
+          "price": null,
+          "priceNum": null,
+          "inStock": null,
+          "status": "skipped"
+        },
+        "croma": {
+          "platform": "Croma",
+          "url": null,
+          "title": null,
+          "price": null,
+          "priceNum": null,
+          "inStock": null,
+          "status": "not_supported"
+        },
+        "bestDeal": {
+          "winner": "amazon",
+          "savings": 0,
+          "status": "ok"
+        },
+        "cached": false,
+        "itemLatencyMs": 2216
+      }
+    }
+  ],
+  "resolutions": [
+    {
+      "id": "69f4026f9a622ea2d7ccb2e6",
+      "platform": "flipkart",
+      "catalogIdentifier": "itmf0e126c67d776",
+      "originalURL": "https://www.flipkart.com/dzab-gaming-core-i5-16-gb-ddr4-512-ssd-windows-11-home-4-gb-22-inch-screen-di5-3470-61-16-512-22-11/p/itmf0e126c67d776",
+      "brand": "Dzab",
+      "title": "Dzab Gaming Core I5 16 Gb Ddr4 512 Ssd Windows 11 Home 4 Gb 22 Inch Screen Di5 3470 61 16 512 22 11",
+      "item": null
+    },
+    {
+      "id": "69f419289a622ea2d7ccb608",
+      "platform": "flipkart",
+      "catalogIdentifier": "itmf65781027269c",
+      "originalURL": "https://www.flipkart.com/gamesoul-js39p-4k-brushless-motor-gimbal-camera-drone-display-remote/p/itmf65781027269c",
+      "brand": "GAMESOUL",
+      "title": "GAMESOUL JS39P 4K Brushless Motor With Gimbal Camera Drone Display Remote Drone",
+      "item": null
+    },
+    {
+      "id": "69f419329a622ea2d7ccb736",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+      "brand": "Godrej",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U"
+    },
+    {
+      "id": "6a080110fe6fd8dc386bbee3",
+      "platform": "amazon",
+      "catalogIdentifier": "B0D41L64NR",
+      "originalURL": "https://www.amazon.in/dp/B0D41L64NR",
+      "brand": "Bosch",
+      "title": "Bosch 9 kg 5 Star Front Load Fully-Automatic Washing Machine, AI ActiveWater, 14 Wash Programs, Removes 99.9% Germs with Steam, No Tangle or Wrinkle, SoftCare Paddle,Zero Vibration, White, WGA14200IN",
+      "item": "B0D41L64NR"
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a37",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm0000000000000",
+      "originalURL": "https://www.flipkart.com/unknown/p/itm0000000000000",
+      "brand": "Godrej",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": null
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a38",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHHUCY5FWTHBAN",
+      "brand": "Godrej",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": null
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a39",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+      "brand": "UnrelatedBrand",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": null
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a3a",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+      "brand": "Godrej",
+      "title": "Godrej 8 kg wrong capacity fixture",
+      "item": null
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a3b",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+      "brand": "Godrej",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U"
+    },
+    {
+      "id": "69f419329a622ea2d7ccb736",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+      "brand": "Godrej",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U"
+    },
+    {
+      "id": "6a080110fe6fd8dc386bbee3",
+      "platform": "amazon",
+      "catalogIdentifier": "B0D41L64NR",
+      "originalURL": "https://www.amazon.in/dp/B0D41L64NR",
+      "brand": "Bosch",
+      "title": "Bosch 9 kg 5 Star Front Load Fully-Automatic Washing Machine, AI ActiveWater, 14 Wash Programs, Removes 99.9% Germs with Steam, No Tangle or Wrinkle, SoftCare Paddle,Zero Vibration, White, WGA14200IN",
+      "item": "B0D41L64NR"
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a3b",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+      "brand": "Godrej",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U"
+    },
+    {
+      "id": "69f4026f9a622ea2d7ccb2e6",
+      "platform": "flipkart",
+      "catalogIdentifier": "itmf0e126c67d776",
+      "originalURL": "https://www.flipkart.com/dzab-gaming-core-i5-16-gb-ddr4-512-ssd-windows-11-home-4-gb-22-inch-screen-di5-3470-61-16-512-22-11/p/itmf0e126c67d776",
+      "brand": "Dzab",
+      "title": "Dzab Gaming Core I5 16 Gb Ddr4 512 Ssd Windows 11 Home 4 Gb 22 Inch Screen Di5 3470 61 16 512 22 11",
+      "item": null
+    },
+    {
+      "id": "69f419289a622ea2d7ccb608",
+      "platform": "flipkart",
+      "catalogIdentifier": "itmf65781027269c",
+      "originalURL": "https://www.flipkart.com/gamesoul-js39p-4k-brushless-motor-gimbal-camera-drone-display-remote/p/itmf65781027269c",
+      "brand": "GAMESOUL",
+      "title": "GAMESOUL JS39P 4K Brushless Motor With Gimbal Camera Drone Display Remote Drone",
+      "item": null
+    },
+    {
+      "id": "69f419329a622ea2d7ccb736",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+      "brand": "Godrej",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U"
+    },
+    {
+      "id": "6a080110fe6fd8dc386bbee3",
+      "platform": "amazon",
+      "catalogIdentifier": "B0D41L64NR",
+      "originalURL": "https://www.amazon.in/dp/B0D41L64NR",
+      "brand": "Bosch",
+      "title": "Bosch 9 kg 5 Star Front Load Fully-Automatic Washing Machine, AI ActiveWater, 14 Wash Programs, Removes 99.9% Germs with Steam, No Tangle or Wrinkle, SoftCare Paddle,Zero Vibration, White, WGA14200IN",
+      "item": "B0D41L64NR"
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a37",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm0000000000000",
+      "originalURL": "https://www.flipkart.com/unknown/p/itm0000000000000",
+      "brand": "Godrej",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": null
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a38",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHHUCY5FWTHBAN",
+      "brand": "Godrej",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": null
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a39",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+      "brand": "UnrelatedBrand",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": null
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a3a",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+      "brand": "Godrej",
+      "title": "Godrej 8 kg wrong capacity fixture",
+      "item": null
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a3b",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+      "brand": "Godrej",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U"
+    },
+    {
+      "id": "69f419329a622ea2d7ccb736",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+      "brand": "Godrej",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U"
+    },
+    {
+      "id": "6a080110fe6fd8dc386bbee3",
+      "platform": "amazon",
+      "catalogIdentifier": "B0D41L64NR",
+      "originalURL": "https://www.amazon.in/dp/B0D41L64NR",
+      "brand": "Bosch",
+      "title": "Bosch 9 kg 5 Star Front Load Fully-Automatic Washing Machine, AI ActiveWater, 14 Wash Programs, Removes 99.9% Germs with Steam, No Tangle or Wrinkle, SoftCare Paddle,Zero Vibration, White, WGA14200IN",
+      "item": "B0D41L64NR"
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a37",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm0000000000000",
+      "originalURL": "https://www.flipkart.com/unknown/p/itm0000000000000",
+      "brand": "Godrej",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": null
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a38",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHHUCY5FWTHBAN",
+      "brand": "Godrej",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": null
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a39",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+      "brand": "UnrelatedBrand",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": null
+    },
+    {
+      "id": "69f419329a622ea2d7ccb736",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+      "brand": "Godrej",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U"
+    },
+    {
+      "id": "6a080110fe6fd8dc386bbee3",
+      "platform": "amazon",
+      "catalogIdentifier": "B0D41L64NR",
+      "originalURL": "https://www.amazon.in/dp/B0D41L64NR",
+      "brand": "Bosch",
+      "title": "Bosch 9 kg 5 Star Front Load Fully-Automatic Washing Machine, AI ActiveWater, 14 Wash Programs, Removes 99.9% Germs with Steam, No Tangle or Wrinkle, SoftCare Paddle,Zero Vibration, White, WGA14200IN",
+      "item": "B0D41L64NR"
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a37",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm0000000000000",
+      "originalURL": "https://www.flipkart.com/unknown/p/itm0000000000000",
+      "brand": "Godrej",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": null
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a38",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHHUCY5FWTHBAN",
+      "brand": "Godrej",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": null
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a39",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+      "brand": "UnrelatedBrand",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": null
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a3a",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+      "brand": "Godrej",
+      "title": "Godrej 8 kg wrong capacity fixture",
+      "item": null
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a3b",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+      "brand": "Godrej",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U"
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a3a",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+      "brand": "Godrej",
+      "title": "Godrej 8 kg wrong capacity fixture",
+      "item": null
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a3b",
+      "platform": "flipkart",
+      "catalogIdentifier": "itm85c805abf4849",
+      "originalURL": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849",
+      "brand": "Godrej",
+      "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+      "item": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U"
+    }
+  ],
+  "failures": [],
+  "sourceReadAt": "2026-11-03T04:43:50.869269+00:00",
+  "sourceHashes": {
+    "services/SurveyBudgetService.js": "60c5468498e01b9e48139741ae84269d36c66303e68ff43d4301c1e91bc987fd",
+    "services/BrandService.js": "5785db6d9502eda61f85fd4166788626fb2a8cbadf6d13a5ec76ab2b5d04e720",
+    "services/LiveBudgetRecommendationService.js": "136ece5770aec60f3f712abc43983d0a5c5d56ce4065e8fcb1dd603474222184",
+    "services/DataCleanupService.js": "62c455adac6528517510261dc4f75265265c14e951e9a5b7d3c34b748e60b888",
+    "services/ProductRecommendationService.js": "cadaae48fe765d2535449508bba75811ffc1df172eb01f3f9b07d30ff527d6e9",
+    "services/SurveyQualityService.js": "854e40101cb4888dda45f9a36b9e7c8f1ea83bc9352c58f60de4ac296ecabd0f",
+    "services/SurveyDeviceService.js": "b648a6b6a3115f119a342a0e8eba32ff2db22cdd59bb4c18975ba1381658d485",
+    "services/ProductAvailabilityPolicy.js": "a814eb2a9f78289c66bb6cf9f9d9e4fff60769384147fa361f8ccd53b4150673",
+    "services/LivePriceService.js": "03d5c3c8ac73f7df281162bdaea467fef4f94859427938db1fbde65fef637f0d",
+    "services/AdminAuthService.js": "6397a4a52f2577d61e8a86ed21d19e946ed5a1209a449e4877bde37a91797269",
+    "services/SurveyService.js": "1cc411cf1f4805fdb151411fef9f4b9fb47e94ea496916445e7884b723c4c642",
+    "services/CromaLivePriceDirect.js": "4be6c32c90c28757f1cb3ad2ea399274387088612f214d579c8de7e154f18c71",
+    "services/CategoryService.js": "d4b25e8c0fd59455d5e05d87a2dc75575751c93d658e4fc595a2467132f3dc9a",
+    "services/RazorpayPayoutService.js": "9df380775dca393e7c9921a84834e8484be8e1ed2ed31fde36da26551c36a6ba",
+    "services/DynamicQuestionService.js": "65db14156acc374028bf26ce7dc8f7e8eeb621b10d1ddb2f648559bb91307f19",
+    "controllers/CategoryController.js": "ffef0dcb5d577bf27771757d9b7976d9dba0999a01b0ff46aa8d1b887689218d",
+    "controllers/AppUpdateController.js": "f3ed7798b658e00e7d3d9bf080c188d5f401037c5e412a30c038d7d23e8d60ef",
+    "controllers/SiteSettingsController.js": "16423da0afc99b3a769bbd7b7f5f7c14f37f28fbb6f8a115859b2034665f767b",
+    "controllers/ContactMessageController.js": "ade2ef65a1ed17b3315e9abbf39665b2b45535f11048204bd97d72b070177b7a",
+    "controllers/AdminAuthController.js": "80072b721d6c91d92ced7025b5bd1f0cb69da67989358df2503201b00241d9fe",
+    "controllers/FeedbackController.js": "a5a2ae090b77feafaa6fecd94c5c7fa2aaeff0624af4b930cc478b2eb73a6045",
+    "controllers/ProductController.js": "4d927892c950ba50e59d1fa53bf7110ea95c96018d63953b3ff3107ee5526562",
+    "controllers/LivePriceController.js": "a21a14886dbd0bbb8f72df4ed6ac30a134a29182cc5e0a5b93aaa73f463e05dc",
+    "controllers/IssueController.js": "587a9a0904638ae67e0dca57d62d777754247c5da502bef5a2a82cac83a88beb",
+    "controllers/ScraperUploadController.js": "ee81ed9a02b8b76e3e43a40ba3c4649f3798c122d7282d52a72dd8355c77c53a",
+    "controllers/SurveyController.js": "55efa088614d0ca5269755dab79c113e2ac9a452ee657548fe9d8af8a60fa7c6",
+    "models/CategoryResponse.js": "57ad7ed07576957aa72e08be869bf79b802b5ea93e6abc35595e30159e1abde6",
+    "models/ProductSummaryDto.js": "7e4eacbbde7d23c5ed396b378ed38a94f9f9522af2f0347c8a26e2ad3084514b",
+    "entities/SurveyDevice.js": "ce534ae508baba09662cba51e4a50cc152131cf8c6893dd9c39ff967750e6521",
+    "entities/SurveyQuestion.js": "a309273cd852aabd07da9f230b778d3d9a8f7cf34e921f1c2b9e7c616c223e67",
+    "entities/AppUpdate.js": "07e6557db3f31c6d86a5d6d5c2390d2e5681babfbfe3492c1824daf499d1fa3e",
+    "entities/ContactMessage.js": "24e257ae60926c5feeed1c87e737c0d91e43df386ff2167ed8f5794d263a075d",
+    "entities/SurveySession.js": "1bdbc93f4baa8dc12f45094199ae18f17aaa358a19339c6f9245f59d396a5b36",
+    "entities/SurveyCampaign.js": "cdde062eb8da5706caa70dc7df7ecbf140881e60a694fbe7d514d8e53fa6b94e",
+    "entities/Admin.js": "ed625e8ad4362ba07518ce27ec71e8ed3d01605bf932f44ec4a39ca80715046f",
+    "entities/SiteSettings.js": "5573d6a84240537556552e355b9fa75fb0c515b5bdbdecb181174841a1db8c72",
+    "entities/Issue.js": "acd83fa0c4ddcf6cb25527e337a3948454685ebaf8b6fd96c55143a49b5f8ba1",
+    "entities/Feedback.js": "2dc92e3df15eae14677b4d5a52497e9bbb6d29a88b5f1cf557535c0121d1d272",
+    "entities/Product.js": "f8a0d9ca27edb48f1981ad533dc16058b583ad226ababed5429e53173c0e3a65",
+    "entities/SurveySubmission.js": "6c0e1d0f32710e0ee5214837772ebfe638bdb5f28b803ecc924f1a75ae1ef6dd",
+    "entities/MyProduct.js": "38373f8def005d487439c59e8ef285551833ac5197004b8213213cd4bb5b77d3",
+    "entities/PriceRange.js": "3e59dc3e41e65868ea2cc3fc77a159147bf4399c562b6fac79738cad444b9092",
+    "entities/Category.js": "9b1f3d8d2b4529c86c37cac034634adf5437810bf4581ae49d239cfc6c229f5b",
+    "utils/brandValidation.js": "1d8bcb895f1135cb2a64c64f9c40cb869871943bc4c326729d3cd1626bf2f3d4",
+    "utils/resolveProductPrice.js": "8dcfd086d5edc30485447ccaa49a2e23851f6f457c90bab4fcd59ed41b1c09e4",
+    "utils/categoryGuard.js": "e5ddd255aac20d0fad6f0cf8ec01e4725a32073287932b4a7a4a41182a0dba7c",
+    "utils/brandUtils.js": "d7d7f589bf6d2b38a7372eade5a4a9344dfdde665cbb416dd1afaa9f561b5065",
+    "utils/surveyRewardUtils.js": "8f214ae085008689f951e9a011c599413fb3a5a674196913e9536d9971af0566",
+    "utils/categoryMongoFilter.js": "a71611e5247a048089f7553e2e4a86ba3b95371d3b01ec1be8621f3e0fb84990",
+    "utils/categorySlugUtils.js": "6862ea942d78aea5695c14d836f7a1adde254a339b83faa4b8d15f191afca64d",
+    "utils/surveyLocaleUtils.js": "368229a2b790135c9d8ce94167f114cf152840d243615b2d51e561579f1cf11f",
+    "utils/apiResponse.js": "84fabfb66d3b8c1e6b70be5919dafa77d2ac3f2406466d6f13329d5b4ff8306a",
+    "utils/productPriceBounds.js": "cb7884ef4b811dd544388b9bbcb0634d8ed2ea3a60da9de4fcc7497e80d36cbb",
+    "utils/upiUtils.js": "529ff770f762adc56408437ba6962a850921a445c2e24ffd7f925814b78fc056",
+    "utils/semverUtils.js": "9e46904adec6468e18b6cacd2d5f49d5228234abf16d17f801fd74d59aedf59c",
+    "utils/priceUtils.js": "8a942d112e168e9bbe4115afdb263284c109baf101bf0bfa6b34510a67078a99",
+    "utils/surveyWordUtils.js": "0a0c21790bc331369d21603d682fd13ee0faf1c18938e580afd0e7539919a6d8",
+    "data/categoryOemBrands.js": "807353e7070519588f70acd6a8b8151f81cd9308b6610f6df006fc07217129a0",
+    "scripts/trustfolio-category-price-watcher.js": "446c7cb5f39356be67529004daa6c8f658564fff33b522e6d393c9f48799def2",
+    "scripts/seed-survey-questions.js": "8d69b327dfdaeaf1f00559da604d28fee92b73cd5e97e9cc6939c54f15450286",
+    "scripts/update-mandatory-feedback-min-words.js": "8094945d6203aab004a5c3efbf64e7fda63d687e1ac4b031a98101c5f4992044",
+    "scripts/export-survey-questions-md.js": "91c0db3c2367adc2527f8adb3442977db1087fbecba6dfbb7b2a43a7bb3f3b6c",
+    "scripts/seed-mandatory-feedback-question.js": "7cf1d149cb7f1cc58643b87debe54c99766230e465604689dd6dee268d1f100f",
+    "scripts/import-survey-questions-md.js": "b0edd4e4349e5bfde1addfa0197fa98fa168457c5304f1b6140acb362250a1e0",
+    "scripts/seed-admin.js": "daa2ca832d171f04bb61a61ed03e85973fb793995b90592a71c001dea7cdd3dd",
+    "scripts/migrate-survey-bilingual.js": "cea853cded5ee24e28f8a9d06061001a612d7a60fb751c6202fdd7d87f533abd",
+    "scripts/migrate-survey-reward-copy.js": "d7b55f5132cf76921793dc4c1dbb9c975dbba22045eca55febaad935eb74d900",
+    "scripts/survey-question-md.js": "ce165187d274d7e1a516559fa4d4fbd2c52acc2f829a01ee7059e4398fb62e07",
+    "scripts/upgrade-survey-campaign.js": "8eab644cfe9978f5eb01401c092059e005fddb480d1e28ae2a789ca968d9de4b",
+    "scripts/reset-survey-responses.js": "1b5f5bcacbc869d25538514f53162ea6d05763ff35f0ccbc19edcb7c205c7507",
+    "scripts/survey-questions-data.js": "697c21da54cc5c9f21e68eecb046c10bd4220f12f552dde847d18791f9febf76"
+  },
+  "patchSHA256": "a58a6f381887f2380f824df6b59406b7b6f14c7d51549d8646115b854676441e",
+  "candidateHashes": {
+    "controllers/ProductController.js": "8b8e9b8e33ad3e27058c51bb3af0d4545e72a782d83136cf2f866169ebf53fb5",
+    "services/CatalogIdentityGuard.js": "1864d439a61929774502f0b955a6af26664711e29d67306b981d287402c13dbc",
+    "services/LiveBudgetRecommendationService.js": "c52e0ccfb4b8dfc32226d129355d8b589528000e27f76bceb04c60357be016da",
+    "services/LivePriceIdentity.js": "9d4a0383effc73d58f68ea67f62357c979398cd2f47dfa506f47d332d14cef1f",
+    "services/LivePriceService.js": "df4f566f3bbc7bc6c17c344d31cccfcbf188de70e188a91d71cfdbb69ed685bb",
+    "services/ProductRecommendationService.js": "0d589d1d6ad37a709ae61e1355e7c15198ea653db918a7f15b3ef328e0ea27f3"
+  },
+  "liveRows": [
+    {
+      "id": "69f4026f9a622ea2d7ccb2e6",
+      "platform": "flipkart",
+      "supported": false,
+      "stored_price_inr": 22364,
+      "live": null,
+      "deleted": false
+    },
+    {
+      "id": "69f419289a622ea2d7ccb608",
+      "platform": "flipkart",
+      "supported": false,
+      "stored_price_inr": 5307,
+      "live": null,
+      "deleted": false
+    },
+    {
+      "id": "69f419329a622ea2d7ccb736",
+      "platform": "flipkart",
+      "supported": true,
+      "stored_price_inr": 34490,
+      "live": {
+        "unavailable_checks": 0,
+        "availability_signal": "none",
+        "availability_since": null,
+        "status": "ok",
+        "checked_at": "2026-11-03T04:47:17.746Z",
+        "verification_status": "ok",
+        "extraction_source": "jsonld_product_offer",
+        "retailer_product_id": "WMNHBK4HNYBSDJ9U",
+        "retailer_url": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U",
+        "price_inr": 34490,
+        "priced_at": "2026-11-03T04:47:17.747Z",
+        "in_stock": true,
+        "availability": null,
+        "error": null,
+        "http_status": 200
+      },
+      "deleted": false
+    },
+    {
+      "id": "6a080110fe6fd8dc386bbee3",
+      "platform": "amazon",
+      "supported": true,
+      "stored_price_inr": 33490,
+      "live": {
+        "unavailable_checks": 0,
+        "availability_signal": "none",
+        "availability_since": null,
+        "status": "ok",
+        "checked_at": "2026-11-03T04:47:19.004Z",
+        "verification_status": "ok",
+        "extraction_source": "amazon_price_to_pay_parts",
+        "retailer_product_id": "B0D41L64NR",
+        "retailer_url": "https://www.amazon.in/dp/B0D41L64NR",
+        "price_inr": 33490,
+        "priced_at": "2026-11-03T04:47:19.004Z",
+        "in_stock": true,
+        "availability": null,
+        "error": null,
+        "http_status": 200
+      },
+      "deleted": false
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a37",
+      "platform": "flipkart",
+      "supported": false,
+      "stored_price_inr": 34490,
+      "live": null,
+      "deleted": false
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a38",
+      "platform": "flipkart",
+      "supported": false,
+      "stored_price_inr": 34490,
+      "live": null,
+      "deleted": false
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a39",
+      "platform": "flipkart",
+      "supported": false,
+      "stored_price_inr": 34490,
+      "live": null,
+      "deleted": false
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a3a",
+      "platform": "flipkart",
+      "supported": false,
+      "stored_price_inr": 34490,
+      "live": null,
+      "deleted": false
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a3b",
+      "platform": "flipkart",
+      "supported": true,
+      "stored_price_inr": 34490,
+      "live": {
+        "unavailable_checks": 0,
+        "availability_signal": "transient",
+        "availability_since": null,
+        "status": "error",
+        "checked_at": "2026-11-03T04:47:17.596Z",
+        "verification_status": null,
+        "extraction_source": null,
+        "retailer_product_id": null,
+        "retailer_url": null,
+        "price_inr": null,
+        "priced_at": null,
+        "in_stock": null,
+        "availability": null,
+        "error": "catalog_variant_mismatch",
+        "http_status": null
+      },
+      "deleted": false
+    }
+  ],
+  "connectedLatencyMs": 2584,
+  "persistence": [
+    {
+      "id": "69f4026f9a622ea2d7ccb2e6",
+      "fixture": null,
+      "catalogIdentifier": "itmf0e126c67d776",
+      "price": "₹22,364",
+      "price_inr": 22364
+    },
+    {
+      "id": "69f419289a622ea2d7ccb608",
+      "fixture": null,
+      "catalogIdentifier": "itmf65781027269c",
+      "price": "₹5,307",
+      "price_inr": 5307
+    },
+    {
+      "id": "69f419329a622ea2d7ccb736",
+      "fixture": null,
+      "catalogIdentifier": "itm85c805abf4849",
+      "price": "34490",
+      "price_inr": 34490,
+      "currentPriceValue": 34490,
+      "live": {
+        "unavailable_checks": 0,
+        "availability_signal": "none",
+        "availability_since": null,
+        "status": "ok",
+        "checked_at": "2026-11-03T04:47:17.746Z",
+        "verification_status": "ok",
+        "extraction_source": "jsonld_product_offer",
+        "retailer_product_id": "WMNHBK4HNYBSDJ9U",
+        "retailer_url": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U",
+        "price_inr": 34490,
+        "priced_at": "2026-11-03T04:47:17.747Z",
+        "in_stock": true,
+        "availability": null,
+        "error": null,
+        "http_status": 200
+      }
+    },
+    {
+      "id": "6a080110fe6fd8dc386bbee3",
+      "fixture": null,
+      "catalogIdentifier": "B0D41L64NR",
+      "price": "33490",
+      "price_inr": 33490,
+      "currentPriceValue": 33490,
+      "live": {
+        "unavailable_checks": 0,
+        "availability_signal": "none",
+        "availability_since": null,
+        "status": "ok",
+        "checked_at": "2026-11-03T04:47:19.004Z",
+        "verification_status": "ok",
+        "extraction_source": "amazon_price_to_pay_parts",
+        "retailer_product_id": "B0D41L64NR",
+        "retailer_url": "https://www.amazon.in/dp/B0D41L64NR",
+        "price_inr": 33490,
+        "priced_at": "2026-11-03T04:47:19.004Z",
+        "in_stock": true,
+        "availability": null,
+        "error": null,
+        "http_status": 200
+      }
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a37",
+      "fixture": "unknown_page",
+      "catalogIdentifier": "itm0000000000000",
+      "price": "34490",
+      "price_inr": 34490,
+      "currentPriceValue": 34490
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a38",
+      "fixture": "conflicting_pid",
+      "catalogIdentifier": "itm85c805abf4849",
+      "price": "34490",
+      "price_inr": 34490,
+      "currentPriceValue": 34490
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a39",
+      "fixture": "wrong_brand",
+      "catalogIdentifier": "itm85c805abf4849",
+      "price": "34490",
+      "price_inr": 34490,
+      "currentPriceValue": 34490
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a3a",
+      "fixture": "wrong_capacity",
+      "catalogIdentifier": "itm85c805abf4849",
+      "price": "34490",
+      "price_inr": 34490,
+      "currentPriceValue": 34490
+    },
+    {
+      "id": "6ae96754ac6e0d0291959a3b",
+      "fixture": "wrong_model",
+      "catalogIdentifier": "itm85c805abf4849",
+      "price": "34490",
+      "price_inr": 34490,
+      "currentPriceValue": 34490,
+      "live": {
+        "unavailable_checks": 0,
+        "availability_signal": "transient",
+        "availability_since": null,
+        "status": "error",
+        "checked_at": "2026-11-03T04:47:17.596Z",
+        "verification_status": null,
+        "extraction_source": null,
+        "retailer_product_id": null,
+        "retailer_url": null,
+        "price_inr": null,
+        "priced_at": null,
+        "in_stock": null,
+        "availability": null,
+        "error": "catalog_variant_mismatch",
+        "http_status": null
+      }
+    }
+  ],
+  "genuineStatus": "PASS",
+  "selectionHTTP": {
+    "http": 200,
+    "body": {
+      "success": true,
+      "message": "Top products retrieved successfully",
+      "data": {
+        "category": "washing-machines",
+        "budget": 35000,
+        "count": 2,
+        "totalMatches": 7,
+        "matchType": "within_budget",
+        "requestedBrand": null,
+        "brandFilterApplied": false,
+        "fallbackApplied": false,
+        "partialBrandFill": false,
+        "brandMatchCount": 0,
+        "similarFillCount": 0,
+        "fallbackMessage": null,
+        "priceWindow": {
+          "min": 0,
+          "max": 35000
+        },
+        "catalogPriceRange": {
+          "min": 33490,
+          "max": 34490,
+          "count": 0,
+          "source": "category_metadata_fast"
+        },
+        "livePriceRefreshCompleted": true,
+        "livePriceCandidatesChecked": 7,
+        "message": "Showing top 2 between ₹0 and ₹35,000 (entered budget: ₹35,000; prices include up to this amount).",
+        "selection_note": "Eligible prices run from zero up to your entered budget (see priceWindow). Selection tries 2 Amazon + 2 Flipkart + 1 Croma (top-ranked per platform); remaining slots fill in round‑robin across Amazon → Flipkart → Croma → other when inventory allows. The returned list is ordered by rating (highest first), then by specifications when ratings tie. Ranking prefers rating, then specifications; Flipkart/Croma rely on specifications when rating is missing.",
+        "products": [
+          {
+            "id": "69f419329a622ea2d7ccb736",
+            "asin": "69f419329a622ea2d7ccb736",
+            "title": "Godrej 9 kg with AI Tech Fully Automatic Front Load Washing Machine with In-built Heater White, Grey",
+            "description": null,
+            "is_active": true,
+            "brand": "Godrej",
+            "price_inr": 34490,
+            "original_price_inr": null,
+            "price_usd": "$415.54",
+            "average_rating": "4.2",
+            "main_image": "https://rukminim2.flixcart.com/image/300/300/xif0q/washing-machine-new/t/r/k/-original-imahmjqskyzfjeys.jpeg?q=90",
+            "images": [
+              "https://rukminim2.flixcart.com/image/300/300/xif0q/washing-machine-new/t/r/k/-original-imahmjqskyzfjeys.jpeg?q=90"
+            ],
+            "product_category": "washing-machines",
+            "feature_bullets": null,
+            "product_information": {
+              "Capacity": "9 kg",
+              "Automation Type": "Fully Automatic",
+              "Load Type": "Front Load",
+              "Wash Features": "In-built Heater"
+            },
+            "product_details": null,
+            "platform": "flipkart",
+            "product_url": "https://www.flipkart.com/godrej-9-kg-ai-tech-fully-automatic-front-load-washing-machine-in-built-heater-white-grey/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U",
+            "availability_status": "In Stock",
+            "in_stock": true,
+            "specifications": {
+              "Capacity": "9 kg",
+              "Automation Type": "Fully Automatic",
+              "Load Type": "Front Load",
+              "Wash Features": "In-built Heater"
+            },
+            "rank": 1,
+            "inStock": true,
+            "verified_retailer_id": "WMNHBK4HNYBSDJ9U",
+            "price_source": "website_live_price_api",
+            "live_price_status": "ok"
+          },
+          {
+            "id": "6a080110fe6fd8dc386bbee3",
+            "asin": "B0D41L64NR",
+            "title": "Bosch 9 kg 5 Star Front Load Fully-Automatic Washing Machine, AI ActiveWater, 14 Wash Programs, Removes 99.9% Germs with Steam, No Tangle or Wrinkle, SoftCare Paddle,Zero Vibration, White, WGA14200IN",
+            "description": null,
+            "is_active": true,
+            "brand": "Bosch",
+            "price_inr": 33490,
+            "original_price_inr": null,
+            "price_usd": "$403.49",
+            "average_rating": "4",
+            "main_image": "https://m.media-amazon.com/images/I/61Krwhkk6uL.jpg",
+            "images": [
+              "https://m.media-amazon.com/images/I/61Krwhkk6uL.jpg"
+            ],
+            "product_category": "washing-machines",
+            "feature_bullets": null,
+            "product_information": {
+              "Capacity": "9 kg",
+              "Energy Rating": "5 Star",
+              "Load Type": "Front Load",
+              "Washing Machine Type": "Fully Automatic"
+            },
+            "product_details": null,
+            "platform": "amazon",
+            "product_url": "https://www.amazon.in/dp/B0D41L64NR",
+            "availability_status": "In Stock",
+            "in_stock": true,
+            "specifications": {
+              "Capacity": "9 kg",
+              "Energy Rating": "5 Star",
+              "Load Type": "Front Load",
+              "Washing Machine Type": "Fully Automatic"
+            },
+            "rank": 2,
+            "inStock": true,
+            "verified_retailer_id": "B0D41L64NR",
+            "price_source": "website_live_price_api",
+            "live_price_status": "ok"
+          }
+        ]
+      },
+      "errors": null
+    },
+    "latencyMs": 28,
+    "cache": "reuse genuine just-persisted 60-second live records; not another fresh retailer run"
+  },
+  "archiveCount": 0,
+  "scope": "Final exact candidate diff; no fixture PID injection; three genuine Worker quotes maximum; no Croma/previous suite retest",
+  "databaseDropped": true
+}
