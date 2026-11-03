@@ -1,0 +1,43 @@
+name: Final bounded Flipkart temporary failure retest
+on:
+  push:
+    branches: [final-worker-switch-readiness-20261103]
+    paths: ['.github/workflows/final-switch-flipkart.yml']
+permissions:
+  contents: read
+jobs:
+  retest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: At most two exact PID requests separated by 12 seconds
+        env:
+          TF_PRICE_WORKER_KEY: ${{ secrets.TF_PRICE_WORKER_KEY }}
+        run: |
+          cat > check.cjs <<'JS'
+          const fs=require('fs'),crypto=require('crypto');
+          const out={client:'Node20 native fetch; no user-agent override',productionChanges:0,requests:[]};
+          const url='https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev/api/check';
+          const item='https://www.flipkart.com/godrej-9-kg/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U';
+          (async()=>{
+          for(let i=0;i<2;i++){
+           if(i)await new Promise(r=>setTimeout(r,12000));
+           const start=performance.now(),id=crypto.randomUUID(),at=new Date().toISOString();
+           try{const r=await fetch(url,{method:'POST',headers:{'content-type':'application/json','x-api-key':process.env.TF_PRICE_WORKER_KEY,'x-request-id':id},body:JSON.stringify({items:[item],useCache:false,browserProbe:false}),signal:AbortSignal.timeout(10000)});
+           const text=await r.text();let b;try{b=JSON.parse(text)}catch{b=null}
+           out.requests.push({index:i+1,at,requestID:id,http:r.status,latencyMS:Math.round(performance.now()-start),ray:r.headers.get('cf-ray'),application:b,bodyHash:crypto.createHash('sha256').update(text).digest('hex')});
+           if(r.status===401||r.status===403||!b){out.stoppedEarly=true;break;}
+           }catch(e){out.requests.push({index:i+1,at,error:e.name,latencyMS:Math.round(performance.now()-start)});}
+          }
+          })().finally(()=>{fs.writeFileSync('flipkart-retest-results.json',JSON.stringify(out,null,2));console.log('FLIPKART_RETEST='+JSON.stringify(out));});
+          
+          JS
+          node check.cjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bounded-flipkart-retest
+          path: flipkart-retest-results.json
+          retention-days: 30
