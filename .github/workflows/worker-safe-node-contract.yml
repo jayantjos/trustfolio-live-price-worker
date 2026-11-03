@@ -1,0 +1,59 @@
+name: Supported backend client Worker diagnostic
+on:
+  push:
+    branches: [worker-safe-cutover-20261103]
+    paths: ['.github/workflows/worker-safe-node-contract.yml']
+permissions:
+  contents: read
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Actual native-fetch client; health gates bounded price checks
+        env:
+          TF_PRICE_WORKER_KEY: ${{ secrets.TF_PRICE_WORKER_KEY }}
+        run: |
+          cat > check.cjs <<'JS'
+          'use strict';
+          const fs=require('fs'),crypto=require('crypto');
+          const BASE='https://trustfolio-live-price-worker.jayantjoshi-joshi.workers.dev';
+          const report={client:'native Node fetch as used by actual backend; default user-agent unchanged',productionChanges:0,requests:[],priceRequestCount:0};
+          async function request(test,path,payload,key){
+           const id=crypto.randomUUID(),at=new Date().toISOString(),start=performance.now();
+           try{
+            const headers={'content-type':'application/json','x-request-id':id};if(key)headers['x-api-key']=key;
+            const r=await fetch(BASE+path,{method:payload?'POST':'GET',headers,body:payload?JSON.stringify(payload):undefined,signal:AbortSignal.timeout(12000)});
+            const text=await r.text();let body;try{body=JSON.parse(text);}catch{body=null;}
+            const row={test,at,http:r.status,latencyMS:Math.round(performance.now()-start),requestID:id,headers:Object.fromEntries(['cf-ray','cf-mitigated','server','content-type','date'].map(h=>[h,r.headers.get(h)])),application:body,bodySHA256:crypto.createHash('sha256').update(text).digest('hex'),htmlTitle:text.match(/<title>([^<]{0,180})<\/title>/i)?.[1]||null,cloudflareError:text.match(/error code:\s*(\d+)/i)?.[1]||null};report.requests.push(row);return row;
+           }catch(e){const row={test,at,error:e.name,latencyMS:Math.round(performance.now()-start)};report.requests.push(row);return row;}
+          }
+          (async()=>{
+           const h=await request('health','/health');
+           if(h.http!==200||h.application?.worker!=='trustfolio-live-price-worker'){report.status='BLOCKED';report.stoppedBeforePrices=true;return;}
+           const empty={items:[],useCache:false,browserProbe:false};
+           await request('missing_key','/api/check',empty);
+           await request('wrong_key','/api/check',empty,'wrong-public-test-value');
+           const key=process.env.TF_PRICE_WORKER_KEY;if(!key){report.status='BLOCKED';report.credentialAvailable=false;return;}
+           const cases=[['amazon_price','B0D41L64NR','amazon','B0D41L64NR'],['flipkart_price','https://www.flipkart.com/godrej-9-kg/p/itm85c805abf4849?pid=WMNHBK4HNYBSDJ9U','flipkart','WMNHBK4HNYBSDJ9U']];
+           for(const [label,item,platform,id] of cases){
+            const row=await request(label,'/api/check',{items:[item],useCache:false,browserProbe:false},key);report.priceRequestCount++;
+            const result=row.application?.results?.[0];row.expectedID=id;row.actualID=platform==='amazon'?result?.asin:result?.pid;
+            row.summary=result?.[platform]||null;row.identityMatches=row.actualID===id;
+            if(row.http!==200){report.status='BLOCKED';return;}
+           }
+           report.authPass=report.requests.filter(x=>['missing_key','wrong_key'].includes(x.test)).every(x=>x.http===401)&&report.requests.filter(x=>x.expectedID).every(x=>x.http===200&&x.identityMatches);
+           report.status=report.authPass?'PASS':'FAIL';
+          })().catch(e=>{report.status='FAIL';report.error=e.name;}).finally(()=>{fs.writeFileSync('node-contract-results.json',JSON.stringify(report,null,2));console.log('NODE_CONTRACT_METADATA='+JSON.stringify(report));});
+          
+          JS
+          node check.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: supported-node-worker-contract
+          path: node-contract-results.json
+          retention-days: 30
