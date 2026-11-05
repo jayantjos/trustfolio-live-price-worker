@@ -606,7 +606,9 @@ const worker = {
     if (browserProbe && (body.items.length!==1 || body.useCache!==false))
       return json({error:'browser_probe_requires_one_item_and_useCache_false'},400);
     const results=[];
-    for(const input of body.items) results.push(await one(input,body.useCache!==false,ctx,env,browserProbe));
+    // Normal traffic always honors the six-hour cache, even if older callers
+    // send useCache:false. Only explicit single-product browser diagnostics bypass it.
+    for(const input of body.items) results.push(await one(input,!browserProbe,ctx,env,browserProbe));
     return json({success:true,results});
   },
   async scheduled(controller,env,ctx) {
