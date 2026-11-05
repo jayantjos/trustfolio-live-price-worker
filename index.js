@@ -64,7 +64,44 @@ export class PriceMonitorState extends DurableObject {
 
 
 const cache = new Map();
-const TTL = 45_000;
+// Six-hour successful-price TTL. Worker isolate memory is only an L1 cache;
+// bind PRICE_CACHE (Cloudflare KV) for cross-isolate persistence.
+const TTL = 6 * 60 * 60 * 1000;
+const inFlight = new Map();
+const CACHE_PREFIX = 'verified-price:v1:';
+function validCachedPrice(data) {
+  return data && data.status === 'ok' && Number(data.priceNum) > 0 && data.inStock !== false && data.in_stock !== false;
+}
+async function getCachedPrice(key, env) {
+  const now = Date.now();
+  const local = cache.get(key);
+  if (local && local.expiry > now && validCachedPrice(local.data)) return local.data;
+  if (local) cache.delete(key);
+  if (!env.PRICE_CACHE) return null;
+  try {
+    const stored = await env.PRICE_CACHE.get(CACHE_PREFIX + key, 'json');
+    if (stored && stored.expiry > now && validCachedPrice(stored.data)) {
+      cache.set(key, stored);
+      return stored.data;
+    }
+  } catch (error) {
+    console.warn('price_cache_read_failed', String(error));
+  }
+  return null;
+}
+async function saveCachedPrice(key, data, env) {
+  if (!validCachedPrice(data)) return;
+  const entry = {data, expiry: Date.now() + TTL};
+  cache.set(key, entry);
+  if (cache.size > 300) cache.delete(cache.keys().next().value);
+  if (env.PRICE_CACHE) {
+    try {
+      await env.PRICE_CACHE.put(CACHE_PREFIX + key, JSON.stringify(entry), {expirationTtl: Math.ceil(TTL / 1000)});
+    } catch (error) {
+      console.warn('price_cache_write_failed', String(error));
+    }
+  }
+}
 const LIMIT = 5;
 // Browser Run is EXPLICIT opt-in, one product per request; no automatic fallbacks.
 const BROWSER_MAX_BYTES = 2_500_000;
@@ -216,15 +253,27 @@ async function one(input, useCache, ctx, env, browserProbe=false) {
       cached:false,itemLatencyMs:Date.now()-start,error:'unsupported_product_url'};
   }
   const k=item.platform+':'+item.id;
-  const existing=cache.get(k);
   let data,cached=false;
-  if (useCache && existing && existing.expiry>Date.now()) {
-    data=existing.data;cached=true;
-  } else {
-    data=await retrieve(item,env,browserProbe);
-    if(data.status==='ok' && data.priceNum>0) {
-      cache.set(k,{data,expiry:Date.now()+TTL});
-      if(cache.size>300)cache.delete(cache.keys().next().value);
+  if (useCache && !browserProbe) {
+    data=await getCachedPrice(k,env);
+    cached=Boolean(data);
+  }
+  if (!data) {
+    // Concurrent requests in this isolate share one upstream extraction.
+    // Explicit diagnostics still bypass cache and coalescing.
+    if (useCache && !browserProbe && inFlight.has(k)) {
+      data=await inFlight.get(k);
+    } else {
+      const pending=(async()=>{
+        const fresh=await retrieve(item,env,browserProbe);
+        if (useCache && !browserProbe) await saveCachedPrice(k,fresh,env);
+        return fresh;
+      })();
+      if (useCache && !browserProbe) inFlight.set(k,pending);
+      try { data=await pending; }
+      finally {
+        if (inFlight.get(k)===pending) inFlight.delete(k);
+      }
     }
   }
   const fk=item.platform==='flipkart'?data:empty('Flipkart','skipped');
